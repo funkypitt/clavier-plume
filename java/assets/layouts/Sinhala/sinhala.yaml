@@ -1,0 +1,40 @@
+name: Sinhala
+languages: si-LK
+attributes: {shiftable: false}
+autoShift: false
+rows:
+  - letters: # rowkeys_sinhala1.xml
+    - {type: case, normal: ['ු'], shiftedManually: ['ූ']}
+    - {type: case, normal: ['අ'], shiftedManually: ['උ']}
+    - {type: case, normal: ['ැ'], shiftedManually: ['ෑ']}
+    - {type: case, normal: ['ර'], shiftedManually: ['ඍ']}
+    - {type: case, normal: ['එ'], shiftedManually: ['ඔ']}
+    - {type: case, normal: ['හ'], shiftedManually: ['ශ']}
+    - {type: case, normal: ['ම'], shiftedManually: ['ඹ']}
+    - {type: case, normal: ['ස'], shiftedManually: ['ෂ']}
+    - {type: case, normal: ['ද', '%', 'ඳ'], shiftedManually: ['ධ']}
+    - {type: case, normal: ['ච'], shiftedManually: ['ඡ']}
+    - {type: case, normal: ['ඤ', '෴'], shiftedManually: ['ඥ', '෴']}
+  - letters: # rowkeys_sinhala2.xml
+    - {type: case, normal: ['්'], shiftedManually: ['ෟ']}
+    - {type: case, normal: ['ි'], shiftedManually: ['ී']}
+    - {type: case, normal: ['ා'], shiftedManually: ['ෘ']}
+    - {type: case, normal: ['ෙ'], shiftedManually: ['ෆ']}
+    - {type: case, normal: ['ට'], shiftedManually: ['ඨ']}
+    - {type: case, normal: ['ය'], shiftedManually: ["්\u200dය"]}
+    - {type: case, normal: ['ව'], shiftedManually: ['ළු']}
+    - {type: case, normal: ['න'], shiftedManually: ['ණ']}
+    - {type: case, normal: ['ක'], shiftedManually: ['ඛ']}
+    - {type: case, normal: ['ත'], shiftedManually: ['ථ']}
+    - {type: case, normal: ['ඏ'], shiftedManually: ["්\u200dර"]}
+  - letters: # rowkeys_sinhala3.xml
+    - {type: case, normal: ['ං', 'ඃ'], shiftedManually: ['ඞ']}
+    - {type: case, normal: ['ජ', 'ඦ'], shiftedManually: ['ඣ']}
+    - {type: case, normal: ['ඩ', 'ඬ'], shiftedManually: ['ඪ']}
+    - {type: case, normal: ['ඉ'], shiftedManually: ['ඊ']}
+    - {type: case, normal: ['බ'], shiftedManually: ['භ']}
+    - {type: case, normal: ['ප'], shiftedManually: ['ඵ']}
+    - {type: case, normal: ['ල'], shiftedManually: ['ළ']}
+    - {type: case, normal: ['ග', 'ඟ'], shiftedManually: ['ඝ']}
+    - {type: case, normal: ['ෳ'], shiftedManually: ["ර්\u200d"]}
+# detected 3 rows

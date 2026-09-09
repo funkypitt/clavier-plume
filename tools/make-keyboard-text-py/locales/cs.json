@@ -1,0 +1,115 @@
+{
+    "locale": "cs",
+    "morekeys": {
+        "a": [
+            "á"
+        ],
+        "c": [
+            "č"
+        ],
+        "d": [
+            "ď"
+        ],
+        "e": [
+            "é",
+            "ě"
+        ],
+        "i": [
+            "í"
+        ],
+        "n": [
+            "ň"
+        ],
+        "o": [
+            "ó"
+        ],
+        "r": [
+            "ř"
+        ],
+        "s": [
+            "š"
+        ],
+        "t": [
+            "ť"
+        ],
+        "u": [
+            "ú",
+            "ů"
+        ],
+        "y": [
+            "ý"
+        ],
+        "z": [
+            "ž"
+        ],
+        "misc_a": [
+            "à",
+            "â",
+            "ä",
+            "æ",
+            "ã",
+            "å",
+            "ā"
+        ],
+        "misc_c": [
+            "ç",
+            "ć"
+        ],
+        "misc_e": [
+            "è",
+            "ê",
+            "ë",
+            "ę",
+            "ė",
+            "ē"
+        ],
+        "misc_i": [
+            "î",
+            "ï",
+            "ì",
+            "į",
+            "ī"
+        ],
+        "misc_n": [
+            "ñ",
+            "ń"
+        ],
+        "misc_o": [
+            "ö",
+            "ô",
+            "ò",
+            "õ",
+            "œ",
+            "ø",
+            "ō"
+        ],
+        "misc_s": [
+            "ß",
+            "ś"
+        ],
+        "misc_u": [
+            "û",
+            "ü",
+            "ù",
+            "ū"
+        ],
+        "misc_y": [
+            "ÿ"
+        ],
+        "misc_z": [
+            "ź",
+            "ż"
+        ]
+    },
+    "keyspec": {},
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_quotes": "!text/single_9qm_lqm",
+        "double_quotes": "!text/double_9qm_lqm",
+        "single_angle_quotes": "!text/single_raqm_laqm",
+        "double_angle_quotes": "!text/double_raqm_laqm"
+    }
+}

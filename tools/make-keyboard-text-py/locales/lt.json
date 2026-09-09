@@ -1,0 +1,35 @@
+{
+    "locale": "lt",
+    "morekeys": {
+        "a": "ą",
+        "c": "č",
+        "e": [
+            "ė",
+            "ę"
+        ],
+        "i": "į",
+        "s": "š",
+        "u": [
+            "ū",
+            "ų"
+        ],
+        "z": "ž"
+    },
+    "keyspec": {},
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_quotes": [
+            "’",
+            "‚",
+            "‘"
+        ],
+        "double_quotes": [
+            "”",
+            "„",
+            "“"
+        ]
+    }
+}

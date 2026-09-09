@@ -1,0 +1,7 @@
+name: Lithuanian QWERTY
+languages: lt
+rows:
+  - letters: ą č ę ė į š ų ū ž
+  - letters: q w e r t y u i o p
+  - letters: a s d f g h j k l
+  - letters: z x c v b n m

@@ -1,0 +1,8 @@
+name: Bashkir
+languages: ba
+minimumFunctionalKeyWidth: 0.0
+rows:
+  - letters: ё ә ө ҡ ғ ҫ ҙ һ ү ң ъ
+  - letters: й ц у к е н г ш щ з х
+  - letters: ф ы в а п р о л д ж э
+  - letters: я ч с м и т ь б ю

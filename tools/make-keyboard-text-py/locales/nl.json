@@ -1,0 +1,67 @@
+{
+    "locale": "nl",
+    "morekeys": {
+        "a": [
+            "á",
+            "ä",
+            "â",
+            "à"
+        ],
+        "e": [
+            "é",
+            "ë",
+            "ê",
+            "è"
+        ],
+        "i": [
+            "í",
+            "ï",
+            "ì",
+            "î",
+            "į",
+            "ī",
+            "ĳ"
+        ],
+        "o": [
+            "ó",
+            "ö"
+        ],
+        "u": [
+            "ú",
+            "ü"
+        ],
+        "misc_a": [
+            "æ",
+            "ã",
+            "å",
+            "ā"
+        ],
+        "misc_e": [
+            "ę",
+            "ė",
+            "ē"
+        ],
+        "misc_o": [
+            "ô",
+            "ò",
+            "õ",
+            "œ",
+            "ø",
+            "ō"
+        ],
+        "misc_u": [
+            "û",
+            "ù",
+            "ū"
+        ]
+    },
+    "keyspec": {},
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_quotes": "!text/single_9qm_rqm",
+        "double_quotes": "!text/double_9qm_rqm"
+    }
+}

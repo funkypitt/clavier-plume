@@ -1,0 +1,60 @@
+name: Khmer
+languages: km-KH
+minimumFunctionalKeyWidth: 0.0
+attributes:
+  moreKeyMode: OnlyExplicit
+  shiftable: false
+autoShift: false
+numberRowMode: AlwaysDisabled
+rows:
+  - letters: # rowkeys_khmer1.xml
+    - {type: case, normal: ['១', '1', '៱'], shiftedManually: ['!', "!icon/zwj_key|\u200d"]}
+    - {type: case, normal: ['២', '2', '៲'], shiftedManually: ['ៗ', "!icon/zwnj_key|\u200c"]}
+    - {type: case, normal: ['៣', '3', '៳'], shiftedManually: ['"', '៑']}
+    - {type: case, normal: ['៤', '4', '៴'], shiftedManually: ['៛', '$', '€']}
+    - {type: case, normal: ['៥', '5', '៵'], shiftedManually: ['%', '៖']}
+    - {type: case, normal: ['៦', '6', '៶'], shiftedManually: ['៍', '៙']}
+    - {type: case, normal: ['៧', '7', '៷'], shiftedManually: ['័', '៚']}
+    - {type: case, normal: ['៨', '8', '៸'], shiftedManually: ['៏', "\u17d7", '*']}
+    - {type: case, normal: ['៩', '9', '៹'], shiftedManually: ['(', '{', '«']}
+    - {type: case, normal: ['០', '0', '៰'], shiftedManually: [')', '}', '»']}
+    - {type: case, normal: ['ឥ', 'ឦ'], shiftedManually: ['៌', '×']}
+    - {type: case, normal: ['ឲ', 'ឱ'], shiftedManually: ['៎']}
+  - letters: # rowkeys_khmer2.xml
+    - {type: case, normal: ['ឆ'], shiftedManually: ['ឈ', 'ៜ']}
+    - {type: case, normal: ['ឹ'], shiftedManually: ['ឺ', '៝']}
+    - {type: case, normal: ['េ'], shiftedManually: ['ែ']}
+    - {type: case, normal: ['រ'], shiftedManually: ['ឬ', 'ឫ']}
+    - {type: case, normal: ['ត'], shiftedManually: ['ទ']}
+    - {type: case, normal: ['យ'], shiftedManually: ['ួ']}
+    - {type: case, normal: ['ុ'], shiftedManually: ['ូ']}
+    - {type: case, normal: ['ិ'], shiftedManually: ['ី']}
+    - {type: case, normal: ['ោ'], shiftedManually: ['ៅ']}
+    - {type: case, normal: ['ផ'], shiftedManually: ['ភ']}
+    - {type: case, normal: ['ៀ'], shiftedManually: ['ឿ']}
+    - {type: case, normal: ['ឪ', 'ឧ', 'ឱ', 'ឳ', 'ឩ', 'ឨ'], shiftedManually: ['ឰ']}
+  - letters: # rowkeys_khmer3.xml
+    - {type: case, normal: ['ា'], shiftedManually: ['ាំ']}
+    - {type: case, normal: ['ស'], shiftedManually: ['ៃ']}
+    - {type: case, normal: ['ដ'], shiftedManually: ['ឌ']}
+    - {type: case, normal: ['ថ'], shiftedManually: ['ធ']}
+    - {type: case, normal: ['ង'], shiftedManually: ['អ']}
+    - {type: case, normal: ['ហ'], shiftedManually: ['ះ', 'ៈ']}
+    - {type: case, normal: ['្'], shiftedManually: ['ញ']}
+    - {type: case, normal: ['ក'], shiftedManually: ['គ', 'ឝ']}
+    - {type: case, normal: ['ល'], shiftedManually: ['ឡ']}
+    - {type: case, normal: ['ើ'], shiftedManually: ['ោះ']}
+    - {type: case, normal: ['់'], shiftedManually: ['៉']}
+    - {type: case, normal: ['ឮ', 'ឭ', 'ឰ'], shiftedManually: ['ឯ']}
+  - letters: # rowkeys_khmer4.xml
+    - {type: case, normal: ['ឋ'], shiftedManually: ['ឍ']}
+    - {type: case, normal: ['ខ'], shiftedManually: ['ឃ']}
+    - {type: case, normal: ['ច'], shiftedManually: ['ជ']}
+    - {type: case, normal: ['វ'], shiftedManually: ['េះ']}
+    - {type: case, normal: ['ប'], shiftedManually: ['ព', 'ឞ']}
+    - {type: case, normal: ['ន'], shiftedManually: ['ណ']}
+    - {type: case, normal: ['ម'], shiftedManually: ['ំ']}
+    - {type: case, normal: ['ុំ'], shiftedManually: ['ុះ']}
+    - {type: case, normal: ['។'], shiftedManually: ['៕']}
+    - {type: case, normal: ['៊', "\u17d8"], shiftedManually: ['?']}
+# detected 4 rows

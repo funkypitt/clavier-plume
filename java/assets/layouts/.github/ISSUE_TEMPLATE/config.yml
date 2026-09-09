@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Want to report an issue that is not related to keyboard layouts?
+    url: https://github.com/futo-org/android-keyboard/issues/new/choose
+    about: Open an issue on the FUTO Keyboard repository.
+  - name: Need a FUTO Keyboard license?
+    url: https://pay2.futo.org/
+    about: Purchase a FUTO Keyboard license with FutoPay
+  - name: Zulip Chat
+    url: https://chat.futo.org/#narrow/stream/53-Keyboard
+    about: FUTO Keyboard community chat
+  - name: Discord Chat (if you don't like Zulip)
+    url: https://keyboard.futo.tech/discord
+    about: FUTO Keyboard community chat

@@ -1,0 +1,112 @@
+name: Central Kurdish (Arabic) G
+languages: ckb
+minimumFunctionalKeyWidth: 0.0
+rows:
+  - letters:
+    # U+0686: چ ARABIC LETTER TCHEH
+    # U+0636: ض ARABIC LETTER DAD
+    - ["\u0686", "\u0686"]
+
+    # U+067E: پ ARABIC LETTER PEH
+    # U+062B: ث ARABIC LETTER THEH
+    # U+0635: ص ARABIC LETTER SAD
+    - ["\u067e", "\u062b", "\u0635"]
+
+    - 'ق'
+    - 'ڤ'
+    - 'ف'
+    - 'غ'
+    - 'ع'
+    # U+0647: ه ARABIC LETTER HEH
+    # U+06BE: ھ ARABIC LETTER HEH DOACHASHMEE
+    - ["\u06be|\u0647", "\u06be"]
+    - 'خ'
+    - 'ح'
+    - 'ج'
+
+  - letters:
+    - 'ش'
+    - 'س'
+    # U+06CC: ی ARABIC LETTER FARSI YEH
+    # U+064A: ي ARABIC LETTER YEH
+    - ["\u06CC", "\u064a"]
+
+    - 'ب'
+    - 'ل'
+    # U+0627 "ا" ARABIC LETTER ALEF
+    # U+0622 "آ" ARABIC LETTER ALEF WITH MADDA ABOVE
+    # U+0625 "إ" ARABIC LETTER ALEF WITH HAMZA BELOW
+    # U+0623 "أ" ARABIC LETTER ALEF WITH HAMZA ABOVE
+    # U+0654 "ٔ" ARABIC HAMZA ABOVE
+    - ["\u0627", "\u0622", "\u0625", "\u0623", "\u0654"]
+    - 'ت'
+    - 'ن'
+    - 'م'
+    # U+06A9 "ک" ARABIC LETTER KEHEH (farsi kaf)
+    # U+0643 "ك" ARABIC LETTER KAF
+    - ["\u06a9", "\u0643"]
+
+    # U+06AF "گ" ARABIC LETTER GAF
+    # U+0637 "ط" ARABIC LETTER TAH
+    - ["\u06af", "\u0637"]
+
+  - letters:
+    # U+0626 "ئ" ARABIC LETTER YEH WITH HAMZA ABOVE
+    # U+0621 "ء" ARABIC LETTER HAMZA
+    - ["\u0626", "\u0621"]
+
+    - 'ڕ'
+    - 'ر'
+    - 'ێ'
+    - 'ڵ'
+
+    # U+06D5 "ە" ARABIC LETTER AE
+    # U+0629 "ة" ARABIC LETTER TEH MARBUTA
+    - ["\u06d5", "\u0629"]
+
+    # U+0648 "و" ARABIC LETTER WAW
+    # U+06C7 "ۇ" ARABIC LETTER U
+    # U+06CA "ۊ" ARABIC LETTER WAW WITH TWO DOTS ABOVE
+    # U+0624 "ؤ" ARABIC LETTER WAW WITH HAMZA ABOVE
+    - ["\u0648", "\u06c7", "\u06ca", "\u0624"]
+
+    # U+0632 "ز" ARABIC LETTER ZAIN
+    # U+0698 "ژ" ARABIC LETTER JEH
+    - ["\u0632", "\u0698"]
+
+    # U+06C6 "ۆ" ARABIC LETTER OE
+    # U+0638 "ظ" ARABIC LETTER ZAH
+    - ["\u06c6", "\u0638"]
+
+    # U+062F "د" ARABIC LETTER DAL
+    # U+0630 "ذ" ARABIC LETTER THAL
+    - ["\u062f", "\u0630"]
+
+    - $delete
+
+  - bottom:
+    - $symbols
+    - ['،', ',']
+    - $action
+    - $space
+
+    # U+061F "؟" ARABIC QUESTION MARK
+    # U+0654 "ٔ" ARABIC HAMZA ABOVE
+    # U+0655 "ٕ" ARABIC HAMZA BELOW
+    # U+064E "َ" ARABIC FATHA
+    # U+064B "ً" ARABIC FATHATAN
+    # U+0650 "ِ" ARABIC KASRA
+    # U+064D "ٍ" ARABIC KASRATAN
+    # U+064F "ُ" ARABIC DAMMA
+    # U+0657 "ٗ" ARABIC INVERTED DAMMA
+    # U+064C "ٌ" ARABIC DAMMATAN
+    # U+0652 "ْ" ARABIC SUKUN
+    # U+0651 "ّ" ARABIC SHADDA
+    # U+0653 "ٓ" ARABIC MADDAH ABOVE
+    # U+0670 "ٰ" ARABIC SUPERSCRIPT ALEF
+    # U+0656 "ٖ" ARABIC SUBSCRIPT ALEF
+    # U+0658 "٘" ARABIC MARK NOON GHUNNA
+    # U+06D4 "۔" ARABIC FULL STOP
+    - ['.', "\u061F", "\u0654", "\u0655", "\u064E", "\u064B", "\u0650", "\u064D", "\u064F", "\u0657", "\u064C", "\u0652", "\u0651", "\u0653", "\u0670", "\u0656", "\u0658", "\u06D4"]
+
+    - $enter

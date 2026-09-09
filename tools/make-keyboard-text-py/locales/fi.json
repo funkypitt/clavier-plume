@@ -1,0 +1,59 @@
+{
+    "locale": "fi",
+    "morekeys": {
+        "a": [
+            "ä",
+            "å"
+        ],
+        "o": [
+            "ö"
+        ],
+        "s": [
+            "š"
+        ],
+        "z": [
+            "ž"
+        ],
+        "misc_a": [
+            "æ",
+            "à",
+            "á",
+            "â",
+            "ã",
+            "ā"
+        ],
+        "misc_o": [
+            "ø",
+            "ô",
+            "ò",
+            "ó",
+            "õ",
+            "œ",
+            "ō"
+        ],
+        "misc_s": [
+            "ß",
+            "ś"
+        ],
+        "misc_z": [
+            "ź",
+            "ż"
+        ],
+        "nordic_row2_10": [
+            "ø"
+        ],
+        "nordic_row2_11": [
+            "æ"
+        ]
+    },
+    "keyspec": {
+        "nordic_row1_11": "å",
+        "nordic_row2_10": "ö",
+        "nordic_row2_11": "ä"
+    },
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {}
+}

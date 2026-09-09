@@ -1,0 +1,46 @@
+name: Newa Romanized
+languages: new-NP
+attributes: {shiftable: false}
+autoShift: false
+useZWNJKey: true
+rows:
+  - letters: 
+    - {type: case, normal: ["𑐚", "𑑏"], shiftedManually: ["𑐛"]}  #Q
+    - {type: case, normal: ["𑑁"], shiftedManually: ["𑐍"]}  #W
+    - {type: case, normal: ["𑐾", "𑐊"], shiftedManually: ["𑐿", "𑐋"]}  #E
+    - {type: case, normal: ["𑐬", "𑐭"], shiftedManually: ["𑐺", "𑐻"]}  #R
+    - {type: case, normal: ["𑐟", "𑐚"], shiftedManually: ["𑐠", "𑐛"]}  #T
+    - {type: case, normal: ["𑐫"], shiftedManually: ["𑐘", "𑐙"]}  #Y
+
+    - {type: case, normal: ["𑐸", "𑐄"], shiftedManually: ["𑐹", "𑐅"]}  #U
+    - {type: case, normal: ["𑐶", "𑐂"], shiftedManually: ["𑐷", "𑐃"]}  #I
+    - {type: case, normal: ["𑑀"], shiftedManually: ["𑐌"]}  #O
+    - {type: case, normal: ["𑐥"], shiftedManually: ["𑐦"]}  #P
+    - {type: case, normal: ["𑐂"], shiftedManually: ["𑐃"]}  #
+
+    
+  - letters: 
+    - {type: case, normal: ["𑐵"], shiftedManually: ["𑐁"]}  #A
+    - {type: case, normal: ["𑐳", "𑐲"], shiftedManually: ["𑐱"]} #S
+    - {type: case, normal: ["𑐡", "𑐜"], shiftedManually: ["𑐢", "𑐝"]}  #D
+    - {type: case, normal: ["𑐦"], shiftedManually: ["𑐄", "𑐅"]}  #F
+    - {type: case, normal: ["𑐐"], shiftedManually: ["𑐑"]}  #G
+
+    - {type: case, normal: ["𑐴"], shiftedManually: ["𑐀"]}  #H
+    - {type: case, normal: ["𑐖"], shiftedManually: ["𑐗"]}  #J
+    - {type: case, normal: ["𑐎"], shiftedManually: ["𑐏"]}   #K
+    - {type: case, normal: ["𑐮", "𑐯"], shiftedManually: ["𑑌"]}  #L
+    - {type: case, normal: ["𑐊"], shiftedManually: ["𑐋"]}
+    - {type: case, normal: ["𑑉"], shiftedManually: ["𑑅"]}
+
+  - letters:
+    - {type: case, normal: ["𑐲"], shiftedManually: ["𑐆", "𑐇"]}  #Z
+    - {type: case, normal: ["𑐕"], shiftedManually: ["𑐝"]}   #X
+    - {type: case, normal: ["𑐔"], shiftedManually: ["𑐕"]}   #C
+    - {type: case, normal: ["𑐰"], shiftedManually: ["𑑃"]}   #V
+    
+    - {type: case, normal: ["𑐧"], shiftedManually: ["𑐨"]}   #B
+    - {type: case, normal: ["𑐣", "𑐤"], shiftedManually: ["𑐞"]}  #N
+    - {type: case, normal: ["𑐩", "𑐪"], shiftedManually: ["𑑄", "𑑈", "𑑆"]}  #M
+    - {type: case, normal: ["𑑍", "?"], shiftedManually: ["𑐬𑐸"]}    #,
+    - {type: case, normal: ["𑑂", "𑑇"], shiftedManually: ["𑐒", "𑐓"]}   #/

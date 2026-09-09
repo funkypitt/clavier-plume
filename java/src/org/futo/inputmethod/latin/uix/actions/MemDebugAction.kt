@@ -1,0 +1,461 @@
+package org.futo.inputmethod.latin.uix.actions
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
+import android.os.Debug
+import android.text.InputType
+import android.view.inputmethod.EditorInfo
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import org.futo.inputmethod.engine.general.ChineseIME
+import org.futo.inputmethod.engine.general.GeneralIME
+import org.futo.inputmethod.engine.general.JapaneseIME
+import org.futo.inputmethod.latin.LatinIME
+import org.futo.inputmethod.latin.LegacySwipeSetting
+import org.futo.inputmethod.latin.R
+import org.futo.inputmethod.latin.SwipeDecoderDictionary
+import org.futo.inputmethod.latin.settings.Settings
+import org.futo.inputmethod.latin.uix.Action
+import org.futo.inputmethod.latin.uix.ActionWindow
+import org.futo.inputmethod.latin.uix.LocalFoldingState
+import org.futo.inputmethod.latin.uix.settings.ScrollableList
+import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
+import org.futo.inputmethod.latin.uix.theme.Typography
+import org.futo.inputmethod.v2keyboard.KeyVisualStyle
+import org.futo.inputmethod.v2keyboard.KeyboardSizeStateProvider
+import java.io.File
+
+val DebugLabel = Typography.Small.copy(fontFamily = FontFamily.Monospace)
+val DebugTitle = Typography.Body.Medium.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+
+private fun getInputTypeAsString(inputType: Int): String {
+    val types = mutableListOf<String>()
+
+    // Classify the base type
+    when (inputType and InputType.TYPE_MASK_CLASS) {
+        InputType.TYPE_CLASS_TEXT -> {
+            types.add("TEXT")
+
+            // Add variations
+            when (inputType and InputType.TYPE_MASK_VARIATION) {
+                InputType.TYPE_TEXT_VARIATION_NORMAL -> types.add("NORMAL")
+                InputType.TYPE_TEXT_VARIATION_URI -> types.add("URI")
+                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS -> types.add("EMAIL_ADDRESS")
+                InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT -> types.add("EMAIL_SUBJECT")
+                InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE -> types.add("SHORT_MESSAGE")
+                InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE -> types.add("LONG_MESSAGE")
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME -> types.add("PERSON_NAME")
+                InputType.TYPE_TEXT_VARIATION_POSTAL_ADDRESS -> types.add("POSTAL_ADDRESS")
+                InputType.TYPE_TEXT_VARIATION_PASSWORD -> types.add("PASSWORD")
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD -> types.add("VISIBLE_PASSWORD")
+                InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT -> types.add("WEB_EDIT_TEXT")
+                InputType.TYPE_TEXT_VARIATION_FILTER -> types.add("FILTER")
+                InputType.TYPE_TEXT_VARIATION_PHONETIC -> types.add("PHONETIC")
+                InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS -> types.add("WEB_EMAIL_ADDRESS")
+                InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD -> types.add("WEB_PASSWORD")
+
+            }
+
+            // Add flags
+            if (inputType and InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS != 0) {
+                types.add("FLAG_CAP_CHARACTERS")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_CAP_WORDS != 0) {
+                types.add("FLAG_CAP_WORDS")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_CAP_SENTENCES != 0) {
+                types.add("FLAG_CAP_SENTENCES")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_AUTO_CORRECT != 0) {
+                types.add("FLAG_AUTO_CORRECT")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE != 0) {
+                types.add("FLAG_AUTO_COMPLETE")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_MULTI_LINE != 0) {
+                types.add("FLAG_MULTI_LINE")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE != 0) {
+                types.add("FLAG_IME_MULTI_LINE")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS != 0) {
+                types.add("FLAG_NO_SUGGESTIONS")
+            }
+            if (inputType and InputType.TYPE_TEXT_FLAG_ENABLE_TEXT_CONVERSION_SUGGESTIONS != 0) {
+                types.add("FLAG_ENABLE_TEXT_CONVERSION_SUGGESTIONS")
+            }
+        }
+        InputType.TYPE_CLASS_NUMBER -> {
+            types.add("NUMBER")
+
+            // Add variations
+            when (inputType and InputType.TYPE_MASK_VARIATION) {
+                InputType.TYPE_NUMBER_VARIATION_NORMAL -> types.add("NORMAL")
+                InputType.TYPE_NUMBER_VARIATION_PASSWORD -> types.add("PASSWORD")
+            }
+
+            // Add flags
+            if (inputType and InputType.TYPE_NUMBER_FLAG_SIGNED != 0) {
+                types.add("FLAG_SIGNED")
+            }
+            if (inputType and InputType.TYPE_NUMBER_FLAG_DECIMAL != 0) {
+                types.add("FLAG_DECIMAL")
+            }
+        }
+        InputType.TYPE_CLASS_PHONE -> {
+            types.add("PHONE")
+        }
+        InputType.TYPE_CLASS_DATETIME -> {
+            types.add("DATETIME")
+
+            // Add variations
+            when (inputType and InputType.TYPE_MASK_VARIATION) {
+                InputType.TYPE_DATETIME_VARIATION_NORMAL -> types.add("NORMAL")
+                InputType.TYPE_DATETIME_VARIATION_DATE -> types.add("DATE")
+                InputType.TYPE_DATETIME_VARIATION_TIME -> types.add("TIME")
+            }
+        }
+    }
+
+    return types.joinToString(" | ")
+}
+
+
+private fun getImeOptionsString(imeOptions: Int): String {
+    val options = mutableListOf<String>()
+
+    // Add action
+    when (imeOptions and EditorInfo.IME_MASK_ACTION) {
+        EditorInfo.IME_ACTION_NONE -> options.add("IME_ACTION_NONE")
+        EditorInfo.IME_ACTION_GO -> options.add("IME_ACTION_GO")
+        EditorInfo.IME_ACTION_SEARCH -> options.add("IME_ACTION_SEARCH")
+        EditorInfo.IME_ACTION_SEND -> options.add("IME_ACTION_SEND")
+        EditorInfo.IME_ACTION_NEXT -> options.add("IME_ACTION_NEXT")
+        EditorInfo.IME_ACTION_DONE -> options.add("IME_ACTION_DONE")
+        EditorInfo.IME_ACTION_PREVIOUS -> options.add("IME_ACTION_PREVIOUS")
+    }
+
+    // Add flags
+    if (imeOptions and EditorInfo.IME_FLAG_NO_FULLSCREEN != 0) {
+        options.add("IME_FLAG_NO_FULLSCREEN")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NAVIGATE_PREVIOUS != 0) {
+        options.add("IME_FLAG_NAVIGATE_PREVIOUS")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NAVIGATE_NEXT != 0) {
+        options.add("IME_FLAG_NAVIGATE_NEXT")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NO_EXTRACT_UI != 0) {
+        options.add("IME_FLAG_NO_EXTRACT_UI")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NO_ACCESSORY_ACTION != 0) {
+        options.add("IME_FLAG_NO_ACCESSORY_ACTION")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION != 0) {
+        options.add("IME_FLAG_NO_ENTER_ACTION")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_FORCE_ASCII != 0) {
+        options.add("IME_FLAG_FORCE_ASCII")
+    }
+    if (imeOptions and EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING != 0) {
+        options.add("IME_FLAG_NO_PERSONALIZED_LEARNING")
+    }
+
+    return options.joinToString(" | ")
+}
+
+
+@Serializable
+private data class SKey(
+    val code: Int,
+    val label: String,
+    val iconId: String,
+    val hintLabel: String?,
+    val hintIconId: String?,
+    val labelFlags: Int,
+    val actionFlags: Int,
+    val width: Int,
+    val height: Int,
+    val horizontalGap: Int,
+    val verticalGap: Int,
+    val x: Int,
+    val y: Int,
+    val visualStyle: KeyVisualStyle,
+    val outputText: String?,
+    val row: Int,
+    val column: Int,
+)
+
+@Serializable
+private data class SKeyboard(
+    val density: Int,
+    val width: Int,
+    val height: Int,
+    val name: String,
+    val keys: List<SKey>,
+
+    val screenWidth: Int,
+    val screenHeight: Int,
+    val mostCommonKeyWidth: Int,
+    val mostCommonKeyHeight: Int,
+)
+internal fun serializeKeyboard(ime: LatinIME): String {
+    val keyboard = ime.latinIMELegacy.mKeyboardSwitcher.keyboard!!
+    val list = keyboard.sortedKeys.toList().map {
+        SKey(
+            code = it.code,
+            label = it.label,
+            iconId = it.iconId,
+            hintLabel = it.effectiveHintLabel,
+            hintIconId = it.effectiveHintIcon,
+            labelFlags = it.labelFlags,
+            actionFlags = it.actionFlags,
+            width = it.width,
+            height = it.height,
+            horizontalGap = it.horizontalGap,
+            verticalGap = it.verticalGap,
+            x = it.x,
+            y = it.y,
+            visualStyle = it.visualStyle,
+            outputText = it.outputText,
+            row = it.row,
+            column = it.column
+        )
+    }
+
+    val kb = SKeyboard(
+        density = ime.resources.configuration.densityDpi,
+        width = keyboard.mBaseWidth,
+        height = keyboard.mBaseHeight,
+        name = keyboard.mId.mKeyboardLayoutSetName,
+        keys = list,
+        screenWidth = ime.resources.displayMetrics.widthPixels,
+        screenHeight = ime.resources.displayMetrics.heightPixels,
+        mostCommonKeyWidth = keyboard.mMostCommonKeyWidth,
+        mostCommonKeyHeight = keyboard.mMostCommonKeyHeight,
+    )
+    return Json.encodeToString(SKeyboard.serializer(), kb)
+}
+
+val MemoryDebugAction = Action(
+    icon = R.drawable.code,
+    name = R.string.action_debug_title,
+    simplePressImpl = null,
+    shownInEditor = false, // Plume: debug action hidden
+    canShowKeyboard = true,
+    windowImpl = { manager, _ ->
+        val latinIme = manager.getLatinIMEForDebug()
+        object : ActionWindow() {
+            override val onlyShowAboveKeyboard: Boolean
+                get() = true
+
+            override val positionIsUserManagable: Boolean
+                get() = true
+
+            @Composable
+            override fun windowName(): String {
+                return stringResource(R.string.action_debug_title)
+            }
+
+            @Composable
+            override fun WindowContents(keyboardShown: Boolean) {
+                val state: MutableState<Map<String, String>> = remember { mutableStateOf(mapOf()) }
+                LaunchedEffect(Unit) {
+                    while (true) {
+                        delay(250)
+
+                        val newInfo = Debug.MemoryInfo()
+                        Debug.getMemoryInfo(newInfo)
+                        state.value = newInfo.memoryStats
+                    }
+                }
+
+                val foldingState = LocalFoldingState.current
+
+                val codenameFor: (String) -> String = { pteAsset ->
+                    if(pteAsset.isBlank()) {
+                        ""
+                    } else {
+                        val metadataAsset = SwipeDecoderDictionary.metadataFor(pteAsset)
+                        val file = File(
+                            SwipeDecoderDictionary.getFilePath(
+                                manager.getContext(),
+                                metadataAsset
+                            )
+                        )
+                        val content = file.readText()
+
+                        SwipeDecoderDictionary.parseMetadataToGetCodename(content)
+                    }
+                }
+                ScrollableList {
+                    if(BugViewerState.bugs.isNotEmpty()) {
+                        Button(onClick = {
+                            manager.activateAction(BugViewerAction)
+                        }) {
+                            Text("View ${BugViewerState.bugs.size} errors")
+                        }
+                    }
+
+                    Text("Swipe Info", style = DebugTitle)
+                    SwipeDecoderDictionary.appliedLayoutInfo.let { layout ->
+                        if(useDataStoreValue(LegacySwipeSetting) == true) {
+                            Text("using legacy mode...", style = DebugLabel)
+                        } else {
+                            val scoring = SwipeDecoderDictionary.appliedScoring.value
+                            Text("universal model = ${SwipeDecoderDictionary.SWIPE_MODEL} (${remember(SwipeDecoderDictionary.SWIPE_MODEL) { codenameFor(SwipeDecoderDictionary.SWIPE_MODEL)} })", style = DebugLabel)
+                            Text("special decoder = ${SwipeDecoderDictionary.appliedLayoutInfo.decoder.ifBlank { "<none>" }} (${remember(SwipeDecoderDictionary.appliedLayoutInfo.decoder) { codenameFor(SwipeDecoderDictionary.appliedLayoutInfo.decoder)} })", style = DebugLabel)
+                            Text("context lm      = ${SwipeDecoderDictionary.appliedLayoutInfo.lm.ifBlank { "<none>" }} (${remember(SwipeDecoderDictionary.appliedLayoutInfo.lm) { codenameFor(SwipeDecoderDictionary.appliedLayoutInfo.lm)} })", style = DebugLabel)
+                            Text("scoring         γ=${scoring.gamma} λ=${scoring.lambda} β=${scoring.beta} α=${scoring.alpha}", style = DebugLabel)
+                            Text("", style = DebugLabel)
+                            Text("layout letters  = ${layout.letters}", style = DebugLabel)
+                            Text("layout scale    = ${layout.sx}, ${layout.sy}", style = DebugLabel)
+                            Text("layout offset   = ${layout.ox}, ${layout.oy}", style = DebugLabel)
+                            Text("", style = DebugLabel)
+                            Text("dictionary count   = ${SwipeDecoderDictionary.appliedTries?.size}", style = DebugLabel)
+                            Text("dictionary weights = ${SwipeDecoderDictionary.appliedTrieWeights.joinToString(", ")}", style = DebugLabel)
+                        }
+
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text("Editor Info", style = DebugTitle)
+                    latinIme.currentInputEditorInfo?.let { info ->
+                        Text("packageName       = ${info.packageName}",       style = DebugLabel)
+                        Text("inputType         = ${info.inputType} (${getInputTypeAsString(info.inputType)})", style = DebugLabel)
+                        Text("imeOptions        = ${info.imeOptions} (${getImeOptionsString(info.imeOptions)})", style = DebugLabel)
+                        Text("privateImeOptions = ${info.privateImeOptions}", style = DebugLabel)
+                        Text("actionId          = ${info.actionId}",          style = DebugLabel)
+                        Text("actionLabel       = ${info.actionLabel}",       style = DebugLabel)
+                        Text("extras            = ${info.extras}",            style = DebugLabel)
+                        Text("fieldId           = ${info.fieldId}",           style = DebugLabel)
+                        Text("fieldName         = ${info.fieldName}",         style = DebugLabel)
+                        Text("hintLocales       = ${info.hintLocales}",       style = DebugLabel)
+                        Text("hintText          = ${info.hintText}",          style = DebugLabel)
+                        Text("initialCapsMode   = ${info.initialCapsMode}",   style = DebugLabel)
+                        Text("initialSelEnd     = ${info.initialSelEnd}",     style = DebugLabel)
+                        Text("initialSelStart   = ${info.initialSelStart}",   style = DebugLabel)
+                        Text("label             = ${info.label}",             style = DebugLabel)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                            Text("contentMimeTypes  = ${info.contentMimeTypes?.joinToString(",")}", style = DebugLabel)
+                        }
+
+                        info
+                    } ?: run {
+                        Text("editor info is null", style = DebugLabel)
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text("Keyboard State", style = DebugTitle)
+                    val ime = remember { latinIme.imeManager.getActiveIME(Settings.getInstance().current) }
+                    when(ime) {
+                        is GeneralIME -> {
+                            ime.debugInfo().forEach {
+                                Text(it, style = DebugLabel)
+                            }
+                        }
+
+                        is ChineseIME -> {
+                            Text("ChineseIME\n${ime.debugInfo}", style = DebugLabel)
+                        }
+
+                        is JapaneseIME -> {
+                            Text("JapaneseIME [no debug info yet]", style = DebugLabel)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text("Screen State Info", style = DebugTitle)
+                    Text("size mode     = ${(manager.getContext() as KeyboardSizeStateProvider).currentSizeState}", style = DebugLabel)
+                    Text("Fold State", style = DebugTitle)
+                    Text("state         = ${foldingState.feature?.state}",          style = DebugLabel)
+                    Text("orientation   = ${foldingState.feature?.orientation}",    style = DebugLabel)
+                    Text("isSeparating  = ${foldingState.feature?.isSeparating}",   style = DebugLabel)
+                    Text("occlusionType = ${foldingState.feature?.occlusionType}",  style = DebugLabel)
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+
+                    Text("Memory Use", style = DebugTitle)
+                    state.value.forEach {
+                        val value = it.value.toInt().toFloat() / 1000.0f
+                        Text("${it.key}: ${String.format("%.2f", value)}MB", style = DebugLabel)
+                    }
+
+                    Button(onClick = {
+                        val testTexts = listOf(
+                            "One type of sentence.",
+                            "One other type of sentence?",
+                            "[Three kinds now! Okay, this text should appear identically 5 times]"
+                        )
+
+                        val txn = manager.createInputTransaction()
+                        testTexts.forEach { txn.updatePartial(it) }
+                        txn.commit(testTexts.last() + " ")
+
+
+                        val innerDelays = listOf(16L, 20L, 24L, 200L)
+                        manager.getLifecycleScope().launch {
+                            for(innerDelay in innerDelays) {
+                                delay(1000L)
+                                run {
+                                    val txn = manager.createInputTransaction()
+                                    testTexts.forEach {
+                                        delay(innerDelay)
+                                        withContext(Dispatchers.Main) { txn.updatePartial(it) }
+                                    }
+                                    withContext(Dispatchers.Main) { txn.commit(testTexts.last() + " ") }
+                                }
+                            }
+                        }
+
+                    }) {
+                        Text("Test action input transaction")
+                    }
+
+
+                    Button(onClick = {
+                        val serialized = try {
+                            serializeKeyboard(manager.getLatinIMEForDebug())
+                        }catch(e: Exception) {
+                            throwIfDebug(e)
+                            ""
+                        }
+
+                        val clipboardManager = manager.getContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+                        clipboardManager.setPrimaryClip(ClipData.newPlainText("Clip", serialized))
+                    }) {
+                        Text("Copy keyboard layout JSON to clipboard")
+                    }
+                }
+            }
+        }
+    }
+)

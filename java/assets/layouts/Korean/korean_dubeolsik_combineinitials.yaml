@@ -1,0 +1,20 @@
+name: 두벌식 (Dubeolsik) (ㄱㄱ -> ㄲ)
+languages: ko
+combiners:
+  - KoreanCombineInitials
+attributes: {shiftable: false}
+autoShift: false
+rows:
+  - letters:
+    - {type: case, normal: ["ㅂ", "ㅃ"], shiftedManually: ["ㅃ"]}
+    - {type: case, normal: ["ㅈ", "ㅉ"], shiftedManually: ["ㅉ"]}
+    - {type: case, normal: ["ㄷ", "ㄸ"], shiftedManually: ["ㄸ"]}
+    - {type: case, normal: ["ㄱ", "ㄲ"], shiftedManually: ["ㄲ"]}
+    - {type: case, normal: ["ㅅ", "ㅆ"], shiftedManually: ["ㅆ"]}
+    - ㅛ
+    - ㅕ
+    - ㅑ
+    - {type: case, normal: ["ㅐ", "ㅒ"], shiftedManually: ["ㅒ"]}
+    - {type: case, normal: ["ㅔ", "ㅖ"], shiftedManually: ["ㅖ"]}
+  - letters: ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ
+  - letters: ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ

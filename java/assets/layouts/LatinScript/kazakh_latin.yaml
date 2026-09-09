@@ -1,0 +1,17 @@
+name: Kazakh (Latin)
+languages: kk-Latn
+rows:
+  - letters: ä ñ ğ ç ū ü ı ö ş
+  - letters:
+    - q
+    - w
+    - e
+    - r
+    - t
+    - y
+    - u
+    - {type: case, normal: ['i'], shifted: ['İ']}
+    - o
+    - p
+  - letters: a s d f g h j k l
+  - letters: z x c v b n m

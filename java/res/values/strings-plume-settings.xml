@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plume: settings screens of the fork (English defaults; French in values-fr/strings-plume.xml) -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Home -->
+    <string name="plume_settings_title">Clavier Plume</string>
+    <string name="plume_home_languages">Languages</string>
+    <string name="plume_home_keyboard">Keyboard</string>
+    <string name="plume_home_typing">Typing and correction</string>
+    <string name="plume_home_actions">Action bar</string>
+    <string name="plume_home_appearance">Appearance</string>
+    <string name="plume_home_backup">Backup</string>
+    <string name="plume_home_about">About</string>
+
+    <!-- Keyboard -->
+    <string name="plume_section_size">Size</string>
+    <string name="plume_keyboard_size_title">Size and keyboard modes</string>
+    <string name="plume_keyboard_size_subtitle">Resize, one-handed, floating, split</string>
+    <string name="plume_section_keys">Keys</string>
+    <string name="plume_number_row">Number row</string>
+    <string name="plume_number_row_subtitle">Show 1234567890 above the letters</string>
+    <string name="plume_key_preview">Key preview</string>
+    <string name="plume_key_preview_subtitle">Show the character above the key while pressing</string>
+    <string name="plume_key_hints">Long-press hints</string>
+    <string name="plume_key_hints_subtitle">Small character in the corner of the keys</string>
+    <string name="plume_long_press_duration">Long-press duration</string>
+    <string name="plume_section_feedback">Feedback</string>
+    <string name="plume_vibrate">Vibration on key press</string>
+    <string name="plume_vibration_strength">Vibration duration</string>
+    <string name="plume_vibration_default">System</string>
+    <string name="plume_key_sound">Sound on key press</string>
+    <string name="plume_section_spacebar">Space bar</string>
+    <string name="plume_spacebar_swipe">Swipe on the space bar</string>
+    <string name="plume_spacebar_swipe_off">Nothing</string>
+    <string name="plume_spacebar_swipe_cursor">Move the cursor</string>
+    <string name="plume_spacebar_swipe_language">Switch language</string>
+
+    <!-- Typing and correction -->
+    <string name="plume_section_correction">Correction</string>
+    <string name="plume_autocorrect">Auto-correction</string>
+    <string name="plume_autocorrect_subtitle">Correct the word when you type a space or punctuation</string>
+    <string name="plume_show_suggestions">Show suggestions</string>
+    <string name="plume_show_suggestions_subtitle">Word suggestions above the keyboard</string>
+    <string name="plume_emoji_suggestions">Emoji suggestions</string>
+    <string name="plume_section_typing">Typing</string>
+    <string name="plume_auto_cap">Auto-capitalisation</string>
+    <string name="plume_auto_cap_subtitle">Capital letter at the start of each sentence</string>
+    <string name="plume_double_space_period">Double-space period</string>
+    <string name="plume_double_space_period_subtitle">Two spaces insert a period followed by a space</string>
+    <string name="plume_swipe_typing">Swipe typing</string>
+    <string name="plume_swipe_typing_subtitle">Slide your finger over the letters to type a word</string>
+    <string name="plume_section_vocabulary">Vocabulary</string>
+    <string name="plume_learn_words">Learn my words</string>
+    <string name="plume_learn_words_subtitle">Suggest words you type that are not in the dictionary</string>
+    <string name="plume_personal_dictionary">Personal dictionary</string>
+    <string name="plume_personal_dictionary_subtitle">Your words and shortcuts</string>
+    <string name="plume_blacklist">Ignored words</string>
+    <string name="plume_blacklist_subtitle">Words that are never suggested</string>
+
+    <!-- Action bar -->
+    <string name="plume_section_action_key">Action key</string>
+    <string name="plume_action_key">Action key next to the space bar</string>
+    <string name="plume_action_key_subtitle">Opens the emoji panel</string>
+    <string name="plume_language_key">Language switch key</string>
+    <string name="plume_language_key_subtitle">Replaces the emoji key with a language key</string>
+    <string name="plume_section_voice">Voice input</string>
+    <string name="plume_voice_key">Microphone key</string>
+    <string name="plume_voice_key_subtitle">Dictate text from the suggestion bar</string>
+    <string name="plume_section_clipboard">Clipboard</string>
+    <string name="plume_clipboard_quick">Copied text in the bar</string>
+    <string name="plume_clipboard_quick_subtitle">Offer the last copied text as a suggestion</string>
+    <string name="plume_clipboard_history">Clipboard history</string>
+    <string name="plume_clipboard_history_subtitle">Keep copied items in the clipboard panel</string>
+
+    <!-- Backup -->
+    <string name="plume_backup_export">Export configuration</string>
+    <string name="plume_backup_export_subtitle">Settings, personal dictionary and learned words to a file</string>
+    <string name="plume_backup_import">Import configuration</string>
+    <string name="plume_backup_import_subtitle">Restore from an exported file</string>
+
+    <!-- About -->
+    <string name="plume_about_version">Version <xliff:g name="version" example="0.14.0">%1$s</xliff:g></string>
+    <string name="plume_about_version_subtitle">Tap to copy</string>
+    <string name="plume_about_copied">Version copied</string>
+    <string name="plume_about_modified_notice">Clavier Plume is a modified version of FUTO Keyboard.</string>
+    <string name="plume_about_licenses">Licences and credits</string>
+    <string name="plume_about_licenses_subtitle">Contributors, third-party libraries</string>
+    <string name="plume_credits_header">Clavier Plume is based on FUTO Keyboard. Thanks to the people below.</string>
+
+    <!-- Languages -->
+    <string name="plume_languages_layouts">Layouts</string>
+    <string name="plume_languages_multilingual">Suggestions in this language at the same time</string>
+    <string name="plume_languages_add_layout">Add a layout</string>
+    <string name="plume_languages_remove">Remove this language</string>
+    <string name="plume_learned_words">Learned words</string>
+    <string name="plume_learned_words_subtitle">Words the keyboard picked up, forget them in one tap</string>
+    <string name="plume_learned_words_tip">A word missing from the dictionary is kept after its second use. Forgetting removes it from suggestions; it can be learned again. The blacklist bans it for good.</string>
+    <string name="plume_learned_words_none">No learned words yet.</string>
+    <string name="plume_learned_words_forget">Forget</string>
+    <plurals name="plume_learned_words_count">
+        <item quantity="one">%d use</item>
+        <item quantity="other">%d uses</item>
+    </plurals>
+</resources>

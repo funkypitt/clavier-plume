@@ -1,0 +1,72 @@
+{
+    "locale": "de",
+    "morekeys": {
+        "a": [
+            "ä"
+        ],
+        "o": [
+            "ö"
+        ],
+        "s": [
+            "ß"
+        ],
+        "u": [
+            "ü"
+        ],
+        "misc_a": [
+            "%",
+            "â",
+            "à",
+            "á",
+            "æ",
+            "ã",
+            "å",
+            "ā"
+        ],
+        "misc_o": [
+            "%",
+            "ô",
+            "ò",
+            "ó",
+            "õ",
+            "œ",
+            "ø",
+            "ō"
+        ],
+        "misc_s": [
+            "ś",
+            "š"
+        ],
+        "misc_u": [
+            "%",
+            "û",
+            "ù",
+            "ú",
+            "ū"
+        ],
+        "swiss_row1_11": [
+            "è"
+        ],
+        "swiss_row2_10": [
+            "é"
+        ],
+        "swiss_row2_11": [
+            "à"
+        ]
+    },
+    "keyspec": {
+        "swiss_row1_11": "ü",
+        "swiss_row2_10": "ö",
+        "swiss_row2_11": "ä"
+    },
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_quotes": "!text/single_9qm_lqm",
+        "double_quotes": "!text/double_9qm_lqm",
+        "single_angle_quotes": "!text/single_raqm_laqm",
+        "double_angle_quotes": "!text/double_raqm_laqm"
+    }
+}

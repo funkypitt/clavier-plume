@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <service
+            android:name="org.futo.inputmethod.updates.UpdateCheckingService"
+            android:label="@string/autoupdater_service_title"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+        </service>
+
+        <receiver android:name="org.futo.inputmethod.updates.InstallReceiver" />
+
+    </application>
+</manifest>

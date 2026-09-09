@@ -1,0 +1,112 @@
+default:
+  image: "gitlab.futo.org:5050/keyboard/latinime/gradle:35-1"
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+  GIT_STRATEGY: clone
+  GIT_DEPTH: 0
+
+stages: # List of stages for jobs, and their order of execution
+  - sync_translations
+  - build
+
+sync_strings_xml:
+  tags:
+    - docker
+  stage: sync_translations
+  only:
+     refs:
+      - master
+  script:
+    - sh syncTranslations.sh
+
+
+buildUnstableBranch:
+  stage: build
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != "master"'
+      when: manual
+    - when: never       # block everything else (e.g. tags, master)
+  needs: []
+  before_script:
+    - git fetch origin $CI_COMMIT_BRANCH:$CI_COMMIT_BRANCH
+    - export GIT_BRANCH="$CI_COMMIT_BRANCH"
+    - export GIT_DESCRIBE="$(git describe --tags --dirty)"
+    - export GIT_REV_LIST="$(git rev-list --first-parent --count $GIT_BRANCH)"
+    - export VERSION_NAME="${GIT_DESCRIBE}--branch-${GIT_BRANCH}-${GIT_REV_LIST}"
+    - export VERSION_CODE="$(curl -s https://dl.keyboard.futo.org/nightly_version | head -n 1 | tr -d '\r')"
+    - echo $VERSION_CODE $VERSION_NAME
+    - ./setUpPropertiesCI.sh
+  script:
+    - gradle assembleUnstableRelease -s
+    - mv build/outputs/apk/unstable/release/latinime-unstable-release.apk ./keyboard-unstable-$VERSION_NAME.apk
+    - ./uploadNightlyBranch.sh ./keyboard-unstable-$VERSION_NAME.apk $VERSION_CODE $VERSION_NAME $GIT_BRANCH
+  artifacts:
+    name: "keyboard-unstable-$VERSION_NAME"
+    paths:
+      - ./*.apk
+
+buildUnstable:
+  tags:
+    - docker
+  stage: build
+  needs: []
+  before_script:
+    - git fetch origin master:master
+    - export VERSION_NAME=`git describe --tags --dirty`
+    - export VERSION_CODE=`git rev-list --first-parent --count master`
+    - echo $VERSION_CODE $VERSION_NAME
+    - ./setUpPropertiesCI.sh
+  script:
+    - gradle signingReport
+    - gradle assembleUnstableRelease -s
+    - mv build/outputs/apk/unstable/release/latinime-unstable-release.apk ./keyboard-unstable-$VERSION_NAME.apk
+    - touch VERSION_CODE_$VERSION_CODE.txt
+    - touch VERSION_NAME_$VERSION_NAME.txt
+    - echo "Keyboard (Unstable) $VERSION_NAME - https://gitlab.futo.org/alex/latinime/-/jobs/$CI_JOB_ID/artifacts/raw/keyboard-unstable-$VERSION_NAME.apk"
+    - echo $VERSION_CODE $VERSION_NAME
+    - ./uploadNightly.sh ./keyboard-unstable-$VERSION_NAME.apk $VERSION_CODE $VERSION_NAME-unstable
+  artifacts:
+    name: "keyboard-unstable-$VERSION_NAME"
+    paths:
+      - ./*.apk
+      - ./*.aab
+      - ./*.txt
+  when: manual
+
+buildStable:
+  tags:
+    - docker
+  stage: build
+  needs: []
+  before_script:
+    - git fetch origin master:master
+    - export VERSION_NAME=`git describe --tags`
+    - export VERSION_CODE=`git rev-list --first-parent --count master`
+    - echo $VERSION_CODE $VERSION_NAME
+    - ./setUpPropertiesCI.sh
+  script:
+    - gradle updateBundleResources -s
+    - gradle bundlePlaystoreRelease -s
+    - gradle assembleStableRelease -s
+    - if grep -q "android.permission.INTERNET" build/intermediates/bundle_manifest/playstoreRelease/processApplicationManifestPlaystoreReleaseForBundle/AndroidManifest.xml; then echo "Internet permission check failed for play store"; exit 1; fi
+    - if grep -q "android.permission.INTERNET" build/intermediates/packaged_manifests/stableRelease/processStableReleaseManifestForPackage/AndroidManifest.xml; then echo "Internet permission check failed for stable"; exit 1; fi
+    - echo "All checks OK"
+    - echo "Standalone permissions" && grep "uses-permission" build/intermediates/packaged_manifests/stableRelease/processStableReleaseManifestForPackage/AndroidManifest.xml
+    - echo "Play Store permissions" && grep "uses-permission" build/intermediates/bundle_manifest/playstoreRelease/processApplicationManifestPlaystoreReleaseForBundle/AndroidManifest.xml
+    - mv build/outputs/apk/stable/release/latinime-stable-release.apk ./keyboard-$VERSION_NAME.apk
+    - mv build/outputs/bundle/playstoreRelease/latinime-playstore-release.aab ./keyboard-playstore-$VERSION_NAME.aab
+    - touch VERSION_CODE_$VERSION_CODE.txt
+    - touch VERSION_NAME_$VERSION_NAME.txt
+    - echo "Keyboard $VERSION_NAME - https://gitlab.futo.org/alex/latinime/-/jobs/$CI_JOB_ID/artifacts/raw/keyboard-$VERSION_NAME.apk"
+    - echo $VERSION_CODE $VERSION_NAME
+  artifacts:
+    name: "keyboard-stable-$VERSION_NAME"
+    paths:
+      - ./*.apk
+      - ./*.aab
+      - ./*.txt
+  when: manual

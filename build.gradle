@@ -1,0 +1,514 @@
+//file:noinspection HardCodedStringLiteral
+plugins {
+    id 'com.android.application' version '8.10.1'
+    id 'org.jetbrains.kotlin.android' version '2.1.0'
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.1.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.0'
+    id 'com.android.library' version '8.10.1' apply false
+}
+
+def getVersionCode = { ->
+    def envCode = System.getenv('VERSION_CODE')
+    if (envCode?.trim()) {
+        try {
+            return Integer.parseInt(envCode.trim())
+        } catch (NumberFormatException ignored) {
+            project.logger.warn("VERSION_CODE='$envCode' is not a valid integer – falling back to git rev-list.")
+        }
+    } else {
+        project.logger.warn("VERSION_CODE env variable not set – falling back to git rev-list.")
+    }
+
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+            standardOutput = stdout
+        }
+        return Integer.parseInt(stdout.toString().trim())
+    } catch (ignored) {
+        project.logger.lifecycle("Failed to get rev-list count from git!")
+        return -1
+    }
+}
+
+def getVersionName = { ->
+    def envName = System.getenv('VERSION_NAME')
+    if (envName?.trim()) {
+        return envName.trim()
+    } else {
+        project.logger.warn("VERSION_NAME env variable not set – falling back to git describe.")
+    }
+
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (ignored) {
+        project.logger.lifecycle("Failed to get version name tag from git!")
+        return "0.0.0"
+    }
+}
+
+def getBranch = { ->
+    def envName = System.getenv('BRANCH_NAME')
+    if (envName?.trim()) {
+        return envName.trim()
+    } else {
+        project.logger.warn("BRANCH_NAME env variable not set – falling back to git branch.")
+    }
+
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'branch', '--show-current'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (ignored) {
+        project.logger.lifecycle("Failed to get branch from git!")
+        return "master"
+    }
+}
+
+
+final def translationsWithoutEngValues = { final String path ->
+    final def sourceDir = file(path)
+    final def taskNameSuffix = sourceDir.name.capitalize()
+
+    final def destDir = file("$buildDir/generated/res-translations-filtered/${taskNameSuffix}")
+
+    tasks.register("prepareResFilter${taskNameSuffix}", Copy) {
+        from(sourceDir) {
+            include 'values-*/**'
+            exclude '**/strings-appname.xml'   // Plume : le nom de l'app est défini une seule fois (java/res)
+
+            filter { String line ->
+                def matcher = line =~ /<string name="([^"]+)"[^>]*>(.+)<\/string>/
+
+                if (matcher.find()) {
+                    var stringName = matcher.group(1)
+                    var content = matcher.group(2)
+                    // Plume : ces clés sont redéfinies dans java/res/values-fr/strings-plume.xml
+                    if (stringName in ['setup_welcome_text', 'setup_active_input_method', 'credits_menu_header_text']) {
+                        return ''
+                    }
+
+                    content = content
+                    // Fix duplicate string tags
+                            .replaceAll(/<!\[CDATA\[<string [^>]+>(.+)<\\/string>\]\]>/, '$1')
+                            .replaceAll(/<string [^>]+>(.+)<\\/string>/, '$1')
+                            .replaceAll(/&lt;string [^&]+&gt;(.+)&lt;\\/string&gt;/, '$1')
+                    // Remove xliff:g tags entirely, keep only the content
+                            .replaceAll(/<xliff:g [^>]+>(.+?)<\/xliff:g>/, '$1')
+                            .replaceAll(/&lt;xliff:g [^&]+&gt;(.+?)&lt;\/xliff:g&gt;/, '$1')
+                    // Fix escaped quotes
+                            .replaceAll(/&amp;quot;/, '"')
+                            .replaceAll(/&quot;/, '"')
+                            .replaceAll(/\\+/, "\\\\")
+                            .replaceAll(/\\"/, '"')
+                            .replaceAll(/\\'/, "'")
+
+                    if (content.startsWith("&quot;")) {
+                        content = content.substring(6)
+                    } else if (content.startsWith('\\"')) {
+                        content = content.substring(2)
+                    } else if (content.startsWith('"')) {
+                        content = content.substring(1)
+                    }
+                    if (content.endsWith("&quot;")) {
+                        content = content.substring(0, content.length() - 6)
+                    } else if (content.endsWith('\\"')) {
+                        content = content.substring(0, content.length() - 2)
+                    } else if (content.endsWith('"')) {
+                        content = content.substring(0, content.length() - 1)
+                    }
+
+                    content = content.replaceAll('"', '\\\\"')
+
+                    "    <string name=\"" + stringName + "\">\"" + content + "\"</string>\n"
+                } else {
+                    line
+                }
+            }
+        }
+        into(destDir)
+        includeEmptyDirs = false
+
+        doFirst {
+            if (destDir.exists()) {
+                println "Cleaning old contents of $destDir"
+                destDir.deleteDir()
+            }
+        }
+    }
+
+    // Ensure it runs before build
+    preBuild.dependsOn("prepareResFilter${taskNameSuffix}")
+
+    destDir
+}
+
+// Plume: overlay of java/res-large (git submodule) with our own resources,
+// e.g. plume/res-large-overlay/raw/main_fr.dict replaces the AOSP 2014 French dictionary.
+final def plumeResLarge = {
+    final def destDir = file("$buildDir/generated/res-large-plume")
+    tasks.register("preparePlumeResLarge", Copy) {
+        from('java/res-large')
+        from('plume/res-large-overlay')
+        into(destDir)
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE   // overlay wins (copied last)
+        includeEmptyDirs = false
+        doFirst {
+            if (destDir.exists()) {
+                destDir.deleteDir()
+            }
+        }
+    }
+    preBuild.dependsOn("preparePlumeResLarge")
+    destDir
+}
+
+tasks.register('updateLocales', Exec) {
+    workingDir = file('tools/make-keyboard-text-py')
+    commandLine = [
+            System.getProperty("os.name").toLowerCase().contains("windows") ? "python" : "python3",
+            "src/generate.py"
+    ]
+}
+
+tasks.register('updateBundleResources', Exec) {
+    workingDir = file('java/res-bundle')
+    commandLine = [
+            System.getProperty("os.name").toLowerCase().contains("windows") ? "python" : "python3",
+            "download-bundles.py",
+            file('java/res-bundle').absolutePath
+    ]
+}
+
+tasks.register('updateContributors') {
+    def script = file('tools/contributors.py')
+    def outputFile = file('java/src/org/futo/inputmethod/latin/uix/settings/pages/credits/Contributors.kt')
+
+    inputs.file script
+    outputs.file outputFile
+
+    doLast {
+        exec {
+            environment 'GITHUB_TOKEN', System.getenv('GITHUB_TOKEN') ?: ''
+            commandLine 'python3', script.absolutePath
+        }
+    }
+}
+
+preBuild.dependsOn updateLocales
+
+android {
+    namespace 'org.futo.inputmethod.latin'
+
+    compileSdk 35
+
+    // Required if using classes in android.test.runner
+    useLibrary 'android.test.runner'
+
+    // Required if using classes in android.test.base
+    useLibrary 'android.test.base'
+
+    // Required if using classes in android.test.mock
+    useLibrary 'android.test.mock'
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 35
+        versionName getVersionName()
+        versionCode getVersionCode()
+
+        applicationId 'org.futo.inputmethod.latin'
+        testApplicationId 'org.futo.inputmethod.latin.tests'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = false
+    }
+
+    bundle {
+        language {
+            enableSplit = true
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("java/shared.keystore")
+        }
+    }
+
+    final def keystorePropertiesFile = rootProject.file("keystore.properties")
+    def releaseSigning = signingConfigs.debug
+    if (keystorePropertiesFile.exists()) {
+        final def keystoreProperties = new Properties()
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        releaseSigning = signingConfigs.create("release") {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile rootProject.file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    } else {
+        project.logger.lifecycle('keystore.properties not found, APK may not be signed')
+    }
+
+
+    final def crashReportPropertiesFile = rootProject.file("crashreporting.properties")
+    final def crashReportProperties = new Properties()
+    if (crashReportPropertiesFile.exists()) {
+        crashReportProperties.load(new FileInputStream(crashReportPropertiesFile))
+    } else {
+        project.logger.lifecycle('crashreporting.properties not found, crash reporting will be disabled')
+    }
+
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig releaseSigning
+        }
+
+        buildTypes.each {
+            if (crashReportPropertiesFile.exists()) {
+                it.buildConfigField "boolean", "ENABLE_ACRA", crashReportProperties['acraEnabled']
+                it.buildConfigField "String", "ACRA_URL", crashReportProperties['acraUrl']
+                it.buildConfigField "String", "ACRA_USER", crashReportProperties['acraUser']
+                it.buildConfigField "String", "ACRA_PASSWORD", crashReportProperties['acraPassword']
+            } else {
+                it.buildConfigField "boolean", "ENABLE_ACRA", "false"
+                it.buildConfigField "String", "ACRA_URL", "\"\""
+                it.buildConfigField "String", "ACRA_USER", "\"\""
+                it.buildConfigField "String", "ACRA_PASSWORD", "\"\""
+            }
+
+            //it.buildConfigField "String", "FUTOPAY_URL", "\"https://pay.futo.org/api/PaymentPortal?product=voiceinput&success=futo-keyboard%3a%2f%2flicense%2factivate\""
+            it.buildConfigField "String", "FUTOPAY_URL", "\"https://pay2.futo.org/checkout/polar/futo-keyboard/futo-keyboard-voiceinput/checkout-ready?success=redirect-to-organization-page\""
+            it.buildConfigField "String", "FUTOPAY_PRICE", "\"~\$6.99\""
+
+            it.buildConfigField "String", "GOOGLEPAY_URL", "\"https://play.google.com/store/apps/details?id=org.futo.keyboardpayment\""
+            it.buildConfigField "String", "GOOGLEPAY_PRICE", "\"~\$11.99\""
+        }
+    }
+
+    flavorDimensions = ["audience", "buildType"]
+
+    productFlavors {
+        // Plume : « prive » = clavier personnel complet ; « publique » = version publiable
+        // (hit-testing probabiliste désactivé, thème par défaut Lavande, applicationId propre)
+        prive {
+            dimension "audience"
+            buildConfigField "boolean", "PLUME_PUBLIC", "false"
+            getIsDefault().set(true)
+        }
+        publique {
+            dimension "audience"
+            applicationId 'ch.plume.clavier'
+            buildConfigField "boolean", "PLUME_PUBLIC", "true"
+        }
+
+        unstable {
+            dimension "buildType"
+            applicationIdSuffix ".unstable"
+            versionNameSuffix "-unstable"
+
+            buildConfigField "boolean", "IS_PLAYSTORE_BUILD", "false"
+            buildConfigField "boolean", "UPDATE_CHECKING", "false" // Plume: updates via F-Droid, no reminders
+            buildConfigField "boolean", "UPDATE_CHECKING_NETWORK", "false"
+            buildConfigField "String", "BRANCH", "\"${getBranch()}\""
+            getIsDefault().set(true)
+
+            buildConfigField "String", "PAYMENT_PRICE", "FUTOPAY_PRICE"
+        }
+
+        stable {
+            dimension "buildType"
+            buildConfigField "boolean", "IS_PLAYSTORE_BUILD", "false"
+            buildConfigField "boolean", "UPDATE_CHECKING", "false" // Plume: updates via F-Droid, no reminders
+            buildConfigField "boolean", "UPDATE_CHECKING_NETWORK", "false"
+            buildConfigField "String", "BRANCH", "\"${getBranch()}\""
+
+            buildConfigField "String", "PAYMENT_PRICE", "FUTOPAY_PRICE"
+        }
+
+        playstore {
+            dimension "buildType"
+            applicationIdSuffix ".playstore"
+            versionNameSuffix "-playstore"
+
+            buildConfigField "boolean", "IS_PLAYSTORE_BUILD", "true"
+            buildConfigField "boolean", "UPDATE_CHECKING", "false"
+            buildConfigField "boolean", "UPDATE_CHECKING_NETWORK", "false"
+            buildConfigField "String", "BRANCH", "\"${getBranch()}\""
+
+            buildConfigField "String", "PAYMENT_PRICE", "GOOGLEPAY_PRICE"
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'java/res',
+                    translationsWithoutEngValues('translations/core'),
+                    translationsWithoutEngValues('translations/core-ign'),
+                    plumeResLarge()
+            ]
+            java.srcDirs = ['common/src', 'java/src']
+            manifest.srcFile 'java/AndroidManifest.xml'
+            assets.srcDirs = ['java/assets']
+        }
+
+        playstore {
+            java.srcDirs = ['common/src', 'java/src', 'java/playstore/java']
+            res.srcDirs = ['java/res-bundle']
+            manifest.srcFile 'java/playstore/AndroidManifest.xml'
+        }
+
+        stable {
+            java.srcDirs = ['common/src', 'java/src', 'java/stable/java']
+            manifest.srcFile 'java/stable/AndroidManifest.xml'
+        }
+
+        unstable {
+            java.srcDirs = ['common/src', 'java/src', 'java/stable/java']
+            manifest.srcFile 'java/stable/AndroidManifest.xml'
+            res.srcDirs = ['java/unstable/res', translationsWithoutEngValues('translations/devbuild')]
+        }
+
+        androidTest {
+            res.srcDirs = ['tests/res']
+            java.srcDirs = ['tests/src']
+            manifest.srcFile 'tests/AndroidManifest.xml'
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    aaptOptions {
+        noCompress 'dict'
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    ndkVersion '28.2.13676358'
+    externalNativeBuild {
+        cmake {
+            path 'native/jni/CMakeLists.txt'
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+        viewBinding true
+        mlModelBinding true
+        buildConfig true
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4'
+    implementation 'androidx.activity:activity-compose:1.9.1'
+    implementation platform('androidx.compose:compose-bom:2025.06.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-compose:2.10.0-alpha02'
+
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation 'androidx.datastore:datastore-preferences:1.1.7'
+    implementation 'androidx.autofill:autofill:1.1.0'
+    implementation 'androidx.window:window:1.3.0'
+
+    stableImplementation 'ch.acra:acra-mail:5.11.1'
+    stableImplementation 'ch.acra:acra-dialog:5.11.1'
+    unstableImplementation 'ch.acra:acra-mail:5.11.1'
+    unstableImplementation 'ch.acra:acra-dialog:5.11.1'
+
+    implementation 'sh.calvin.reorderable:reorderable:3.0.0'
+
+    //implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.1'
+
+    implementation 'com.akuleshov7:ktoml-core:0.7.1'
+
+    //def work_version = "2.9.0"
+    //implementation "androidx.work:work-runtime-ktx:$work_version"
+    //implementation "androidx.work:work-runtime:$work_version"
+
+    implementation project(":voiceinput-shared")
+
+    implementation "com.charleskorn.kaml:kaml:0.61.0"
+
+    // For MOZC
+    implementation 'com.google.protobuf:protobuf-javalite:3.8.0'
+    implementation 'com.google.guava:guava:33.4.8-android'
+    implementation(name:'mozc-release', ext:'aar')
+    // End for MOZC
+
+    // For RIME
+    implementation files('libs/rime-release.aar')
+    // End for RIME
+
+    implementation files('libs/futo-swipe-release.aar')
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation "org.mockito:mockito-core:1.9.5"
+    androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
+    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+}
+
+project.logger.lifecycle("versionCode = ${android.defaultConfig.versionCode}")
+project.logger.lifecycle("versionName = ${android.defaultConfig.versionName}")

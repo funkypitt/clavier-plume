@@ -1,0 +1,102 @@
+name: bengali akkhor
+languages: bn-BD
+attributes: {shiftable: false}
+autoShift: false
+useZWNJKey: true
+rows:
+  - letters:
+        - type: case
+          normal: [ 'ধ', '১', 'ধ্ব', 'ধ্য', 'ধ্র' ]
+          shiftedManually: [ 'ঢ' ]
+        - type: case
+          normal: [ 'থ', '২', 'থ্য', 'থ্র' ]
+          shiftedManually: [ 'ঠ' ]
+        - type: case
+          normal: [ 'ে', '৩', 'এ' ]
+          shiftedManually: [ 'ৈ', 'ঐ' ]
+        - type: case
+          normal: [ 'র', '৪' ]
+          shiftedManually: [ 'ড়', '়' ]
+        - type: case
+          normal: [ 'ত', '৫', 'ৎ', 'ত্ত', 'ত্ন', 'ত্ব', 'ত্ম' ]
+          shiftedManually: [ 'ট', '৳', 'ট্ট', 'ট্ব', 'ট্ম' ]
+        - type: case
+          normal: [ 'য়', '৬' ]
+          shiftedManually: [ 'ঞ', 'ঞ্চ', 'ঞ্ছ', 'ঞ্জ' ]
+        - type: case
+          normal: [ 'ু', '৭', 'উ' ]
+          shiftedManually: [ 'ূ', 'ঊ' ]
+        - type: case
+          normal: [ 'ি', '৮', 'ই' ]
+          shiftedManually: [ 'ী', 'ঈ' ]
+        - type: case
+          normal: [ 'ো', '৯', 'ও' ]
+          shiftedManually: [ 'ৌ', 'চ', 'ৗ' ]
+        - type: case
+          normal: [ 'প', '০', 'প্ত', 'প্ন', 'প্প', 'প্য', 'প্র', 'প্ল', 'প্স' ]
+          shiftedManually: [ 'ফ', 'ফ্ট', 'ফ্য', 'ফ্র', 'ফ্ল' ]
+        - type: case
+          normal: [ 'আ' ]
+          shiftedManually: [ 'ঋ', 'ঌ', 'ৡ', '৴', '৵', '৶', 'ৢ', 'ৣ' ]
+  - letters:
+        - type: case
+          normal: [ 'া', 'আ' ]
+          shiftedManually: [ 'অ' ]
+        - type: case
+          normal: [ 'স', 'স্ব', 'স্ত', 'স্ট', 'স্ক', 'স্প' ]
+          shiftedManually: [ 'শ', 'শ্চ', 'শ্ছ', 'শ্ত', 'শ্ন', 'শ্ব', 'শ্ম', 'শ্র', 'শ্ল' ]
+        - type: case
+          normal: [ 'দ', 'দ্দ', 'দ্ধ', 'দ্ব', 'দ্ভ', 'দ্ম', 'দ্য', 'দ্র' ]
+          shiftedManually: [ 'ড', 'ড্ড' ]
+        - type: case
+          normal: [ 'ৃ', 'ঋ' ]
+          shiftedManually: [ 'ঢ়' ]
+        - type: case
+          normal: [ 'গ', 'গ্ধ', 'গ্র', 'গ্ল', 'গ্ন' ]
+          shiftedManually: [ 'ঘ' ]
+        - type: case
+          normal: [ '্' ]
+          shiftedManually: [ 'হ', 'ঽ', 'হ্ণ', 'হ্ন', 'হ্ব', 'হ্ম', 'হ্র', 'হ্ল' ]
+        - type: case
+          normal: [ 'জ', 'জ্ঞ', 'জ্জ', 'জ্য', 'জ্ব', 'জ্র' ]
+          shiftedManually: [ 'ঝ' ]
+        - type: case
+          normal: [ 'ক', 'ক্ষ', 'ক্ক', 'ক্ট', 'ক্ত', 'ক্র', 'ক্স', 'ক্ল' ]
+          shiftedManually: [ 'খ' ]
+        - type: case
+          normal: [ 'ল', 'ল্ক', 'ল্গ', 'ল্ট', 'ল্ড', 'ল্ত', 'ল্দ', 'ল্ধ', 'ল্প', 'ল্ফ', 'ল্ব', 'ল্ম', 'ল্ল' ]
+          shiftedManually: [ 'ৎ' ]
+        - type: case
+          normal: [ 'ই' ]
+          shiftedManually: [ 'ঈ' ]
+        - type: case
+          normal: [ 'উ' ]
+          shiftedManually: [ 'ঊ' ]
+  - letters:
+        - type: case
+          normal:  ['য', '্য']
+          shiftedManually: ['।', '॥']
+        - type: case
+          normal:  ['ষ', 'ষ্ক', 'ষ্ট', 'ষ্ঠ', 'ষ্ণ', 'ষ্প', 'ষ্ফ', 'ষ্ম']
+          shiftedManually: ['ঙ', 'ঙ্ক', 'ঙ্খ', 'ঙ্গ']
+        - type: case
+          normal:  ['চ', 'চ্চ', 'চ্ছ']
+          shiftedManually: ['ছ']
+        - type: case
+          normal:  ['ভ', 'ভ্য', 'ভ্র', 'ভ্ল']
+          shiftedManually: ['ঃ']
+        - type: case
+          normal:  ['ব', '্ব', 'ব্র', 'ব্জ', 'ব্দ', 'ব্ধ', 'ব্ব', 'ব্ল', 'ৱ', 'ৰ']
+          shiftedManually: ['ঁ']
+        - type: case
+          normal:  ['ন', 'ন্ত', 'ন্থ', 'ন্ট', 'ন্দ', 'ন্ধ', 'ন্ড', 'ন্ন', 'ন্ব', 'ন্ম', 'ন্স']
+          shiftedManually: ['ণ', 'ণ্ট', 'ণ্ড', 'ণ্ণ']
+        - type: case
+          normal:  ['ম', 'ম্ন', 'ম্প', 'ম্ব', 'ম্ভ', 'ম্ম', 'ম্র', 'ম্ল']
+          shiftedManually: ['ং']
+        - type: case
+          normal:  ['এ']
+          shiftedManually: ['ঐ']
+        - type: case
+          normal:  ['ও']
+          shiftedManually: ['ঔ']

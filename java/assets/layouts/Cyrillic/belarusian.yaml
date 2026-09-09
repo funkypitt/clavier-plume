@@ -1,0 +1,48 @@
+name: Belarusian
+languages: be
+minimumFunctionalKeyWidth: 0.0
+rows:
+  - letters:
+    - й
+    - ц
+    - у
+    - к
+    - ['е', 'ё']
+    - н
+    - ['г', 'ґ']
+    - ['ш', 'щ']
+    - ['ў', 'щ']
+    - з
+    - ['х', '’']
+  - letters:
+    - ф
+    - ы
+    - в
+    - а
+    - п
+    - р
+    - о
+    - л
+    - д
+    - ж
+    - ['э', 'є']
+  - letters:
+    - $shift
+    - я
+    - ч
+    - с
+    - м
+    - ['і', 'и', 'ї']
+    - т
+    - ь
+    - б
+    - ю
+    - $delete
+  - bottom:
+    - $symbols
+    - ','
+    - $action
+    - $space
+    - ["’", "'", "«", "»", "„", "“", "‚", "‘"]
+    - '.'
+    - $enter

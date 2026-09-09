@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plume : chaînes ajoutées par le fork (les traductions FUTO sont dans translations/) -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="theme_plume_system">Plume (auto)</string>
+    <string name="theme_plume_light">Plume clair</string>
+    <string name="theme_plume_dark">Plume sombre</string>
+    <string name="theme_plume_encre">Plume Encre (noir sur blanc)</string>
+    <string name="theme_plume_encre_inv">Plume Encre inversée (blanc sur noir)</string>
+    <string name="theme_plume_lavande">Plume Lavande</string>
+    <string name="theme_plume_sauge">Plume Sauge</string>
+    <string name="theme_plume_nordique">Plume Nordique</string>
+    <string name="theme_plume_terracotta">Plume Terracotta</string>
+    <string name="keyboard_suggest_forget_learned_word">Oublier (désapprendre)</string>
+    <string name="keyboard_suggest_forget_body">« <xliff:g name="word" example="crane">%s</xliff:g> » : oublier ce mot appris (le dictionnaire reprend la main, il pourra être réappris), ou le mettre en liste noire définitivement ?</string>
+    <string name="setup_welcome_text">Bienvenue dans Clavier Plume.\n\nPour commencer, activez Clavier Plume comme méthode de saisie.</string>
+    <string name="setup_active_input_method">Sélectionnez Clavier Plume comme méthode de saisie active.</string>
+    <string name="credits_menu_header_text">Clavier Plume est une version modifiée de FUTO Keyboard. Merci aux personnes qui font FUTO Keyboard.</string>
+
+    <!-- Réglages Plume -->
+    <string name="plume_settings_title">Clavier Plume</string>
+    <string name="plume_home_languages">Langues</string>
+    <string name="plume_home_keyboard">Clavier</string>
+    <string name="plume_home_typing">Saisie et correction</string>
+    <string name="plume_home_actions">Barre d\'actions</string>
+    <string name="plume_home_appearance">Apparence</string>
+    <string name="plume_home_backup">Sauvegarde</string>
+    <string name="plume_home_about">À propos</string>
+
+    <string name="plume_section_size">Taille</string>
+    <string name="plume_keyboard_size_title">Taille et modes du clavier</string>
+    <string name="plume_keyboard_size_subtitle">Redimensionner, une main, flottant, scindé</string>
+    <string name="plume_section_keys">Touches</string>
+    <string name="plume_number_row">Rangée de chiffres</string>
+    <string name="plume_number_row_subtitle">Affiche 1234567890 au-dessus des lettres</string>
+    <string name="plume_key_preview">Aperçu de touche</string>
+    <string name="plume_key_preview_subtitle">Affiche le caractère au-dessus de la touche pendant l\'appui</string>
+    <string name="plume_key_hints">Indices d\'appui long</string>
+    <string name="plume_key_hints_subtitle">Petit caractère dans le coin des touches</string>
+    <string name="plume_long_press_duration">Durée d\'appui long</string>
+    <string name="plume_section_feedback">Retour</string>
+    <string name="plume_vibrate">Vibration à chaque touche</string>
+    <string name="plume_vibration_strength">Durée de la vibration</string>
+    <string name="plume_vibration_default">Système</string>
+    <string name="plume_key_sound">Son des touches</string>
+    <string name="plume_section_spacebar">Barre d\'espace</string>
+    <string name="plume_spacebar_swipe">Glisser sur la barre d\'espace</string>
+    <string name="plume_spacebar_swipe_off">Rien</string>
+    <string name="plume_spacebar_swipe_cursor">Déplacer le curseur</string>
+    <string name="plume_spacebar_swipe_language">Changer de langue</string>
+
+    <string name="plume_section_correction">Correction</string>
+    <string name="plume_autocorrect">Correction automatique</string>
+    <string name="plume_autocorrect_subtitle">Corrige le mot à l\'espace ou à la ponctuation</string>
+    <string name="plume_show_suggestions">Afficher les suggestions</string>
+    <string name="plume_show_suggestions_subtitle">Propositions de mots au-dessus du clavier</string>
+    <string name="plume_emoji_suggestions">Suggestions d\'emojis</string>
+    <string name="plume_section_typing">Saisie</string>
+    <string name="plume_auto_cap">Majuscule automatique</string>
+    <string name="plume_auto_cap_subtitle">Majuscule au début de chaque phrase</string>
+    <string name="plume_double_space_period">Point par double espace</string>
+    <string name="plume_double_space_period_subtitle">Deux espaces insèrent un point suivi d\'une espace</string>
+    <string name="plume_swipe_typing">Saisie par glissement</string>
+    <string name="plume_swipe_typing_subtitle">Glissez le doigt sur les lettres pour écrire un mot</string>
+    <string name="plume_section_vocabulary">Vocabulaire</string>
+    <string name="plume_learn_words">Apprendre mes mots</string>
+    <string name="plume_learn_words_subtitle">Propose les mots que vous tapez et qui manquent au dictionnaire</string>
+    <string name="plume_personal_dictionary">Dictionnaire personnel</string>
+    <string name="plume_blacklist">Mots ignorés</string>
+    <string name="plume_blacklist_subtitle">Mots jamais proposés</string>
+
+    <string name="plume_section_action_key">Touche d\'action</string>
+    <string name="plume_action_key">Touche d\'action à côté de l\'espace</string>
+    <string name="plume_action_key_subtitle">Ouvre le panneau des emojis</string>
+    <string name="plume_language_key">Touche de changement de langue</string>
+    <string name="plume_language_key_subtitle">Remplace la touche emoji par une touche de langue</string>
+    <string name="plume_section_voice">Saisie vocale</string>
+    <string name="plume_voice_key">Touche micro</string>
+    <string name="plume_voice_key_subtitle">Dicter du texte depuis la barre de suggestions</string>
+    <string name="plume_section_clipboard">Presse-papiers</string>
+    <string name="plume_clipboard_quick">Texte copié dans la barre</string>
+    <string name="plume_clipboard_quick_subtitle">Propose le dernier texte copié comme suggestion</string>
+    <string name="plume_clipboard_history">Historique du presse-papiers</string>
+    <string name="plume_clipboard_history_subtitle">Conserve les éléments copiés dans le panneau presse-papiers</string>
+
+    <string name="plume_backup_export">Exporter la configuration</string>
+    <string name="plume_backup_export_subtitle">Réglages, dictionnaire personnel et mots appris dans un fichier</string>
+    <string name="plume_backup_import">Importer une configuration</string>
+    <string name="plume_backup_import_subtitle">Restaurer depuis un fichier exporté</string>
+
+    <string name="plume_about_version">Version <xliff:g name="version" example="0.14.0">%1$s</xliff:g></string>
+    <string name="plume_about_version_subtitle">Toucher pour copier</string>
+    <string name="plume_about_copied">Version copiée</string>
+    <string name="plume_about_modified_notice">Clavier Plume est une version modifiée de FUTO Keyboard.</string>
+    <string name="plume_about_licenses">Licences et crédits</string>
+    <string name="plume_about_licenses_subtitle">Contributeurs, bibliothèques tierces</string>
+    <string name="plume_credits_header">Plume repose sur FUTO Keyboard. Merci aux personnes ci-dessous.</string>
+
+    <string name="plume_languages_layouts">Dispositions</string>
+    <string name="plume_languages_multilingual">Suggestions dans cette langue en même temps</string>
+    <string name="plume_languages_add_layout">Ajouter une disposition</string>
+    <string name="plume_languages_remove">Retirer la langue</string>
+    <string name="plume_learned_words">Mots appris</string>
+    <string name="plume_learned_words_subtitle">Mots retenus par le clavier, à oublier d\'un geste</string>
+    <string name="plume_learned_words_tip">Un mot absent du dictionnaire est retenu à sa deuxième validation. Oublier un mot le retire des suggestions ; il pourra être réappris. La liste noire, elle, l\'interdit pour de bon.</string>
+    <string name="plume_learned_words_none">Aucun mot appris pour l\'instant.</string>
+    <string name="plume_learned_words_forget">Oublier</string>
+    <plurals name="plume_learned_words_count">
+        <item quantity="one">%d validation</item>
+        <item quantity="other">%d validations</item>
+    </plurals>
+    <string name="plume_personal_dictionary_subtitle">Mots ajoutés à la main dans Android (avec leurs raccourcis)</string>
+</resources>

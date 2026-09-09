@@ -1,0 +1,114 @@
+# For languages not commonly recognized, include an entry here to force a specific name.
+# You should include at least an English name and its own name. You can include another name if
+# it makes sense (e.g. Hindi name for Hinglish)
+
+ipa:
+  en: International Phonetic Alphabet
+hi_Latn:
+  en: Hinglish
+  hi: "हिंग्लिश"
+  hi_Latn: Hinglish
+lbj:
+  bod: ལ་དྭགས་སྐད་
+  en: Ladakhi
+  lbj: ལ་དྭགས་སྐད་
+sip:
+  bod: འབྲས་ལྗོངས་སྐད་
+  en: Sikkimese Bhutia
+  sip: འབྲས་ལྗོངས་སྐད་
+tok:
+  en: Toki Pona
+  tok: toki pona
+xsr:
+  bod: ཤར་པའི་སྐད་
+  en: Sherpa
+  xsr: ཤར་པའི་སྐད་
+zgh:
+  en: Amazigh (Tifinagh)
+  zgh: ⵜⴰⵎⴰⵣⵉⵖⵜ
+zgh_Latn:
+  en: Amazigh (Latin)
+  zgh_Latn: Tamaziɣt
+zz:
+  en: No language (Alphabet)
+ks_Latn: 
+  en: Kashmiri
+  ks_Latn: Kóshur
+# Uralic languages ( https://github.com/futo-org/futo-keyboard-layouts/pull/172 )
+koi:
+  en: Komi-Permyak
+  koi: перем коми
+kpv:
+  en: Komi-Zyrian
+  kpv: коми
+mhr:
+  en: Meadow Mari
+  mhr: марий йылме
+mrj:
+  en: Hill Mari
+  mrj: мары йӹлмӹ
+udm:
+  en: Udmurt
+  udm: удмурт
+yrk:
+  en: Nenets
+  yrk: "ненэця’ вада"
+nio:
+  en: Nganasan
+  nio: "няˮ сиәде"
+sje:
+  en: Pite Sami
+  sje: Bidumsámegiella
+sju:
+  en: Ume Sami
+  sju: Ubmejesámiengiälla
+enf:
+  en: Forest Enets
+  enf: Онэй база # Not sure the names for these
+enh:
+  en: Tundra Enets
+  enh: Онэй база # Not sure the names for these
+vep:
+  en: Veps
+  vep: "vepsän kelʹ"
+lud:
+  en: Ludian
+  lud: "lyydin kiel'"
+
+# North Caucasian languages ( https://github.com/futo-org/futo-keyboard-layouts/pull/174 )
+abq:
+  en: Abaza
+  abq: абаза
+ady:
+  en: Adyghe
+  ady: адыгабзэ
+agx:
+  en: Aghul
+  agx: агъул
+av:
+  en: Avar
+  av: магӏарул мацӏ
+dar:
+  en: Dargwa
+  dar: дарган
+inh:
+  en: Ingush
+  inh: гӏалгӏай
+kbd:
+  en: Kabardian
+  kbd: адыгэбзэ
+lbe:
+  en: Lak
+  lbe: лакку
+lez:
+  en: Lezgian
+  lez: Лезги
+rut:
+  en: Rutul
+  rut: мыхаӀбишды чӀел
+tab:
+  en: Tabasaran
+  tab: табасаран чIал
+tkr_RU:
+  en: Tsakhur
+  tkr_RU: цӀаӀхна миз

@@ -1,0 +1,79 @@
+package org.futo.inputmethod.latin.settings
+
+import android.content.Context
+import android.content.res.Resources
+import androidx.datastore.preferences.core.stringPreferencesKey
+import org.futo.inputmethod.latin.R
+import org.futo.inputmethod.latin.uix.KeyHintsSetting
+import org.futo.inputmethod.latin.uix.SettingsKey
+import org.futo.inputmethod.latin.uix.getSettingBlocking
+
+enum class LongPressKey {
+    Numbers,
+    LanguageKeys,
+    Symbols,
+    QuickActions,
+    MiscLetters
+}
+
+fun LongPressKey.name(resources: Resources): String {
+    return when(this) {
+        LongPressKey.Numbers -> resources.getString(R.string.morekey_settings_kind_numbers)
+        LongPressKey.LanguageKeys -> resources.getString(R.string.morekey_settings_kind_language_keys)
+        LongPressKey.Symbols -> resources.getString(R.string.morekey_settings_kind_symbols)
+        LongPressKey.QuickActions -> resources.getString(R.string.morekey_settings_kind_actions)
+        LongPressKey.MiscLetters -> resources.getString(R.string.morekey_settings_kind_misc_common)
+    }
+}
+fun LongPressKey.description(resources: Resources): String {
+    return when(this) {
+        LongPressKey.Numbers -> resources.getString(R.string.morekey_settings_kind_numbers_example)
+        LongPressKey.LanguageKeys -> resources.getString(R.string.morekey_settings_kind_language_keys_example)
+        LongPressKey.Symbols -> resources.getString(R.string.morekey_settings_kind_symbols_example)
+        LongPressKey.QuickActions -> resources.getString(R.string.morekey_settings_kind_actions_example)
+        LongPressKey.MiscLetters -> resources.getString(R.string.morekey_settings_kind_misc_common_example)
+    }
+}
+
+val LongPressKeyLayoutSetting = SettingsKey(
+    stringPreferencesKey("longPressKeyOrdering"),
+    // Plume : accents de la langue d'abord, puis chiffres et symboles ; pas de diacritiques
+    // étrangères (ãåāª…) par défaut — réactivables dans les réglages
+    "${LongPressKey.LanguageKeys.ordinal},${LongPressKey.Numbers.ordinal},${LongPressKey.Symbols.ordinal},${LongPressKey.QuickActions.ordinal}"
+)
+
+fun String.toLongPressKeyLayoutItems(): List<LongPressKey> {
+    return this.split(",").mapNotNull {
+        val id = it.toIntOrNull() ?: return@mapNotNull null
+
+        LongPressKey.entries[id]
+    }
+}
+
+fun List<LongPressKey>.toEncodedString(): String {
+    return this.joinToString(separator = ",") {
+        "${it.ordinal}"
+    }
+}
+
+data class LongPressKeySettings(val currentOrder: List<LongPressKey>, val showHints: Boolean) {
+    companion object {
+        @JvmStatic
+        fun load(context: Context): LongPressKeySettings =
+            LongPressKeySettings(
+                context.getSettingBlocking(LongPressKeyLayoutSetting).toLongPressKeyLayoutItems(),
+                context.getSettingBlocking(KeyHintsSetting)
+            )
+
+        @JvmStatic
+        fun joinMoreKeys(keys: List<String>): String =
+            keys.map {
+                it.replace("\\", "\\\\")
+                    .replace(",", "\\,")
+            }.joinToString(",")
+
+        @JvmStatic
+        fun forTest(): LongPressKeySettings =
+            LongPressKeySettings(listOf(LongPressKey.Numbers, LongPressKey.LanguageKeys), false)
+    }
+}

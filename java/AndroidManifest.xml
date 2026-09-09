@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--<uses-permission android:name="android.permission.READ_PROFILE"/>--> <!-- ? -->
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+
+    <!-- For clipboard manager reading screenshots -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"
+        android:minSdkVersion="33" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove"/>
+
+    <application android:label="@string/english_ime_name"
+         android:icon="@mipmap/ic_launcher"
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:allowBackup="true"
+         android:largeHeap="true"
+         android:enableOnBackInvokedCallback="true"
+         android:name=".CrashLoggingApplication">
+
+        <!-- Services -->
+        <service android:name=".LatinIME"
+             android:label="@string/english_ime_name"
+             android:permission="android.permission.BIND_INPUT_METHOD"
+             android:directBootAware="true"
+             android:exported="true">
+            <intent-filter>
+                <action android:name="android.view.InputMethod"/>
+            </intent-filter>
+            <meta-data android:name="android.view.im"
+                 android:resource="@xml/method"/>
+        </service>
+
+        <!--
+        <service android:name=".spellcheck.AndroidSpellCheckerService"
+             android:label="@string/spell_checker_service_name"
+             android:permission="android.permission.BIND_TEXT_SERVICE"
+             android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.textservice.SpellCheckerService"/>
+            </intent-filter>
+            <meta-data android:name="android.view.textservice.scs"
+                 android:resource="@xml/spellchecker"/>
+        </service>
+        -->
+
+        <!-- Activities -->
+        <activity android:name=".uix.settings.SettingsActivity"
+             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+             android:icon="@mipmap/ic_launcher"
+             android:roundIcon="@mipmap/ic_launcher_round"
+             android:launchMode="singleTask"
+             android:noHistory="false"
+             android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard|uiMode|density"
+             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".uix.settings.VoiceInputSwitchActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:launchMode="singleTask"
+            android:noHistory="false"
+            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard|uiMode|density"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.futo.inputmethod.latin.action.VoiceInputSwitch" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".uix.ImportResourceActivity"
+            android:label="@string/language_settings_import_dictionary_or_model"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:launchMode="singleTask"
+            android:noHistory="false"
+            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard|uiMode|density"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="content"/>
+                <data android:host="*"/>
+
+                <data android:mimeType="application/octet-stream"/>
+                <data android:mimeType="application/dict"/>
+                <data android:mimeType="application/bin"/>
+                <data android:mimeType="application/gguf"/>
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".permissions.PermissionsActivity"
+             android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             android:exported="false"
+             android:taskAffinity="">
+        </activity>
+
+        <activity android:name=".spellcheck.SpellCheckerSettingsActivity"
+             android:theme="@style/platformSettingsTheme"
+             android:label="@string/android_spell_checker_settings"
+             android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Broadcast receivers -->
+        <receiver android:name="SystemBroadcastReceiver"
+             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_INITIALIZE"/>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
+        <!--
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="specialUse"
+            tools:node="merge">
+
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Neural network model training"/>
+
+        </service>
+        -->
+        <activity
+            android:name=".payment.PaymentCompleteActivity"
+            android:exported="true"
+            android:label="@string/payment_screen_payment_complete_title"
+            android:clearTaskOnLaunch="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="futo-voice-input" />
+                <data android:scheme="futo-keyboard" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MicPermissionActivity"
+            android:clearTaskOnLaunch="false"
+            android:launchMode="standard"
+            android:noHistory="true"
+            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard|uiMode|density"
+            android:theme="@style/Theme.TextEditPopup" />
+
+        <activity
+            android:name=".uix.TextEditPopupActivity"
+            android:exported="true"
+            android:label="@string/settings_try_typing_here"
+            android:clearTaskOnLaunch="false"
+            android:launchMode="standard"
+            android:noHistory="true"
+            android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard|uiMode|density"
+            android:process=":texteditpopup"
+            android:theme="@style/Theme.TextEditPopup" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove"
+            tools:ignore="MissingClass" />
+
+        <provider
+            android:authorities="${applicationId}.font"
+            android:name=".content.KbContentProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
+        <provider
+            android:authorities="${applicationId}.clipboard"
+            android:name=".uix.actions.clipboard.ClipboardProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+
+    <!-- To query enabled input methods for voice IME detection -->
+    <queries>
+        <intent>
+            <action android:name="android.view.InputMethod" />
+        </intent>
+    </queries>
+</manifest>

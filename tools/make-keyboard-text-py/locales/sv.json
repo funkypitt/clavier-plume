@@ -1,0 +1,58 @@
+{
+    "locale": "sv",
+    "morekeys": {
+        "a": [
+            "ä",
+            "å"
+        ],
+        "e": [
+            "é"
+        ],
+        "o": [
+            "ö"
+        ],
+        "misc_a": [
+            "æ",
+            "á",
+            "à",
+            "â",
+            "ą",
+            "ã"
+        ],
+        "misc_e": [
+            "è",
+            "ê",
+            "ë",
+            "ę"
+        ],
+        "misc_o": [
+            "ø",
+            "œ",
+            "ó",
+            "ò",
+            "ô",
+            "õ",
+            "ō"
+        ],
+        "nordic_row2_10": [
+            "ø",
+            "œ"
+        ],
+        "nordic_row2_11": [
+            "æ"
+        ]
+    },
+    "keyspec": {
+        "nordic_row1_11": "å",
+        "nordic_row2_11": "ä",
+        "nordic_row2_10": "ö"
+    },
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_angle_quotes": "!text/single_raqm_laqm",
+        "double_angle_quotes": "!text/double_raqm_laqm"
+    }
+}

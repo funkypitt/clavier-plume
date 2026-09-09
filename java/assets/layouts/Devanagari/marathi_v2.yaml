@@ -1,0 +1,79 @@
+name: "मराठी"
+description: "Modern Keyboard Layout for Marathi by Sanmay Joshi"
+languages: mr-IN
+attributes: {moreKeyMode: OnlyExplicit}
+rows:
+  - numbers:
+      - [१]
+      - [२]
+      - [३]
+      - [४]
+      - [५]
+      - [६]
+      - [७]
+      - [८]
+      - [९]
+      - [०]
+  - letters:
+      - {type: case, normal: [ ्,  ़], shifted: [अ]}
+      - {type: case, normal: [ ा], shifted: [आ]}
+      - {type: case, normal: [ ि], shifted: [इ]}
+      - {type: case, normal: [ ी], shifted: [ई]}
+      - {type: case, normal: [ ु], shifted: [उ]}
+      - {type: case, normal: [ ू], shifted: [ऊ]}
+      - {type: case, normal: [ े], shifted: [ए]}
+      - {type: case, normal: [ ै], shifted: [ऐ, ऄ]}
+      - {type: case, normal: [ ो], shifted: [ओ]}
+      - {type: case, normal: [ ौ], shifted: [औ]}
+  - letters:
+      - [क]
+      - [ख]
+      - [ग]
+      - [घ]
+      - [च]
+      - [छ]
+      - [ज]
+      - [झ]
+      - {type: case, normal: [ ृ,  ॄ], shifted: [ऋ, ॠ]}
+      - {type: case, normal: [ ं,  ः],  shifted: [अं, अः]}
+  - letters:
+      - [ट]
+      - [ठ]
+      - [ड]
+      - [ढ]
+      - [ण]
+      - [त, त्र]
+      - [थ]
+      - [द]
+      - [ध]
+      - [न, ङ, ञ]
+  - letters:
+      - [प]
+      - [फ]
+      - [ब]
+      - [भ]
+      - [म]
+      - [य]
+      - [र, ₹]
+      - [ल]
+      - [व]
+      - [श, श्र]
+  - letters:
+      - $shift
+      - [ष]
+      - [स]
+      - [ह]
+      - [ळ]
+      - [क्ष]
+      - [ज्ञ, ॐ]
+      - {type: case, normal: [ ॅ,  ँ], shifted: [ऍ, ॲ]}
+      - {type: case, normal: [ ॉ], shifted: [ऑ]}
+      - $delete
+  - bottom:
+      - $symbols
+      - type: contextual
+        fallbackKey: ","
+      - $action
+      - $space
+      - [".", "।"]
+      - $enter

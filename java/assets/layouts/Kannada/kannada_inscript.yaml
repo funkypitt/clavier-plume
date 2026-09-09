@@ -1,0 +1,41 @@
+name: Kannada (InScript)
+languages: kn-IN
+attributes: {shiftable: false}
+autoShift: false
+minimumFunctionalKeyWidth: 0.0
+useZWNJKey: true
+rows:
+  - letters: # rowkeys_kannada1.xml
+    - {type: case, normal: ['ೌ', '೧'], shiftedManually: ['ಔ']}
+    - {type: case, normal: ['ೈ', '೨'], shiftedManually: ['ಐ']}
+    - {type: case, normal: ['ಾ', '೩'], shiftedManually: ['ಆ']}
+    - {type: case, normal: ['ೀ', '೪'], shiftedManually: ['ಈ']}
+    - {type: case, normal: ['ೂ', '೫'], shiftedManually: ['ಊ']}
+    - {type: case, normal: ['ಬ', '೬'], shiftedManually: ['ಭ']}
+    - {type: case, normal: ['ಹ', '೭'], shiftedManually: ['ಙ']}
+    - {type: case, normal: ['ಗ', '೮'], shiftedManually: ['ಘ']}
+    - {type: case, normal: ['ದ', '೯'], shiftedManually: ['ಧ']}
+    - {type: case, normal: ['ಜ', '೦'], shiftedManually: ['ಝ']}
+    - {type: case, normal: ['ಡ'], shiftedManually: ['ಢ']}
+  - letters: # rowkeys_kannada2.xml
+    - {type: case, normal: ['ೋ'], shiftedManually: ['ಓ']}
+    - {type: case, normal: ['ೇ'], shiftedManually: ['ಏ']}
+    - {type: case, normal: ['್'], shiftedManually: ['ಅ']}
+    - {type: case, normal: ['ಿ'], shiftedManually: ['ಇ']}
+    - {type: case, normal: ['ು'], shiftedManually: ['ಉ']}
+    - {type: case, normal: ['ಪ'], shiftedManually: ['ಫ']}
+    - {type: case, normal: ['ರ', 'ೃ', '್ರ'], shiftedManually: ['ಱ']}
+    - {type: case, normal: ['ಕ'], shiftedManually: ['ಖ']}
+    - {type: case, normal: ['ತ'], shiftedManually: ['ಥ']}
+    - {type: case, normal: ['ಚ'], shiftedManually: ['ಛ']}
+    - {type: case, normal: ['ಟ'], shiftedManually: ['ಠ']}
+  - letters: # rowkeys_kannada3.xml
+    - {type: case, normal: ['ೊ'], shiftedManually: ['ಒ']}
+    - {type: case, normal: ['ೆ'], shiftedManually: ['ಎ']}
+    - {type: case, normal: ['ಂ'], shiftedManually: ['ಞ']}
+    - {type: case, normal: ['ಮ', 'ೃ', 'ೄ'], shiftedManually: ['ೃ', 'ೄ']}
+    - {type: case, normal: ['ನ'], shiftedManually: ['ಣ']}
+    - {type: case, normal: ['ವ', 'ಋ', 'ೠ'], shiftedManually: ['ಋ', 'ೠ']}
+    - {type: case, normal: ['ಲ'], shiftedManually: ['ಳ']}
+    - {type: case, normal: ['ಸ'], shiftedManually: ['ಶ']}
+    - {type: case, normal: ['ಯ', 'ಜ್ಞ', 'ಕ್ಷ'], shiftedManually: ['ಷ']}

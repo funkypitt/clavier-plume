@@ -1,0 +1,17 @@
+name: Slovenian QWERTY
+languages: sl
+rows:
+  - letters: q w e r t y u i o p š
+  - letters:
+    - a
+    - s
+    - ['d', 'đ']
+    - f
+    - g
+    - h
+    - j
+    - k
+    - l
+    - č
+    - ž
+  - letters: z x c v b n m

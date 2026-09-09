@@ -1,0 +1,15 @@
+name: Ukrainian
+languages: uk
+minimumFunctionalKeyWidth: 0.0
+rows:
+  - letters: й ц у к е н г ш щ з х
+  - letters: ф і в а п р о л д ж є
+  - letters: $shift я ч с м и т ь б ю $delete
+  - bottom:
+    - $symbols
+    - ['ї', ',']
+    - $action
+    - $space
+    - ["'", '.']
+    - {type: case, normal: ['.'], shiftedManually: [',']}
+    - $enter

@@ -1,0 +1,143 @@
+{
+    "locale": "ckb",
+    "morekeys": {
+        "period": [
+            "؟"
+        ],
+        "tablet_period": [
+            "؟"
+        ],
+        "question": [
+            "?",
+            "¿"
+        ],
+        "symbols_semicolon": [
+            ";"
+        ],
+        "symbols_percent": [
+            "\\%",
+            "‰"
+        ],
+        "tablet_comma": [
+            "!fixedColumnOrder!4",
+            ":",
+            "!",
+            "؟",
+            "؛",
+            "-",
+            "\\\"",
+            "\\'"
+        ],
+        "bullet": [
+            "♪"
+        ],
+        "star": [
+            "★",
+            "٭"
+        ],
+        "left_parenthesis": [
+            "!fixedColumnOrder!4",
+            "﴾|﴿",
+            "!text/keyspecs_left_parenthesis_more_keys"
+        ],
+        "right_parenthesis": [
+            "!fixedColumnOrder!4",
+            "﴿|﴾",
+            "!text/keyspecs_right_parenthesis_more_keys"
+        ],
+        "arabic_diacritics": [
+            "!fixedColumnOrder!7",
+            " \u0655◌|\u0655",
+            " \u0654◌|\u0654",
+            " \u0652◌|\u0652",
+            " \u064d◌|\u064d",
+            " \u064c◌|\u064c",
+            " \u064b◌|\u064b",
+            " \u0651◌|\u0651",
+            " \u0656◌|\u0656",
+            " \u0670◌|\u0670",
+            " \u0653◌|\u0653",
+            " \u0650◌|\u0650",
+            " \u064f◌|\u064f",
+            " \u064e◌|\u064e",
+            "\u0640|\u0640"
+        ]
+    },
+    "keyspec": {
+        "period": ".",
+        "comma": "،",
+        "symbols_1": "١",
+        "symbols_2": "٢",
+        "symbols_3": "٣",
+        "symbols_4": "٤",
+        "symbols_5": "٥",
+        "symbols_6": "٦",
+        "symbols_7": "٧",
+        "symbols_8": "٨",
+        "symbols_9": "٩",
+        "symbols_0": "٠",
+        "symbols_question": "؟",
+        "symbols_semicolon": "؛",
+        "symbols_percent": "٪",
+        "tablet_comma": "،",
+        "left_parenthesis": "(|)",
+        "right_parenthesis": ")|(",
+        "left_square_bracket": "[|]",
+        "right_square_bracket": "]|[",
+        "left_curly_bracket": "{|}",
+        "right_curly_bracket": "}|{",
+        "less_than": "<|>",
+        "greater_than": ">|<",
+        "less_than_equal": "≤|≥",
+        "greater_than_equal": "≥|≤",
+        "left_double_angle_quote": "«|»",
+        "right_double_angle_quote": "»|«",
+        "left_single_angle_quote": "‹|›",
+        "right_single_angle_quote": "›|‹"
+    },
+    "label": {},
+    "keylabel": {
+        "to_alpha": "أ‌ب‌ج",
+        "to_symbol": "٣٢١؟"
+    },
+    "keyhintlabel": {
+        "period": "ّ",
+        "tablet_period": "ّ",
+        "tablet_comma": "؟"
+    },
+    "additional_morekeys": {
+        "symbols_1": [
+            "1"
+        ],
+        "symbols_2": [
+            "2"
+        ],
+        "symbols_3": [
+            "3"
+        ],
+        "symbols_4": [
+            "4"
+        ],
+        "symbols_5": [
+            "5"
+        ],
+        "symbols_6": [
+            "6"
+        ],
+        "symbols_7": [
+            "7"
+        ],
+        "symbols_8": [
+            "8"
+        ],
+        "symbols_9": [
+            "9"
+        ],
+        "symbols_0": [
+            "0",
+            "٫",
+            "٬"
+        ]
+    },
+    "other": {}
+}

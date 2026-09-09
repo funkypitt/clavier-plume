@@ -1,0 +1,7 @@
+name: Kurdish (Latin)
+languages: ku-Latn
+minimumFunctionalKeyWidth: 0.0
+rows:
+  - letters: q w e r t y u i o p û
+  - letters: a s d f g h j k l ê î
+  - letters: z x c v b n m ç ş

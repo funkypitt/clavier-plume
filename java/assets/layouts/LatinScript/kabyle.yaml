@@ -1,0 +1,33 @@
+name: Kabyle
+languages: kab
+rows:
+  - letters: # rowkeys_kabyle1.xml
+    - ['a', 'ɛ']
+    - ['z', 'ẓ']
+    - ['e']
+    - ['r', 'ṛ']
+    - ['t', 'ṭ']
+    - ['y']
+    - ['u', 'o']
+    - ['i']
+    - ['ɛ']
+    - ['ɣ']
+  - letters: # rowkeys_kabyle2.xml
+    - ['q']
+    - ['s', 'ṣ']
+    - ['d', 'ḍ']
+    - ['f']
+    - ['g', 'ǧ']
+    - ['h', 'ḥ']
+    - ['j']
+    - ['k']
+    - ['l']
+    - ['m']
+  - letters: # rowkeys_kabyle3.xml
+    - ['w']
+    - ['x']
+    - ['c', 'č']
+    - ['v']
+    - ['b', 'p']
+    - ['n']
+    - ['-']

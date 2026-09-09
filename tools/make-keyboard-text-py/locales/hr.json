@@ -1,0 +1,40 @@
+{
+    "locale": "hr",
+    "morekeys": {
+        "c": [
+            "č",
+            "ć"
+        ],
+        "d": [
+            "đ"
+        ],
+        "s": [
+            "š"
+        ],
+        "z": [
+            "ž"
+        ],
+        "misc_c": [
+            "ç"
+        ],
+        "misc_s": [
+            "ś",
+            "ß"
+        ],
+        "misc_z": [
+            "ź",
+            "ż"
+        ]
+    },
+    "keyspec": {},
+    "label": {},
+    "keylabel": {},
+    "keyhintlabel": {},
+    "additional_morekeys": {},
+    "other": {
+        "single_quotes": "!text/single_9qm_rqm",
+        "double_quotes": "!text/double_9qm_rqm",
+        "single_angle_quotes": "!text/single_raqm_laqm",
+        "double_angle_quotes": "!text/double_raqm_laqm"
+    }
+}

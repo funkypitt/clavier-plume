@@ -1,0 +1,41 @@
+name: Nepali Romanized
+languages: ne-NP
+attributes: {shiftable: false}
+autoShift: false
+useZWNJKey: true
+rows:
+  - letters: # rowkeys_nepali_romanized1.xml
+    - {type: case, normal: ["ट", "%", "॰"], shiftedManually: ["ठ"]}  #Q
+    - {type: case, normal: ["ौ"], shiftedManually: ["औ"]}  #W
+    - {type: case, normal: ["े"], shiftedManually: ["ै"]}  #E
+    - {type: case, normal: ["र", "%", "र्‍|ऱ्"], shiftedManually: ["ृ", "ॄ"]}  #R
+    - {type: case, normal: ["त"], shiftedManually: ["थ"]}  #T
+    - {type: case, normal: ["य"], shiftedManually: ["ञ"]}  #Y
+    - {type: case, normal: ["ु"], shiftedManually: ["ू"]}  #U
+    - {type: case, normal: ["ि"], shiftedManually: ["ी"]}  #I
+    - {type: case, normal: ["ो"], shiftedManually: ["ओ"]}  #O
+    - {type: case, normal: ["प"], shiftedManually: ["फ"]}  #P
+    - {type: case, normal: ["इ"], shiftedManually: ["ई"]}  #
+
+  - letters: # rowkeys_nepali_romanized2.xml
+    - {type: case, normal: ["ा"], shiftedManually: ["आ"]}  #A
+    - {type: case, normal: ["स"], shiftedManually: ["श"]}  #S
+    - {type: case, normal: ["द"], shiftedManually: ["ध"]}  #D
+    - {type: case, normal: ["उ"], shiftedManually: ["ऊ"]}  #F
+    - {type: case, normal: ["ग"], shiftedManually: ["घ"]}  #G
+    - {type: case, normal: ["ह"], shiftedManually: ["अ"]}  #H
+    - {type: case, normal: ["ज"], shiftedManually: ["झ"]}  #J
+    - {type: case, normal: ["क"], shiftedManually: ["ख"]}  #K
+    - {type: case, normal: ["ल"], shiftedManually: ["॥"]}  #L
+    - {type: case, normal: ["ए"], shiftedManually: ["ऐ"]}  #;
+    - {type: case, normal: ["ॐ"], shiftedManually: ["ः"]}  #'
+
+  - letters: # rowkeys_nepali_romanized3.xml
+    - {type: case, normal: ["ष"], shiftedManually: ["ऋ", "ॠ"]}  #Z
+    - {type: case, normal: ["ड"], shiftedManually: ["ढ"]}  #X
+    - {type: case, normal: ["च"], shiftedManually: ["छ"]}  #C
+    - {type: case, normal: ["व"], shiftedManually: ["ँ"]}  #V
+    - {type: case, normal: ["ब"], shiftedManually: ["भ"]}  #B
+    - {type: case, normal: ["न"], shiftedManually: ["ण"]}  #N
+    - {type: case, normal: ["म"], shiftedManually: ["ं", "़"]}  #M
+    - {type: case, normal: ["्", "ऽ"], shiftedManually: ["ङ"]}  #/

@@ -1,0 +1,60 @@
+name: Lao
+languages: lo-LA
+minimumFunctionalKeyWidth: 0.0
+attributes:
+  moreKeyMode: OnlyExplicit
+  shiftable: false
+autoShift: false
+numberRowMode: AlwaysDisabled
+rows:
+  - letters: # rowkeys_lao1.xml
+    - {type: case, normal: ['ຢ', '1', '໑'], shiftedManually: ['໑']}
+    - {type: case, normal: ['ຟ', '2', '໒'], shiftedManually: ['໒']}
+    - {type: case, normal: ['ໂ', '3', '໓'], shiftedManually: ['໓']}
+    - {type: case, normal: ['ຖ', '4', '໔'], shiftedManually: ['໔']}
+    - {type: case, normal: ['ຸ'], shiftedManually: ['໌']}
+    - {type: case, normal: ['ູ'], shiftedManually: ['ຼ']}
+    - {type: case, normal: ['ຄ', '5', '໕'], shiftedManually: ['໕']}
+    - {type: case, normal: ['ຕ', '6', '໖'], shiftedManually: ['໖']}
+    - {type: case, normal: ['ຈ', '7', '໗'], shiftedManually: ['໗']}
+    - {type: case, normal: ['ຂ', '8', '໘'], shiftedManually: ['໘']}
+    - {type: case, normal: ['ຊ', '9', '໙'], shiftedManually: ['໙']}
+    - {type: case, normal: ['ໍ'], shiftedManually: ['ໍ່']}
+  - letters: # rowkeys_lao2.xml
+    - {type: case, normal: ['ົ'], shiftedManually: ['ົ້']}
+    - {type: case, normal: ['ໄ', '0', '໐'], shiftedManually: ['໐']}
+    - {type: case, normal: ['ຳ'], shiftedManually: ['ຳ້']}
+    - {type: case, normal: ['ພ'], shiftedManually: ['_']}
+    - {type: case, normal: ['ະ'], shiftedManually: ['+']}
+    - {type: case, normal: ['ິ'], shiftedManually: ['ິ້']}
+    - {type: case, normal: ['ີ'], shiftedManually: ['ີ້']}
+    - {type: case, normal: ['ຮ'], shiftedManually: ['ຣ']}
+    - {type: case, normal: ['ນ'], shiftedManually: ['ໜ']}
+    - {type: case, normal: ['ຍ'], shiftedManually: ['ຽ']}
+    - {type: case, normal: ['ບ'], shiftedManually: ['ຫຼ']}
+    - {type: case, normal: ['ລ'], shiftedManually: ['”']}
+  - letters: # rowkeys_lao3.xml
+    - {type: case, normal: ['ັ'], shiftedManually: ['ັ້']}
+    - {type: case, normal: ['ຫ'], shiftedManually: [';']}
+    - {type: case, normal: ['ກ'], shiftedManually: ['.']}
+    - {type: case, normal: ['ດ'], shiftedManually: [',']}
+    - {type: case, normal: ['ເ'], shiftedManually: [':']}
+    - {type: case, normal: ['້'], shiftedManually: ['໊']}
+    - {type: case, normal: ['່'], shiftedManually: ['໋']}
+    - {type: case, normal: ['າ'], shiftedManually: ['!']}
+    - {type: case, normal: ['ສ'], shiftedManually: ['?']}
+    - {type: case, normal: ['ວ'], shiftedManually: ['%']}
+    - {type: case, normal: ['ງ'], shiftedManually: ['=']}
+    - {type: case, normal: ['“'], shiftedManually: ['“']}
+  - letters: # rowkeys_lao4.xml
+    - {type: case, normal: ['ຜ'], shiftedManually: ['₭']}
+    - {type: case, normal: ['ປ'], shiftedManually: ['(']}
+    - {type: case, normal: ['ແ'], shiftedManually: ['ຯ']}
+    - {type: case, normal: ['ອ'], shiftedManually: ['@']}
+    - {type: case, normal: ['ຶ'], shiftedManually: ['ຶ້']}
+    - {type: case, normal: ['ື'], shiftedManually: ['ື້']}
+    - {type: case, normal: ['ທ'], shiftedManually: ['ໆ']}
+    - {type: case, normal: ['ມ'], shiftedManually: ['ໝ']}
+    - {type: case, normal: ['ໃ'], shiftedManually: ['$']}
+    - {type: case, normal: ['ຝ'], shiftedManually: [')']}
+# detected 4 rows

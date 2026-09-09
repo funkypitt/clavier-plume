@@ -1,0 +1,17 @@
+# Gradle
+.externalNativeBuild/
+.gradle/
+.idea/
+LatinIME.iml
+build/
+local.properties
+crashreporting.properties
+keystore.properties
+key.jks
+java/res/raw/mozc.data
+.cxx
+java/src/org/futo/inputmethod/keyboard/internal/KeyboardTextsTable.java
+build-plume*.log
+local.properties
+build-plume*.log
+build-perso.log

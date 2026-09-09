@@ -1,0 +1,962 @@
+languages:
+  abq:
+    - north_caucasian
+  ady:
+    - north_caucasian
+  af:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ak:
+    - akan
+  agx:
+    - north_caucasian
+  alt:
+    - altai
+  ar:
+    - arabic
+    - arabic_pc
+    - lulua
+  av:
+    - north_caucasian
+  az_AZ:
+    - azerbaijani
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ba:
+    - bashkir
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  be_BY:
+    - belarusian
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  be_Latn:
+    - belarusian_latin
+    - belarusian_latin2
+  bg:
+    - bulgarian
+    - bulgarian_bds
+    - bulgarian_dvorak
+  bn_BD:
+    - bengali_akkhor
+    - bengali_probhat
+    - bengali_inscript
+    - bengali_jatiyo
+    - bengali_unijoy
+  bn_IN:
+    - bengali_inscript
+    - bengali_probhat
+    - bengali_akkhor
+    - bengali_jatiyo
+    - bengali
+    - bengali_unijoy
+  bod:
+    - tibetan
+    - tibetan_wylie
+  ca:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ce:
+    - north_caucasian
+  ckb:
+    - kurdish
+    - central_kurdish_arabic_g
+  cs:
+    - qwertz
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  cv:
+    - chuvash
+  cy:
+    - welsh_qwerty
+  da:
+    - nordic
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - kasroz
+    - clearflow
+  dar:
+    - north_caucasian
+  de:
+    - german
+    - qwertz
+    - swiss
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  de_CH:
+    - swiss
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  dz:
+    - tibetan_wylie
+  el:
+    - greek
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  en_GB:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - workman
+    - kasroz
+    - clearflow
+  en_IN:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - workman
+    - kasroz
+    - clearflow
+  en_Shaw:
+    - shavian
+    - shavian_two_layer
+  en_US:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - workman
+    - kasroz
+    - clearflow
+  enf:
+    - enets
+  enh:
+    - enets
+  eo:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  es:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+  es_419:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  es_US:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  et_EE:
+    - estonian
+    - nordic
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - kasroz
+    - clearflow
+  eu_ES:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  fa:
+    - farsi
+  fi:
+    - nordic
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - kasroz
+    - clearflow
+  fr:
+    - qwertz
+    - swiss
+    - azerty
+    - qwerty
+    - dvorak
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - bepo_alt
+    - pcqwerty
+    - nordic
+    - azerty_inclusive
+    - bepo_inclusive
+    - kasroz
+    - clearflow
+  fr_CA:
+    - qwerty
+    - swiss
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - bepo_alt
+    - pcqwerty
+    - nordic
+    - bepo_inclusive
+    - kasroz
+    - clearflow
+  fr_CH:
+    - qwertz
+    - swiss
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - bepo_alt
+    - pcqwerty
+    - nordic
+    - bepo_inclusive
+    - kasroz
+    - clearflow
+  ga:
+    - irish
+  gag:
+    - gagauz
+  gl_ES:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ha:
+    - hausa
+  haw:
+    - hawaiian
+  hi:
+    - hindi
+    - hindi_compact
+    - hindi_devanagari
+  hi_Latn:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  hr:
+    - serbian_qwertz
+    - qwertz
+    - south_slavic_qwertz_12
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  hu:
+    - hungarian
+    - qwertz
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  hy_AM:
+    - armenian_phonetic
+  in:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  inh:
+    - north_caucasian
+  is:
+    - icelandic
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  it:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  it_CH:
+    - swiss
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  iw:
+    - hebrew
+    - hebrew-staggered
+  izh:
+    - izhorian
+    - qwerty
+  kab:
+    - kabyle
+    - azerty
+    - swiss
+    - qwerty
+    - qwertz
+    - dvorak
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ka_GE:
+    - georgian
+  kaa:
+    - karakalpak_latin
+  kbd:
+    - north_caucasian
+  kk:
+    - kazakh_cyrillic
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  kk_Latn:
+    - kazakh_latin
+  km_KH:
+    - khmer
+  kn_IN:
+    - kannada_inscript
+    - kannada
+  ko:
+    - korean_dubeolsik
+    - korean_dubeolsik_combineinitials
+    - korean_danmoeum
+    - korean_phonetic
+  koi:
+    - komi
+  kpv:
+    - komi
+  krl:
+    - karelian
+    - qwerty
+  ks_Latn: 
+    - koashur
+  ku_Latn:
+    - kurdish_latin
+  ky:
+    - kyrgyz
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  lbe:
+    - north_caucasian
+  lbj:
+    - tibetan_wylie
+  lez:
+    - north_caucasian
+  lkt:
+    - lakota
+  lo_LA:
+    - lao
+  lt:
+    - lithuanian_qwerty
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  lud:
+    - ludic_veps
+    - qwerty
+  lv:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  mhr:
+    - mari_meadow
+  mrj:
+    - mari_hill
+  mk:
+    - south_slavic
+  ml_IN:
+    - malayalam
+  mn_MN:
+    - mongolian
+  mr_IN:
+    - marathi_v2
+    - marathi
+  ms_MY:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  mt:
+    - maltese
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  my:
+    - myanmar_g
+  nb:
+    - nordic
+  ne_NP:
+    - nepali_romanized
+    - nepali_traditional_simplified
+    - nepali_traditional
+  new_NP:
+    - newa_romanized
+    - newa_traditional
+  nl:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  nl_BE:
+    - azerty
+    - qwerty
+    - qwertz
+    - dvorak
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  nio:
+    - nganasan
+  pa_IN:
+    - gurmukhi
+  pl:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  pt_BR:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  pt_PT:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ro:
+    - romanian
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ru:
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  rut:
+    - north_caucasian
+  sah:
+    - yakut
+  se:
+    - sami_northern
+  sje:
+    - sami_pite
+  sju:
+    - sami_ume
+  sma:
+    - sami_southern
+  smj:
+    - sami_lule
+  smn:
+    - sami_inari
+  si_LK:
+    - sinhala
+  sip:
+    - tibetan_wylie
+  sk:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  sl:
+    - slovenian_qwerty
+    - slovenian_qwertz
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  sq:
+    - albanian
+    - qwertz
+    - qwerty
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  sr:
+    - south_slavic
+  sr_Latn:
+    - serbian_qwertz
+    - south_slavic_qwertz_12
+  sv:
+    - qwerty
+    - nordic
+  sw:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ta_IN:
+    - tamil_inscript
+    - tamil
+  ta_LK:
+    - tamil_inscript
+    - tamil
+  ta_SG:
+    - tamil_inscript
+    - tamil
+  tab:
+    - north_caucasian
+  te_IN:
+    - telugu
+  tg:
+    - tajik
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  th:
+    - thai
+  tk:
+    - turkmen
+  tkr_RU:
+    - north_caucasian
+  tl:
+    - spanish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  tok:
+    - toki_pona
+  tr:
+    - turkish
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  tt:
+    - tatar
+  tyv:
+    - kyrgyz
+  udm:
+    - udmurt
+  ug:
+    - uyghur_phonetic
+    - uyghur
+  uk:
+    - ukrainian
+    - ukrainian_g
+    - east_slavic
+    - russian_student
+    - russian_yavert
+    - russian_yazhert
+  ur:
+    - urdu_phonetic
+  uz_UZ:
+    - uzbek
+  vep:
+    - ludic_veps
+    - qwerty
+  vi:
+    - vietnamese_telex
+    - vietnamese_vni
+    - kasroz
+    - clearflow
+  vot:
+    - votic
+    - qwerty
+  xsr:
+    - tibetan_wylie
+  yrk:
+    - nenets
+  zgh:
+    - amazigh_basic
+    - amazigh_extended
+    - amazigh_g
+  zgh-latn:
+    - amazigh_latin
+    - qwerty_amazigh
+    - qwertz_amazigh
+  zh:
+    - zh_qwerty
+    - zh_stroke
+  zh_Hant:
+    - zh_qwerty
+    - zh_stroke
+  zu:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  zz:
+    - qwerty
+    - qwertz
+    - dvorak
+    - azerty
+    - colemak
+    - colemak_dh
+    - colemak_dh_ansi
+    - bepo
+    - pcqwerty
+    - nordic
+    - kasroz
+    - clearflow
+  ja:
+    - flick
+    - japanese_qwerty
+    - flick_latin
+  ipa:
+    - ipa_qwerty
+    - ipa_qwerty_more
+    - ipa_qwerty_google
+    - ipa_qwerty_g
+    - ipa_qwerty_more_g
