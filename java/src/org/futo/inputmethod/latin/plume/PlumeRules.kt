@@ -62,6 +62,32 @@ object PlumeRules {
         "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "n", "q", "r", "s", "t", "u", "v", "w", "x", "z",
     )
 
+    private val ORDINAL = Regex("^(\\d*)(e|è|em|èm|ème|eme|er|re|ere|ère)$")
+
+    /**
+     * Ordinaux : « 3e » (norme), « 3ème » (usage), « 1er » / « 1re ». Le chiffre est soit dans le
+     * mot composé (« 3e », rangée de chiffres), soit juste avant lui dans le texte (« 3|ème »,
+     * chiffre tapé sur le clavier des symboles) : dans ce cas on ne propose que le suffixe,
+     * qui remplace le mot composé. Vide hors français.
+     */
+    @JvmStatic
+    fun ordinalSuggestions(typed: String?, digitsBefore: String?, locale: Locale?): List<String> {
+        if (typed == null || locale?.language != "fr") return emptyList()
+        val m = ORDINAL.find(typed) ?: return emptyList()
+        val inWord = m.groupValues[1]
+        val suffix = m.groupValues[2]
+        val before = digitsBefore ?: ""
+        if (inWord.isEmpty() && before.isEmpty()) return emptyList()
+        val n = if (inWord.isNotEmpty()) inWord else before
+        val prefix = inWord                                   // "" si le chiffre est déjà dans le texte
+        val first = n == "1" || (n.endsWith("1") && !n.endsWith("11"))
+        return if (suffix.startsWith("er") || suffix.startsWith("re") || suffix.startsWith("ère") || suffix.startsWith("ere")) {
+            if (first) listOf("${prefix}er", "${prefix}re") else listOf("${prefix}e", "${prefix}ème")
+        } else {
+            listOf("${prefix}e", "${prefix}ème")
+        }
+    }
+
     /** Le jeton (lettres, points internes) juste avant le point est-il une abréviation ? */
     @JvmStatic
     fun isAbbreviation(token: CharSequence?): Boolean {

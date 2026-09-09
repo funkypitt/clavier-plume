@@ -138,6 +138,9 @@ public final class Suggest {
         return suggestionsContainer;
     }
 
+    /** Plume : chiffres immédiatement avant le mot composé (voir InputLogic.getSuggestedWords). */
+    public static volatile String plumeDigitsBefore = "";
+
     private static SuggestedWordInfo getWhitelistedWordInfoOrNull(
             @Nonnull final ArrayList<SuggestedWordInfo> suggestions) {
         if (suggestions.isEmpty()) {
@@ -284,6 +287,14 @@ public final class Suggest {
                 SuggestedWordInfo.NOT_A_CONFIDENCE /* autoCommitFirstWordConfidence */);
         if (!TextUtils.isEmpty(typedWordString)) {
             suggestionsContainer.add(0, typedWordInfo);
+        }
+        // Plume : ordinaux « 3e », « 3ème », « 1er », « 1re » proposés dès « 3e » / « 1e »
+        // (les mots commençant par un chiffre ne sont jamais autocorrigés ni au dictionnaire)
+        for (final String ord : org.futo.inputmethod.latin.plume.PlumeRules.ordinalSuggestions(typedWordString, plumeDigitsBefore, locale)) {
+            if (ord.equals(typedWordString)) continue;
+            suggestionsContainer.add(Math.min(1, suggestionsContainer.size()), new SuggestedWordInfo(ord,
+                    "" /* prevWordsContext */, SuggestedWordInfo.MAX_SCORE - 1, SuggestedWordInfo.KIND_CORRECTION,
+                    Dictionary.DICTIONARY_USER_TYPED, SuggestedWordInfo.NOT_AN_INDEX, SuggestedWordInfo.NOT_A_CONFIDENCE));
         }
 
         final ArrayList<SuggestedWordInfo> suggestionsList;

@@ -36,6 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -113,7 +115,8 @@ fun ThemePreview(colors: KeyboardColorScheme, name: String, loading: Boolean, is
         currColors.outline
     }
 
-    val textColor = colors.onBackground
+    // Plume : titre lisible sur tout bandeau (Encre inversée avait blanc sur blanc)
+    val textColor = if (colors.keyboardSurfaceDim.luminance() > 0.5f) Color.Black else Color.White
 
     val spacebarColor = colors.keyboardContainer
     val actionColor = colors.primary

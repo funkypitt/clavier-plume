@@ -173,7 +173,10 @@ class SettingsActivity : ComponentActivity(), DynamicThemeProviderOwner {
                             color = MaterialTheme.colorScheme.background
                         ) {
                             Box(Modifier.safeDrawingPadding()) {
-                                SetupOrMain(
+                                val setupDone = useDataStoreValue(PlumeSetupDone)
+                                if (!setupDone) {
+                                    PlumeSetupWizard(inputMethodEnabled.value, inputMethodSelected.value) { updateSystemState() }
+                                } else SetupOrMain(
                                     inputMethodEnabled.value,
                                     inputMethodSelected.value,
                                     doublePackage.value

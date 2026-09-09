@@ -2954,6 +2954,19 @@ public final class InputLogic {
             final int sequenceNumber, final OnGetSuggestedWordsCallback callback) {
         mWordComposer.adviseCapitalizedModeBeforeFetchingSuggestions(
                 getActualCapsMode(settingsValues, keyboardShiftMode));
+        // Plume : chiffres collés juste avant le mot composé (« 3|ème ») pour les ordinaux
+        org.futo.inputmethod.latin.Suggest.plumeDigitsBefore = "";
+        if (mWordComposer.isComposingWord()) {
+            final CharSequence before = mConnection.getTextBeforeCursor(24, 0);
+            final String typed = mWordComposer.getTypedWord();
+            if (before != null && typed != null && before.length() > typed.length()
+                    && before.toString().endsWith(typed)) {
+                final String rest = before.subSequence(0, before.length() - typed.length()).toString();
+                int k = rest.length();
+                while (k > 0 && Character.isDigit(rest.charAt(k - 1))) k--;
+                org.futo.inputmethod.latin.Suggest.plumeDigitsBefore = rest.substring(k);
+            }
+        }
         mSuggest.getSuggestedWords(mWordComposer,
                 getNgramContextFromNthPreviousWordForSuggestion(
                         settingsValues.mSpacingAndPunctuations,

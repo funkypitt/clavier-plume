@@ -566,6 +566,15 @@ val PlumeAboutMenu = UserSettingsMenu(
             style = NavigationItemStyle.Misc,
             navigateTo = "credits"
         ),
+        UserSetting(name = R.string.plume_about_restart_setup) {
+            val context = LocalContext.current
+            NavigationItem(
+                title = stringResource(R.string.plume_about_restart_setup),
+                subtitle = stringResource(R.string.plume_about_restart_setup_subtitle),
+                style = NavigationItemStyle.Misc,
+                navigate = { org.futo.inputmethod.latin.uix.settings.plumeRestartSetup(context) }
+            )
+        },
     )
 )
 
