@@ -27,20 +27,17 @@ val ENGLISH_MODELS: List<ModelLoader> = listOf(
     ),
 )
 
-// Plume : le modèle multilingue « tiny » (français, allemand, italien… + anglais) est embarqué,
-// comme le modèle anglais. Plus rien à télécharger ni à importer pour dicter en français.
+// Plume : le modèle multilingue « base » (74 M de paramètres, recommandé par FUTO pour le français) est
+// embarqué (2026-09-11, remplace « tiny », jugé par FUTO « non recommandé pour la plupart des langues »).
+// Fichier identique à voice-input-multilingual-74.bin de FUTO (sha256 e44f352c…). Le 244 (« small ») reste
+// optionnel : téléchargement par le navigateur puis import (Plume n'a pas de permission Internet).
 val BUILTIN_MULTILINGUAL_MODEL: ModelLoader = ModelBuiltInAsset(
-    name = R.string.tiny_name,
-    ggmlFile = "tiny_acft_q8_0.bin.not.tflite"
+    name = R.string.base_name,
+    ggmlFile = "base_acft_q8_0.bin.not.tflite"
 )
 
 val MULTILINGUAL_MODELS: List<ModelLoader> = listOf(
     BUILTIN_MULTILINGUAL_MODEL,
-    ModelDownloadable(
-        name = R.string.base_name,
-        ggmlFile = "base_acft_q8_0.bin",
-        checksum = "e44f352c9aa2c3609dece20c733c4ad4a75c28cd9ab07d005383df55fa96efc4"
-    ),
     ModelDownloadable(
         name = R.string.small_name,
         ggmlFile = "small_acft_q8_0.bin",

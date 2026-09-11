@@ -164,9 +164,13 @@
     <string name="plume_language_models">Language models</string>
     <string name="plume_language_models_subtitle">Import a .gguf file and choose the model for each language</string>
     <string name="plume_voice_models_title">Dictation</string>
-    <string name="plume_voice_model_builtin">Built-in model (Whisper multilingual tiny)</string>
+    <string name="plume_voice_model_builtin">Built-in model: Whisper multilingual 74</string>
     <string name="plume_import_model_file">Import a file (.gguf or .bin)</string>
     <string name="plume_import_done">%1$s imported for %2$s</string>
     <string name="plume_about_support_futo">Support FUTO Keyboard</string>
     <string name="plume_about_support_futo_subtitle">Clavier Plume is built on FUTO Keyboard: pay for FUTO\'s license</string>
+    <string name="plume_voice_model_builtin_en">Built-in model: Whisper English 39</string>
+    <string name="plume_voice_revert_builtin">Back to the built-in model</string>
+    <string name="plume_voice_precise_download">Precise dictation: download the 244 model (264 MB)</string>
+    <string name="plume_voice_precise_tip">The 244 model is the most accurate but slower. Download it with the browser, then use Import a file below and choose the language.</string>
 </resources>

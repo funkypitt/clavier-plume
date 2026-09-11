@@ -99,27 +99,51 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
             }
         }
 
-        // Plume : modèles de dictée par langue (importés ou intégré)
+        // Plume : modèles de dictée par langue. Intégré : Whisper multilingue 74 (anglais : modèle anglais 39).
+        // Option : le 244, téléchargé par le navigateur puis importé ; « Revenir au modèle intégré » le retire.
         if (!LocalInspectionMode.current) {
             val voiceRows = remember(refreshKey) {
                 org.futo.inputmethod.latin.uix.getActiveLanguages(context).map { lang ->
                     val locale = org.futo.inputmethod.latin.Subtypes.getLocale(lang.tag)
                     val file = org.futo.inputmethod.latin.uix.ResourceHelper.findFileForKind(
                         context, locale, org.futo.inputmethod.latin.uix.FileKind.VoiceInput)
-                    lang.name to file?.let { "${it.name} · ${humanReadableByteCountSI(it.length())}" }
+                    Triple(lang, locale, file)
                 }
             }
             Spacer(modifier = Modifier.height(32.dp))
             ScreenTitle(stringResource(R.string.plume_voice_models_title))
-            val builtin = stringResource(R.string.plume_voice_model_builtin)
-            voiceRows.forEach { (name, detail) ->
+            val builtinMulti = stringResource(R.string.plume_voice_model_builtin)
+            val builtinEn = stringResource(R.string.plume_voice_model_builtin_en)
+            val revertLabel = stringResource(R.string.plume_voice_revert_builtin)
+            voiceRows.forEach { (lang, locale, file) ->
                 NavigationItem(
-                    title = name,
-                    subtitle = detail ?: builtin,
+                    title = lang.name,
+                    subtitle = file?.let { "${it.name} · ${humanReadableByteCountSI(it.length())}" }
+                        ?: (if (locale.language == "en") builtinEn else builtinMulti),
                     style = NavigationItemStyle.MiscNoArrow,
                     navigate = { }
                 )
+                if (file != null) {
+                    NavigationItem(
+                        title = revertLabel,
+                        subtitle = lang.name,
+                        style = NavigationItemStyle.Misc,
+                        navigate = {
+                            org.futo.inputmethod.latin.uix.ResourceHelper.deleteResourceForLanguage(
+                                context, org.futo.inputmethod.latin.uix.FileKind.VoiceInput, locale)
+                            refresh.intValue++
+                        }
+                    )
+                }
             }
+            org.futo.inputmethod.latin.uix.settings.Tip(stringResource(R.string.plume_voice_precise_tip))
+            NavigationItem(
+                title = stringResource(R.string.plume_voice_precise_download),
+                style = NavigationItemStyle.ExternalLink,
+                navigate = {
+                    context.openURI("https://keyboard.futo.org/voice-input-multilingual-244.bin", true)
+                }
+            )
         }
 
         Spacer(modifier = Modifier.height(32.dp))

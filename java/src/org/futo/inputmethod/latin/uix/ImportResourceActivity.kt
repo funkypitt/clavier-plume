@@ -594,15 +594,18 @@ object ResourceHelper {
     }
 
     fun deleteResourceForLanguage(context: Context, kind: FileKind, locale: Locale) {
-        val setting = kind.preferenceKeyFor(locale.toString())
+        // Plume : même résolution de clé que findFileForKind (fr_CH → fr…), sinon un fichier importé
+        // pour « fr » restait actif alors que la langue active est « fr_CH ».
+        val key = findKeyForLocaleAndKind(context, locale, kind) ?: locale.toString()
+        val setting = kind.preferenceKeyFor(key)
         val value = runBlocking { context.getSetting(setting, "") }
         if(value.isNotBlank()) {
             val file = File(context.getExternalFilesDir(null), value)
             file.delete()
         }
 
-        runBlocking { context.setSetting(kind.preferenceKeyFor(locale.toString()), "") }
-        runBlocking { context.setSetting(kind.namePreferenceKeyFor(locale.toString()), "") }
+        runBlocking { context.setSetting(kind.preferenceKeyFor(key), "") }
+        runBlocking { context.setSetting(kind.namePreferenceKeyFor(key), "") }
 
         GlobalIMEMessage.tryEmit(IMEMessage.ReloadResources)
     }

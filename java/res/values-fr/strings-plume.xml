@@ -174,9 +174,13 @@
     <string name="plume_language_models_subtitle">Importer un fichier .gguf et choisir le modèle de chaque langue</string>
     <string name="prediction_settings_transformer_english_notice">Modèles de langue neuronaux. Le modèle français/anglais de Clavier Plume s\'importe depuis un fichier .gguf et s\'attribue à une langue.</string>
     <string name="plume_voice_models_title">Dictée</string>
-    <string name="plume_voice_model_builtin">Modèle intégré (Whisper multilingue tiny)</string>
+    <string name="plume_voice_model_builtin">Modèle intégré : Whisper multilingue 74</string>
     <string name="plume_import_model_file">Importer un fichier (.gguf ou .bin)</string>
     <string name="plume_import_done">%1$s importé pour %2$s</string>
     <string name="plume_about_support_futo">Soutenir FUTO Keyboard</string>
     <string name="plume_about_support_futo_subtitle">Clavier Plume repose sur FUTO Keyboard : payer la licence de FUTO</string>
+    <string name="plume_voice_model_builtin_en">Modèle intégré : Whisper anglais 39</string>
+    <string name="plume_voice_revert_builtin">Revenir au modèle intégré</string>
+    <string name="plume_voice_precise_download">Dictée précise : télécharger le modèle 244 (264 Mo)</string>
+    <string name="plume_voice_precise_tip">Le modèle 244 est le plus précis mais plus lent. Téléchargez-le avec le navigateur, puis « Importer un fichier » ci-dessous et choisissez la langue.</string>
 </resources>

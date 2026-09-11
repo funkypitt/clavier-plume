@@ -226,6 +226,13 @@ public class LanguageModelFacilitator(
         }
     }
 
+    private fun plumeIsKnownWord(word: String): Boolean {
+        if(word.none { it.isLetter() }) return true
+        if(dictionaryFacilitator.isValidSuggestionWord(word)) return true
+        val lower = word.lowercase(dictionaryFacilitator.primaryLocale ?: java.util.Locale.ROOT)
+        return lower != word && dictionaryFacilitator.isValidSuggestionWord(lower)
+    }
+
     suspend fun getLanguageModelSuggestions(values: PredictionInputValues): ArrayList<SuggestedWordInfo>? {
         if(values.composedData.mTypedWord.length > BinaryDictionary.DICTIONARY_MAX_WORD_LENGTH-1)
             return null
@@ -237,7 +244,7 @@ public class LanguageModelFacilitator(
     fun processAndMergeSuggestions(
         values: PredictionInputValues,
         suggestedWordsDict: SuggestedWords,
-        lmSuggestions: ArrayList<SuggestedWordInfo>
+        lmSuggestionsRaw: ArrayList<SuggestedWordInfo>
     ): SuggestedWords? {
         var transformerWeight = context.getSetting(BinaryDictTransformerWeightSetting)
         if(dictionaryFacilitator.locales.size > 1) transformerWeight = 1.0f
@@ -245,6 +252,13 @@ public class LanguageModelFacilitator(
         val suggestionResults = SuggestionResults(
             14, values.ngramContext.isBeginningOfSentenceContext, false)
 
+
+        // Plume : le modèle compose ses mots à partir de morceaux (SentencePiece) et peut inventer des
+        // non-mots (« ambiguguité ») ou sortir un jeton de format (<XBU>). Ne garder que les mots connus
+        // d'un dictionnaire (principal, contacts, personnel, historique appris), minuscule comprise.
+        val lmSuggestions = ArrayList(lmSuggestionsRaw.filter { plumeIsKnownWord(it.mWord) })
+        if(BuildConfig.DEBUG && lmSuggestions.size != lmSuggestionsRaw.size) Log.d(TAG,
+            "plume: dropped LM non-words ${lmSuggestionsRaw.filter { !lmSuggestions.contains(it) }.map { it.mWord }}")
 
         val reweightedSuggestions = lmSuggestions.mapIndexedNotNull { i, it ->
             if(transformerWeight == Float.NEGATIVE_INFINITY) { null } else {
