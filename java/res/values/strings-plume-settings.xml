@@ -110,7 +110,7 @@
     <string name="plume_setup_welcome_title">Clavier Plume</string>
     <string name="plume_setup_welcome_body">A French and English keyboard, built first for writing French well. One minute to set up.</string>
     <string name="plume_setup_welcome_differs_title">What sets it apart</string>
-    <string name="plume_setup_welcome_differs">Commercial keyboards are designed for English, and most open-source keyboards reuse their engine as is. Plume knows French elision (l\', d\', qu\'), recovers accents, respects French typography, switches languages with one key, and only learns a word after seeing it twice.</string>
+    <string name="plume_setup_welcome_differs">Commercial keyboards are designed for English, and most open-source keyboards reuse their engine as is. Plume knows French elision (l\', d\', qu\'), recovers accents, respects French typography, switches languages with one key, and only learns a word after seeing it three times.</string>
     <string name="plume_setup_welcome_privacy">Offline, no account, no ads: nothing leaves your phone.</string>
     <string name="plume_setup_language_title">Your main language</string>
     <string name="plume_setup_language_body">It sets the typography and the toggle key. The other language stays available.</string>

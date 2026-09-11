@@ -147,11 +147,11 @@ class GeneralIME(val helper: IMEHelper) : IMEInterface, WordLearner, SuggestionS
             blockOffensive
         )
 
-        // Plume : le transformer n'apprend un mot inconnu du dictionnaire qu'à sa DEUXIÈME
-        // validation (l'historique AOSP a déjà ce comportement via sa courbe d'oubli).
+        // Plume : le transformer n'apprend un mot inconnu du dictionnaire qu'à sa TROISIÈME
+        // validation, comme l'historique de frappe (InputLogic.performAdditionToUserHistoryDictionary).
         val plumeWord = org.futo.inputmethod.latin.plume.PlumeVocab.canonical(word, wasCapitalized, settings.current.mLocale)
         val plumeTooNew = !dictionaryFacilitator.isValidSuggestionWord(word)
-                && org.futo.inputmethod.latin.plume.PlumeVocab.count(plumeWord, settings.current.mLocale) < 2
+                && org.futo.inputmethod.latin.plume.PlumeVocab.count(plumeWord, settings.current.mLocale) < org.futo.inputmethod.latin.plume.PlumeVocab.LEARN_AT
         if (settings.current.mTransformerPredictionEnabled && !plumeTooNew) {
             languageModelFacilitator.addToHistory(
                 word, wasCapitalized,

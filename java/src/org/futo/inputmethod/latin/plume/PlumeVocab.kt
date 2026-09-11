@@ -28,6 +28,9 @@ object PlumeVocab {
     private const val FLUSH_SECONDS = 60L
     private const val MAX_WORDS = 50_000
 
+    /** Validations nécessaires pour qu'un mot absent du dictionnaire soit appris (3 depuis le 2026-09-11). */
+    const val LEARN_AT = 3
+
     data class Entry(val word: String, val count: Int, val lang: String)
 
     private val counts = ConcurrentHashMap<String, Int>()   // clé = "lang\tmot"

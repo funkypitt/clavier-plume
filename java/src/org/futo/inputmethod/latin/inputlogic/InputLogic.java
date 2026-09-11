@@ -2093,11 +2093,19 @@ public final class InputLogic {
         }
 
         if (TextUtils.isEmpty(suggestion)) return;
-        // Plume : l'historique AOSP (courbe d'oubli) ne rend un mot inconnu visible qu'à sa
-        // deuxième occurrence ; le modèle transformer, lui, est bridé à deux validations dans
-        // GeneralIME.addToHistory (PlumeVocab.count).
+        // Plume : un mot est appris à sa TROISIÈME validation (décision du 2026-09-11 ; deux avant). L'historique
+        // natif (courbe d'oubli : OCCURRENCES_TO_RAISE_THE_LEVEL = 1, MIN_VISIBLE_LEVEL = 2) rend un mot inconnu
+        // visible à sa deuxième occurrence : on ne lui transmet donc pas la première validation d'un mot absent
+        // des dictionnaires livrés (PlumeVocab.record précède cet appel). Les mots connus apprennent leurs
+        // fréquences dès le premier usage.
         final boolean wasAutoCapitalized =
                 mWordComposer.wasAutoCapitalized() && !mWordComposer.isMostlyCaps();
+        final String plumeWord = org.futo.inputmethod.latin.plume.PlumeVocab.canonical(
+                suggestion, wasAutoCapitalized, getDictionaryFacilitatorLocale());
+        final boolean plumeUnknown = !mDictionaryFacilitator.isInShippedDictionary(plumeWord);
+        final int plumeCount = org.futo.inputmethod.latin.plume.PlumeVocab.count(
+                plumeWord, getDictionaryFacilitatorLocale());
+        if (plumeUnknown && plumeCount < org.futo.inputmethod.latin.plume.PlumeVocab.LEARN_AT - 1) return;
         final long timeStampInSeconds = TimeUnit.MILLISECONDS.toSeconds(
                 System.currentTimeMillis());
 
@@ -2106,12 +2114,9 @@ public final class InputLogic {
         mIme.addToHistory(suggestion, wasAutoCapitalized,
                 ngramContext, timeStampInSeconds, settingsValues.mBlockPotentiallyOffensive,
                 importance);
-        // Plume : mot absent du dictionnaire, visible dans l'historique dès la 2e validation
+        // Plume : mot absent du dictionnaire, visible dans l'historique à la 3e validation
         // → listé dans l'écran « Mots appris »
-        final String plumeWord = org.futo.inputmethod.latin.plume.PlumeVocab.canonical(
-                suggestion, wasAutoCapitalized, getDictionaryFacilitatorLocale());
-        if (!mDictionaryFacilitator.isInShippedDictionary(plumeWord)
-                && org.futo.inputmethod.latin.plume.PlumeVocab.count(plumeWord, getDictionaryFacilitatorLocale()) >= 2) {
+        if (plumeUnknown && plumeCount >= org.futo.inputmethod.latin.plume.PlumeVocab.LEARN_AT) {
             org.futo.inputmethod.latin.plume.PlumeVocab.markLearned(plumeWord, getDictionaryFacilitatorLocale());
         }
     }

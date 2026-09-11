@@ -119,7 +119,7 @@
     <string name="plume_setup_welcome_title">Clavier Plume</string>
     <string name="plume_setup_welcome_body">Un clavier français et anglais, pensé d\'abord pour bien écrire le français. Une minute suffit pour le régler.</string>
     <string name="plume_setup_welcome_differs_title">Ce qui le distingue</string>
-    <string name="plume_setup_welcome_differs">Les claviers du commerce sont conçus pour l\'anglais, et la plupart des claviers libres reprennent leur moteur tel quel. Plume, lui, connaît l\'élision (l\', d\', qu\'), retrouve les accents, respecte la typographie française, bascule entre deux langues d\'une touche, et n\'apprend un mot qu\'après l\'avoir vu deux fois.</string>
+    <string name="plume_setup_welcome_differs">Les claviers du commerce sont conçus pour l\'anglais, et la plupart des claviers libres reprennent leur moteur tel quel. Plume, lui, connaît l\'élision (l\', d\', qu\'), retrouve les accents, respecte la typographie française, bascule entre deux langues d\'une touche, et n\'apprend un mot qu\'après l\'avoir vu trois fois.</string>
     <string name="plume_setup_welcome_privacy">Hors ligne, sans compte, sans publicité : rien ne quitte votre téléphone.</string>
     <string name="plume_setup_language_title">Votre langue principale</string>
     <string name="plume_setup_language_body">Elle règle la typographie et la touche de bascule. L\'autre langue reste toujours disponible.</string>
