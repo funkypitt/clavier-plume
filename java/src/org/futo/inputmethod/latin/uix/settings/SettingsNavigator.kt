@@ -18,6 +18,7 @@ import org.futo.inputmethod.latin.uix.InfoDialog
 import org.futo.inputmethod.latin.uix.LocalNavController
 import org.futo.inputmethod.latin.uix.SettingsExporter.ExportingMenu
 import org.futo.inputmethod.latin.uix.settings.pages.BlacklistScreen
+import org.futo.inputmethod.latin.uix.settings.pages.addModelManagerNavigation
 import org.futo.inputmethod.latin.uix.settings.pages.CreditsScreen
 import org.futo.inputmethod.latin.uix.settings.pages.LanguagesScreen
 import org.futo.inputmethod.latin.uix.settings.pages.PlumeHomeScreen
@@ -124,6 +125,14 @@ fun SettingsNavigator(
             // Sauvegarde, À propos
             composable("exportingcfg") { ExportingMenu(navController) }
             composable("credits") { CreditsScreen(navController) }
+
+            // Plume : modèles de langue (liste, import .gguf, choix par langue) — route « models »
+            addModelManagerNavigation(navController)
+
+            // Paiement à FUTO : la licence FUTO Source First interdit de le retirer ou de le masquer
+            composable("payment") {
+                org.futo.inputmethod.latin.uix.settings.pages.PaymentScreen(navController) { navController.navigateUp() }
+            }
         }
     }
 }

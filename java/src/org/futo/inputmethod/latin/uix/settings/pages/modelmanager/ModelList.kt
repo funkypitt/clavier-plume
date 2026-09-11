@@ -48,15 +48,26 @@ fun ModelNavigationItem(navController: NavHostController, name: String, isPrimar
 @Composable
 fun ModelListScreen(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
+    // Plume : la liste est recalculée à chaque retour sur l'écran (après un import, elle restait figée)
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    val refresh = remember { androidx.compose.runtime.mutableIntStateOf(0) }
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) refresh.intValue++
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    val refreshKey = refresh.intValue
     val models = if(LocalInspectionMode.current) { PreviewModels } else {
-        remember {
+        remember(refreshKey) {
             ModelPaths.getModels(context).mapNotNull {
                 it.loadDetails()
             }
         }
     }
 
-    val modelChoices = remember { runBlocking { ModelPaths.getModelOptions(context) } }
+    val modelChoices = remember(refreshKey) { runBlocking { ModelPaths.getModelOptions(context) } }
 
     val modelsByLanguage: MutableMap<String, MutableList<ModelInfo>> = mutableMapOf()
     models.forEach { model ->
@@ -88,10 +99,33 @@ fun ModelListScreen(navController: NavHostController = rememberNavController()) 
             }
         }
 
+        // Plume : modèles de dictée par langue (importés ou intégré)
+        if (!LocalInspectionMode.current) {
+            val voiceRows = remember(refreshKey) {
+                org.futo.inputmethod.latin.uix.getActiveLanguages(context).map { lang ->
+                    val locale = org.futo.inputmethod.latin.Subtypes.getLocale(lang.tag)
+                    val file = org.futo.inputmethod.latin.uix.ResourceHelper.findFileForKind(
+                        context, locale, org.futo.inputmethod.latin.uix.FileKind.VoiceInput)
+                    lang.name to file?.let { "${it.name} · ${humanReadableByteCountSI(it.length())}" }
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+            ScreenTitle(stringResource(R.string.plume_voice_models_title))
+            val builtin = stringResource(R.string.plume_voice_model_builtin)
+            voiceRows.forEach { (name, detail) ->
+                NavigationItem(
+                    title = name,
+                    subtitle = detail ?: builtin,
+                    style = NavigationItemStyle.MiscNoArrow,
+                    navigate = { }
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle("Actions")
         NavigationItem(
-            title = "Import from file",
+            title = stringResource(R.string.plume_import_model_file),
             style = NavigationItemStyle.Misc,
             navigate = {
                 openModelImporter(context)

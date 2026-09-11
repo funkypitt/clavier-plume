@@ -93,7 +93,8 @@ final def translationsWithoutEngValues = { final String path ->
                     var stringName = matcher.group(1)
                     var content = matcher.group(2)
                     // Plume : ces clés sont redéfinies dans java/res/values-fr/strings-plume.xml
-                    if (stringName in ['setup_welcome_text', 'setup_active_input_method', 'credits_menu_header_text']) {
+                    if (stringName in ['setup_welcome_text', 'setup_active_input_method', 'credits_menu_header_text',
+                                       'prediction_settings_transformer_english_notice']) {
                         return ''
                     }
 

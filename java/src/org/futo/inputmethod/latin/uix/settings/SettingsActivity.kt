@@ -176,6 +176,9 @@ class SettingsActivity : ComponentActivity(), DynamicThemeProviderOwner {
                                 val setupDone = useDataStoreValue(PlumeSetupDone)
                                 if (!setupDone) {
                                     PlumeSetupWizard(inputMethodEnabled.value, inputMethodSelected.value) { updateSystemState() }
+                                } else if (!inputMethodEnabled.value || !inputMethodSelected.value) {
+                                    // clavier désactivé ou remplacé après coup : l'écran d'activation de la prise en main
+                                    PlumeSetupWizard(inputMethodEnabled.value, inputMethodSelected.value, initialStep = 3) { updateSystemState() }
                                 } else SetupOrMain(
                                     inputMethodEnabled.value,
                                     inputMethodSelected.value,

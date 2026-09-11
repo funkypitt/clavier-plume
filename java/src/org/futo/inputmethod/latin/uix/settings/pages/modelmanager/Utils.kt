@@ -137,7 +137,9 @@ fun ModelPicker(
 fun openModelImporter(context: Context) {
     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
         addCategory(Intent.CATEGORY_OPENABLE)
-        type = "application/octet-stream"
+        // Plume : tous types ; un .gguf téléchargé depuis Telegram n'est pas toujours typé octet-stream.
+        // ImportResourceActivity reconnaît le fichier à son contenu (determineFileKind).
+        type = "*/*"
     }
 
     findActivity(context)!!.startActivityForResult(intent, IMPORT_RESOURCE_FILE_REQUEST)

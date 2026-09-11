@@ -91,6 +91,7 @@
     <string name="plume_about_version_subtitle">Toucher pour copier</string>
     <string name="plume_about_copied">Version copiée</string>
     <string name="plume_about_modified_notice">Clavier Plume est une version modifiée de FUTO Keyboard.</string>
+    <string name="credits">Pierre Gallaz · développé avec Claude Code</string>
     <string name="plume_about_licenses">Licences et crédits</string>
     <string name="plume_about_licenses_subtitle">Contributeurs, bibliothèques tierces</string>
     <string name="plume_credits_header">Plume repose sur FUTO Keyboard. Merci aux personnes ci-dessous.</string>
@@ -160,9 +161,22 @@
     <string name="plume_setup_contacts_done">Contacts reconnus ✓</string>
     <string name="plume_setup_try_title">Essayez</string>
     <string name="plume_setup_try_body_fr">Tapez sans accent ni apostrophe, puis un espace après chaque mot : « jaime lordinateur voila ». Regardez la barre de suggestions et le résultat.</string>
-    <string name="plume_setup_try_body_en">Type a few words and watch the suggestion bar; tap the EN / FR key to switch language.</string>
+    <string name="plume_setup_try_body_en">Tapez quelques mots en anglais et regardez la barre de suggestions ; la touche FR bascule vers le français.</string>
     <string name="plume_setup_try_placeholder">Essayez de taper ici…</string>
     <string name="plume_setup_try_after">Tout se règle ensuite dans les réglages, en sept écrans. Cette prise en main reste disponible dans À propos.</string>
     <string name="plume_about_restart_setup">Revoir la prise en main</string>
     <string name="plume_about_restart_setup_subtitle">Langues, dispositions, thème, les bases</string>
+    <string name="plume_probabilistic_keys">Touches probabilistes (mesure)</string>
+    <string name="plume_probabilistic_keys_subtitle">Élargit les touches selon la lettre attendue. Coupez une semaine pour comparer dans le journal des typos.</string>
+    <string name="plume_setup_chosen">Choisi ✓</string>
+    <string name="plume_section_models">Modèle neuronal</string>
+    <string name="plume_language_models">Modèles de langue</string>
+    <string name="plume_language_models_subtitle">Importer un fichier .gguf et choisir le modèle de chaque langue</string>
+    <string name="prediction_settings_transformer_english_notice">Modèles de langue neuronaux. Le modèle français/anglais de Clavier Plume s\'importe depuis un fichier .gguf et s\'attribue à une langue.</string>
+    <string name="plume_voice_models_title">Dictée</string>
+    <string name="plume_voice_model_builtin">Modèle intégré (Whisper multilingue tiny)</string>
+    <string name="plume_import_model_file">Importer un fichier (.gguf ou .bin)</string>
+    <string name="plume_import_done">%1$s importé pour %2$s</string>
+    <string name="plume_about_support_futo">Soutenir FUTO Keyboard</string>
+    <string name="plume_about_support_futo_subtitle">Clavier Plume repose sur FUTO Keyboard : payer la licence de FUTO</string>
 </resources>

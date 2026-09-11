@@ -1,0 +1,15 @@
+Clavier Plume est un clavier Android français / anglais dérivé de FUTO Keyboard, pensé d'abord pour bien écrire le français. Hors ligne, sans publicité ni télémétrie : rien ne quitte l'appareil.
+
+- Élision juste : l', d', qu', j', n', s'… générées par la grammaire et validées contre le dictionnaire Dicollecte, pas devinées (« l'hôtel » oui, « l'haricot » non).
+- Accents retrouvés : « voila » → « voilà », « coeur » → « cœur », « aplus » → « à plus ».
+- Impératifs et inversions : « rappelle-moi », « dépêche-toi », « allons-y », « a-t-il », « avez-vous ».
+- Typographie : apostrophe courbe, espaces insécables avant ; : ! ?, guillemets « ».
+- Pas de majuscule après les abréviations (« etc. », « cf. », « p. ex. », « M. »).
+- Deux langues, une touche : la touche EN/FR bascule instantanément, la barre d'espace aussi par glissement ; les deux dictionnaires restent actifs.
+- Apprentissage prudent : un mot inconnu n'est retenu qu'à sa deuxième validation, un mot effacé au retour arrière est désappris, l'écran « Mots appris » permet d'oublier d'un geste.
+- Dictionnaire construit sur Lexique 3.83, noms propres et bigrammes du corpus de Leipzig, vocabulaire de LanguageTool et vocabulaire passif du Littré.
+- Réglages minimalistes, dictée hors ligne (Whisper), glissement, presse-papiers, neuf thèmes dont deux « encre » à fort contraste.
+
+Clavier Plume est une version modifiée de FUTO Keyboard (FUTO Source First License 1.1, usage non commercial). Les modifications et les licences des données sont listées dans NOTICE-PLUME.md.
+
+Pierre Gallaz · développé avec Claude Code

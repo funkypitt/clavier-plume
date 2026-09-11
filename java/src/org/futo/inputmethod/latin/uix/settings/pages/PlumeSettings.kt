@@ -152,6 +152,11 @@ fun PlumeHomeScreen(navController: NavHostController = rememberNavController()) 
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Version publique : rappel de paiement de FUTO, comme dans FUTO Keyboard (licence)
+            if (BuildConfig.PLUME_PUBLIC) {
+                org.futo.inputmethod.latin.uix.settings.pages.ConditionalUnpaidNoticeWithNav(navController)
+            }
+
             PlumeHomeMenu.render(showTitle = false)
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -228,6 +233,13 @@ val PlumeKeyboardMenu = UserSettingsMenu(
                 steps = 23
             )
         },
+
+        userSettingToggleSharedPrefs(
+            title = R.string.plume_probabilistic_keys,
+            subtitle = R.string.plume_probabilistic_keys_subtitle,
+            key = org.futo.inputmethod.latin.plume.PlumeExperiment.PREF_PROBABILISTIC_KEYS,
+            default = { true }
+        ).copy(visibilityCheck = { !BuildConfig.PLUME_PUBLIC }),
 
         section(R.string.plume_section_feedback),
         userSettingToggleSharedPrefs(
@@ -333,6 +345,14 @@ val PlumeTypingMenu = UserSettingsMenu(
             subtitle = R.string.plume_swipe_typing_subtitle,
             key = Settings.PREF_GESTURE_INPUT,
             default = { true },
+        ),
+
+        section(R.string.plume_section_models),
+        userSettingNavigationItem(
+            title = R.string.plume_language_models,
+            subtitle = R.string.plume_language_models_subtitle,
+            style = NavigationItemStyle.Misc,
+            navigateTo = "models"
         ),
 
         section(R.string.plume_section_vocabulary),
@@ -558,6 +578,7 @@ val PlumeAboutMenu = UserSettingsMenu(
         userSettingDecorationOnly {
             Spacer(Modifier.height(8.dp))
             PlumeParagraph(stringResource(R.string.plume_about_modified_notice))
+            PlumeParagraph(stringResource(R.string.credits))
             Spacer(Modifier.height(8.dp))
         },
         userSettingNavigationItem(
@@ -565,6 +586,13 @@ val PlumeAboutMenu = UserSettingsMenu(
             subtitle = R.string.plume_about_licenses_subtitle,
             style = NavigationItemStyle.Misc,
             navigateTo = "credits"
+        ),
+        // Paiement à FUTO : exigé par la licence FUTO Source First pour toute copie distribuée
+        userSettingNavigationItem(
+            title = R.string.plume_about_support_futo,
+            subtitle = R.string.plume_about_support_futo_subtitle,
+            style = NavigationItemStyle.Misc,
+            navigateTo = "payment"
         ),
         UserSetting(name = R.string.plume_about_restart_setup) {
             val context = LocalContext.current

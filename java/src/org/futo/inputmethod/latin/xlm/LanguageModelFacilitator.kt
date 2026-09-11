@@ -44,9 +44,13 @@ val BinaryDictTransformerWeightSetting = SettingsKey(
     3.4f
 )
 
+// Plume : vrai par défaut. Le blocage de FUTO vient de son modèle anglais, dont l'autocorrection par
+// caractère n'a appris que les positions QWERTY ; le modèle Plume FR/EN est entraîné sur des fautes
+// simulées en QWERTZ suisse, AZERTY et QWERTY (tools/lm/lib_typo_fr_en.py). Sans cela, le modèle est
+// silencieusement coupé en QWERTZ et en AZERTY.
 val AllowTransformerOnNonQWERTYLayouts = SettingsKey(
     booleanPreferencesKey("allow_transformer_lm_on_non_qwerty"),
-    false
+    true
 )
 
 internal fun SuggestedWordInfo.add(other: SuggestedWordInfo): SuggestedWordInfo {
@@ -311,6 +315,30 @@ public class LanguageModelFacilitator(
             autocorrectWord = clone
             suggestionResults.add(clone)
             filtered.add(maxWordDict)
+        }
+
+        // Plume (2026-09-11) : FUTO n'autocorrige que si le modèle et le dictionnaire désignent le même mot.
+        // Avec un modèle moins sûr que le dictionnaire, « nestil », « atil », « awra » n'étaient plus corrigés.
+        // Quand le mot tapé n'existe pas et que le dictionnaire corrigerait, on ne renonce jamais à corriger :
+        // vers le mot du modèle s'il est une correction plausible (candidat du dictionnaire), sinon vers le dictionnaire.
+        if(autocorrectWord == null && suggestedWordsDict.mWillAutoCorrect && maxWordDict != null && maxWord != null) {
+            val lmCandidateInDict = suggestedWordsDictList.firstOrNull {
+                it != suggestedWordsDict.typedWordInfo && it.mWord.equals(maxWord.mWord, ignoreCase = true)
+            }
+            if(lmCandidateInDict != null) {
+                if(BuildConfig.DEBUG) Log.d(TAG, "plume: LM choice is a dictionary candidate, autocorrect to ${maxWord.mWord}")
+                val clone = maxWord.add(lmCandidateInDict)
+                autocorrectWord = clone
+                suggestionResults.add(clone)
+                filtered.add(lmCandidateInDict)
+                filtered.add(maxWord)
+            } else {
+                if(BuildConfig.DEBUG) Log.d(TAG, "plume: keep dictionary autocorrection ${maxWordDict.mWord}")
+                val clone = maxWordDict.scoreAtLeast(maxWord)
+                autocorrectWord = clone
+                suggestionResults.add(clone)
+                filtered.add(maxWordDict)
+            }
         }
 
         if(transformerWeight <= 0.0f) {

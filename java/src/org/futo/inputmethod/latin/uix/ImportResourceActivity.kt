@@ -767,6 +767,13 @@ class ImportResourceActivity : ComponentActivity() {
                 }
             }
             GlobalIMEMessage.tryEmit(IMEMessage.ReloadResources)
+            // Plume : confirmation visible (l'écran d'origine donnait l'impression que rien n'avait été importé)
+            android.widget.Toast.makeText(
+                applicationContext,
+                getString(R.string.plume_import_done, fileKind.kind.kindTitle(resources),
+                    org.futo.inputmethod.latin.Subtypes.getNameForLocale(locale)),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
             finish()
         }
     }

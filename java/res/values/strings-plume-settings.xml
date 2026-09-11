@@ -82,6 +82,7 @@
     <string name="plume_about_version_subtitle">Tap to copy</string>
     <string name="plume_about_copied">Version copied</string>
     <string name="plume_about_modified_notice">Clavier Plume is a modified version of FUTO Keyboard.</string>
+    <string name="credits">Pierre Gallaz · developed with Claude Code</string>
     <string name="plume_about_licenses">Licences and credits</string>
     <string name="plume_about_licenses_subtitle">Contributors, third-party libraries</string>
     <string name="plume_credits_header">Clavier Plume is based on FUTO Keyboard. Thanks to the people below.</string>
@@ -150,10 +151,22 @@
     <string name="plume_setup_contacts_allow">Allow contacts</string>
     <string name="plume_setup_contacts_done">Contacts recognised ✓</string>
     <string name="plume_setup_try_title">Try it</string>
-    <string name="plume_setup_try_body_fr">Type without accents or apostrophes, then a space after each word: “jaime lordinateur voila”. Watch the suggestion bar and the result.</string>
+    <string name="plume_setup_try_body_fr">Type the French words without accents or apostrophes, a space after each: “jaime lordinateur voila”. Watch the suggestion bar and the result.</string>
     <string name="plume_setup_try_body_en">Type a few words and watch the suggestion bar; tap the EN / FR key to switch language.</string>
     <string name="plume_setup_try_placeholder">Try typing here…</string>
     <string name="plume_setup_try_after">Everything else lives in the settings, seven screens. This walkthrough stays available under About.</string>
     <string name="plume_about_restart_setup">Redo the walkthrough</string>
     <string name="plume_about_restart_setup_subtitle">Languages, layouts, theme, the basics</string>
+    <string name="plume_probabilistic_keys">Probabilistic keys (measurement)</string>
+    <string name="plume_probabilistic_keys_subtitle">Widens keys by the expected next letter. Turn off for a week to compare in the typo log.</string>
+    <string name="plume_setup_chosen">Chosen ✓</string>
+    <string name="plume_section_models">Neural model</string>
+    <string name="plume_language_models">Language models</string>
+    <string name="plume_language_models_subtitle">Import a .gguf file and choose the model for each language</string>
+    <string name="plume_voice_models_title">Dictation</string>
+    <string name="plume_voice_model_builtin">Built-in model (Whisper multilingual tiny)</string>
+    <string name="plume_import_model_file">Import a file (.gguf or .bin)</string>
+    <string name="plume_import_done">%1$s imported for %2$s</string>
+    <string name="plume_about_support_futo">Support FUTO Keyboard</string>
+    <string name="plume_about_support_futo_subtitle">Clavier Plume is built on FUTO Keyboard: pay for FUTO\'s license</string>
 </resources>

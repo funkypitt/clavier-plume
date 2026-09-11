@@ -59,3 +59,14 @@ projet (Lexique + règles d'élision + contrôle Dicollecte) ; il est fourni com
 *Clavier Plume is a French/English Android keyboard derived from FUTO Keyboard, focused on
 correct French elision, accents and typography, with a bilingual toggle key and cautious word
 learning. Non-commercial licence (FUTO Source First 1.1). Nothing leaves the device.*
+
+## Crédits / Credits
+
+Basé sur / Based on [FUTO Keyboard](https://github.com/futo-org/android-keyboard) by FUTO Holdings Inc.,
+FUTO Source First License 1.1. Voir / see `NOTICE.md` et `NOTICE-PLUME.md`.
+
+© 2026 Pierre Gallaz. Développé avec [Claude Code](https://claude.com/claude-code) (Anthropic).
+Licence FUTO Source First 1.1, voir `LICENSE.md`.
+
+© 2026 Pierre Gallaz. Developed with [Claude Code](https://claude.com/claude-code) (Anthropic).
+FUTO Source First 1.1 licence, see `LICENSE.md`.

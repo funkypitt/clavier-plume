@@ -81,6 +81,24 @@ public final class TypoLogger {
      * @param locale current IME locale (e.g. "pt-BR")
      * @param source either "auto_correct" or "manual_pick"
      */
+    private static final java.util.concurrent.atomic.AtomicInteger sWords = new java.util.concurrent.atomic.AtomicInteger();
+    private static final int STATS_EVERY = 200;
+
+    /** Compte les mots validés ; toutes les STATS_EVERY validations, une ligne « stats »
+     *  (avec l'état du hit-testing) sert de dénominateur à la mesure. */
+    public static void countWord() {
+        final TypoLogger inst = sInstance;
+        if (inst == null) return;
+        if (sWords.incrementAndGet() % STATS_EVERY != 0) return;
+        try {
+            final String line = "{\"ts\":\"" + inst.mTsFormat.format(new Date()) + "\",\"src\":\"stats\",\"words\":"
+                    + STATS_EVERY + ",\"boost\":" + org.futo.inputmethod.latin.plume.PlumeExperiment.getLastBoostState() + "}\n";
+            inst.mQueue.offer(line);
+        } catch (final Exception e) {
+            Log.w(TAG, "stats", e);
+        }
+    }
+
     public static void log(final String typed, final String committed,
                            final String locale, final String source) {
         final TypoLogger inst = sInstance;
@@ -113,7 +131,8 @@ public final class TypoLogger {
         sb.append("\"typed\":\"").append(escape(typed)).append("\",");
         sb.append("\"committed\":\"").append(escape(committed)).append("\",");
         sb.append("\"locale\":\"").append(escape(locale)).append("\",");
-        sb.append("\"src\":\"").append(escape(source)).append("\"");
+        sb.append("\"src\":\"").append(escape(source)).append("\",");
+        sb.append("\"boost\":").append(org.futo.inputmethod.latin.plume.PlumeExperiment.getLastBoostState());
         sb.append('}').append('\n');
         return sb.toString();
     }

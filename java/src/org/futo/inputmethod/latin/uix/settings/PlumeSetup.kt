@@ -78,7 +78,7 @@ val PlumeSetupDone = SettingsKey(booleanPreferencesKey("plume_setup_done"), fals
 private const val STEPS = 7
 
 @Composable
-fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, onFinished: () -> Unit) {
+fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, initialStep: Int = 0, onFinished: () -> Unit) {
     val context = LocalContext.current
     // langue : celle de l'app (réglage par application d'Android compris) ; région : celle du système
     val appLocale = remember { context.resources.configuration.locales[0] ?: Locale.getDefault() }
@@ -86,7 +86,7 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
         val system = android.content.res.Resources.getSystem().configuration.locales[0] ?: Locale.getDefault()
         if (system.country.isNotEmpty()) system else appLocale
     }
-    var step by rememberSaveable { mutableStateOf(0) }
+    var step by rememberSaveable { mutableStateOf(initialStep) }
     var primary by rememberSaveable { mutableStateOf(if (appLocale.language == "en") "en" else "fr") }
     // Défauts d'après la région du téléphone : Suisse → fr_CH + QWERTZ ; Québec → fr_CA + QWERTY
     // (clavier canadien) ; France, Belgique, Luxembourg, Monaco → AZERTY ; Royaume-Uni / Irlande → en_GB.
@@ -97,6 +97,7 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
         mutableStateOf(when (sys.country) { "CH", "LI" -> "qwertz"; "CA", "US" -> "qwerty"; else -> "azerty" })
     }
     var enLayout by rememberSaveable { mutableStateOf(if (sys.country in setOf("CH", "LI", "DE", "AT")) "qwertz" else "qwerty") }
+    var layoutTouched by rememberSaveable { mutableStateOf(false) }
     var enVariant by rememberSaveable { mutableStateOf(if (sys.country in setOf("GB", "IE", "AU", "NZ")) "en_GB" else "en_US") }
 
     fun applyLanguages() {
@@ -119,8 +120,10 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
             LinearProgressIndicator(progress = (step + 1f) / STEPS, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp))
             when (step) {
                 0 -> StepWelcome()
-                1 -> StepLanguage(primary, frVariant, enVariant, { primary = it }, { frVariant = it }, { enVariant = it })
-                2 -> StepLayouts(primary, frVariant, enVariant, frLayout, enLayout, { frLayout = it }, { enLayout = it })
+                1 -> StepLanguage(primary, frVariant, enVariant, { primary = it },
+                    { v -> frVariant = v; if (!layoutTouched) frLayout = when (v) { "fr_CH" -> "qwertz"; "fr_CA" -> "qwerty"; else -> "azerty" } },
+                    { enVariant = it })
+                2 -> StepLayouts(primary, frVariant, enVariant, frLayout, enLayout, { frLayout = it; layoutTouched = true }, { enLayout = it })
                 3 -> StepActivate(inputMethodEnabled, inputMethodSelected)
                 4 -> StepTheme()
                 5 -> StepBasics()
@@ -132,7 +135,8 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
             if (step > 0) TextButton(onClick = { step -= 1 }) { Text(stringResource(R.string.plume_setup_back)) } else Spacer(Modifier.width(1.dp))
             Row {
                 if (step in 1..5 && !(step == 3 && !(inputMethodEnabled && inputMethodSelected))) {
-                    TextButton(onClick = { if (step == 2) applyLanguages(); step += 1 }) { Text(stringResource(R.string.plume_setup_skip)) }
+                    // Passer ne change rien aux réglages existants (Suivant, lui, applique les dispositions)
+                    TextButton(onClick = { step += 1 }) { Text(stringResource(R.string.plume_setup_skip)) }
                 }
                 val canNext = step != 3 || (inputMethodEnabled && inputMethodSelected)
                 Button(enabled = canNext, onClick = {
@@ -163,14 +167,26 @@ private fun Body(text: String) {
 @Composable
 private fun ChoiceCard(title: String, subtitle: String?, selected: Boolean, onClick: () -> Unit,
                        content: (@Composable () -> Unit)? = null) {
-    val border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                 else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    // choisi : bordure épaisse couleur d'accent, fond teinté et étiquette « Choisi ✓ » ; les autres
+    // options restent en filet fin (l'utilisateur ne distinguait pas assez le choix courant)
+    val border = if (selected) BorderStroke(3.dp, MaterialTheme.colorScheme.primary)
+                 else BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
     Surface(
         shape = RoundedCornerShape(12.dp), border = border,
-        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.08f) else MaterialTheme.colorScheme.surface,
+        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.16f) else MaterialTheme.colorScheme.surface,
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clip(RoundedCornerShape(12.dp)).clickable { onClick() }
     ) {
-        Column(Modifier.padding(14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.padding(start = 14.dp, end = 14.dp, bottom = 14.dp, top = if (selected) 6.dp else 14.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            if (selected) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Surface(shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary) {
+                        Text(stringResource(R.string.plume_setup_chosen), Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                            style = Typography.SmallMl)
+                    }
+                }
+            }
             content?.invoke()
             Text(title, style = Typography.Body.MediumMl, textAlign = TextAlign.Center)
             if (subtitle != null) Text(subtitle, style = Typography.SmallMl, color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -247,10 +263,13 @@ private fun StepLayouts(primary: String, frVariant: String, enVariant: String, f
     for (lang in listOf(first, if (first == "fr") "en" else "fr")) {
         if (lang == "fr") {
             Text(stringResource(R.string.plume_setup_layout_for_fr), style = Typography.Body.MediumMl, modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
-            for (id in listOf("qwertz", "swiss", "azerty", "qwerty")) LayoutChoice(id, frLocale, frLayout == id) { setFr(id) }
+            // le choix courant en tête, pour qu'il soit visible sans défiler
+            val frIds = listOf("qwertz", "swiss", "azerty", "qwerty")
+            for (id in listOf(frLayout) + frIds.filter { it != frLayout }) LayoutChoice(id, frLocale, frLayout == id) { setFr(id) }
         } else {
             Text(stringResource(R.string.plume_setup_layout_for_en), style = Typography.Body.MediumMl, modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
-            for (id in listOf("qwerty", "qwertz")) LayoutChoice(id, enLocale, enLayout == id) { setEn(id) }
+            val enIds = listOf("qwerty", "qwertz")
+            for (id in listOf(enLayout) + enIds.filter { it != enLayout }) LayoutChoice(id, enLocale, enLayout == id) { setEn(id) }
         }
     }
 }

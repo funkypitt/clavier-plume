@@ -260,6 +260,15 @@ public final class Suggest {
             hasAutoCorrection = false;
         } else {
             final SuggestedWordInfo firstSuggestion = suggestionResults.first();
+            if (org.futo.inputmethod.latin.BuildConfig.DEBUG) {
+                android.util.Log.d("PlumeAC", "typed=" + typedWordString + " considered=" + consideredWord
+                        + " first=" + firstSuggestion.mWord + " score=" + firstSuggestion.mScore
+                        + " norm=" + BinaryDictionaryUtils.calcNormalizedScore(consideredWord, firstSuggestion.mWord, firstSuggestion.mScore)
+                        + " thr=" + org.futo.inputmethod.latin.plume.PlumeRules.autocorrectThreshold(consideredWord, autoCorrectionThreshold)
+                        + " native=" + suggestionResults.mFirstSuggestionExceedsConfidenceThreshold
+                        + " typedIdx=" + firstOcurrenceOfTypedWordInSuggestions
+                        + " kind=" + firstSuggestion.mKindAndFlags);
+            }
             if (suggestionResults.mFirstSuggestionExceedsConfidenceThreshold
                     && firstOcurrenceOfTypedWordInSuggestions != 0) {
                 hasAutoCorrection = true;

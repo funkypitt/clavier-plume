@@ -49,17 +49,12 @@ object PlumeRules {
      * SentenceExceptList + usages courants FR/EN). Comparaison en minuscules.
      */
     private val ABBREVIATIONS: Set<String> = hashSetOf(
-        // français
-        "etc", "cf", "ex", "p", "pp", "fig", "chap", "vol", "env", "apr", "av", "ibid", "id", "op", "cit",
-        "éd", "ed", "trad", "réf", "ref", "art", "al", "n°", "no", "nos", "tél", "tel", "bd", "boul", "av",
-        "fbg", "sq", "dép", "dept", "min", "max", "num", "resp", "dipl", "vs", "svp", "stp", "approx",
-        "m", "mm", "mme", "mmes", "mlle", "mlles", "dr", "drs", "pr", "me", "mgr", "st", "ste", "sts",
-        "janv", "févr", "fév", "sept", "oct", "nov", "déc", "dec", "lun", "mar", "mer", "jeu", "ven", "sam", "dim",
-        // anglais
-        "mr", "mrs", "ms", "jr", "sr", "inc", "ltd", "co", "corp", "dept", "est", "vs", "approx", "misc",
-        "e.g", "i.e", "jan", "feb", "aug", "sep", "dec", "mon", "tue", "wed", "thu", "fri", "sat", "sun",
-        // lettres seules d'énumération (a. b. c.) sauf mots d'une lettre
-        "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "n", "q", "r", "s", "t", "u", "v", "w", "x", "z",
+        // Réduite le 2026-09-11 aux jetons que la mesure justifie (257 Mo de français web, occurrences
+        // suivies d'une minuscule / d'une majuscule) : ex. 203/75, max. 137/22, op. 151/6, cf. 441/435,
+        // p. 240/184. Retirés car suivis d'une majuscule dans la grande majorité des cas : etc. (2 960/390),
+        // M. (noms), jeu., mer., est., art., vol., av., titres, mois, jours, lettres seules.
+        "ex", "max", "op", "cf", "p", "pp",
+        "e.g", "i.e",
     )
 
     private val ORDINAL = Regex("^(\\d*)(e|è|em|èm|ème|eme|er|re|ere|ère)$")

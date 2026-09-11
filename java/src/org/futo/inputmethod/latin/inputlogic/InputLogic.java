@@ -885,10 +885,13 @@ public final class InputLogic {
         }
         mSuggestedWords = suggestedWords;
         // Plume : hit-testing probabiliste — poids des lettres suivantes depuis les suggestions
-        if (!org.futo.inputmethod.latin.BuildConfig.PLUME_PUBLIC) {
+        if (!org.futo.inputmethod.latin.BuildConfig.PLUME_PUBLIC
+                && org.futo.inputmethod.latin.plume.PlumeExperiment.probabilisticKeys(mImeHelper.getContext())) {
             mImeHelper.updateBoostWeights(org.futo.inputmethod.latin.plume.PlumeKeyBoost.computeWeights(
                     mWordComposer.isComposingWord() ? mWordComposer.getTypedWord() : "",
                     suggestedWords));
+        } else {
+            mImeHelper.updateBoostWeights(null);
         }
         final boolean newAutoCorrectionIndicator = suggestedWords.mWillAutoCorrect;
 
@@ -2309,6 +2312,19 @@ public final class InputLogic {
             unlearnWord(committedWordString, inputTransaction.mSettingsValues,
                     Constants.EVENT_REVERT);
         }
+        // Plume : annuler une correction vaut validation du mot tapé. Sans cela, un nom corrigé puis
+        // restauré à chaque fois n'était jamais appris (compteur PlumeVocab + historique) — 2026-09-11
+        if (!TextUtils.isEmpty(originallyTypedWordString) && mLastComposedWord.mNgramContext != null) {
+            final java.util.Locale plumeLocale = getDictionaryFacilitatorLocale();
+            final boolean plumeAutoCap =
+                    mLastComposedWord.mCapitalizedMode == WordComposer.CAPS_MODE_AUTO_SHIFTED;
+            org.futo.inputmethod.latin.plume.PlumeVocab.record(
+                    org.futo.inputmethod.latin.plume.PlumeVocab.canonical(
+                            originallyTypedWordString, plumeAutoCap, plumeLocale),
+                    plumeLocale, plumeIsSensitiveField(inputTransaction.mSettingsValues));
+            performAdditionToUserHistoryDictionary(inputTransaction.mSettingsValues,
+                    originallyTypedWordString, mLastComposedWord.mNgramContext, 1);
+        }
         final String stringToCommit = originallyTypedWord +
                 (usePhantomSpace ? "" : separatorString);
         final SpannableString textToCommit = new SpannableString(stringToCommit);
@@ -2889,6 +2905,7 @@ public final class InputLogic {
         }
         // Add the word to the user history dictionary
         mDictionaryFacilitator.onWordCommitted(chosenWord);
+        TypoLogger.countWord();   // dénominateur de la mesure (mots validés)
         // Plume : vocabulaire personnel exportable (plume_vocab.tsv)
         org.futo.inputmethod.latin.plume.PlumeVocab.record(
                 org.futo.inputmethod.latin.plume.PlumeVocab.canonical(chosenWord,
