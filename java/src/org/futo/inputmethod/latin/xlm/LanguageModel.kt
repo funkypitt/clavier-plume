@@ -250,7 +250,9 @@ class LanguageModel(
         context: String,
         composeInfo: ComposeInfo,
         autocorrectThreshold: Float,
-        bannedWords: Array<String>
+        bannedWords: Array<String>,
+        scoreCandidates: Array<String> = arrayOf(),
+        outScores: FloatArray = FloatArray(0)
     ): ArrayList<SuggestedWordInfo> {
         val maxResults = 128
         val outProbabilities = FloatArray(maxResults)
@@ -266,7 +268,9 @@ class LanguageModel(
             autocorrectThreshold,
             bannedWords,
             outStrings,
-            outProbabilities
+            outProbabilities,
+            scoreCandidates,
+            outScores
         )
         val suggestions = ArrayList<SuggestedWordInfo>()
         var kind = SuggestedWordInfo.KIND_PREDICTION
@@ -318,7 +322,12 @@ class LanguageModel(
                     null,
                     0,
                     0
-                )
+                ).apply {
+                    // Plume : le natif retire 1 aux candidats non exacts dès que le mot tapé figure dans
+                    // les résultats (règle « exact match ») ; une probabilité négative en porte la trace.
+                    val p = outProbabilities[i]
+                    mPlumeLmProbability = if (p < 0f) p + 1f else p
+                }
             )
         }
 
@@ -347,7 +356,21 @@ class LanguageModel(
 
         context = addPersonalDictionary(context, personalDictionary)
 
-        return@withContext getSuggestionsInternal(proximityInfoHandle, context, composeInfo, autocorrectThreshold, bannedWords)
+        // Plume : mot tapé membre d'une paire de confusion (a/à, on/ont…) → le natif score aussi chaque membre,
+        // dans le même passage que les suggestions (invite décodée une seule fois)
+        val members = if(composeInfo.inputMode == 1 || composeInfo.partialWord.isEmpty()) null
+            else org.futo.inputmethod.latin.plume.PlumeConfusions.fixedMembers(composeInfo.partialWord, locale)
+        val scores = FloatArray(members?.size ?: 0) { Float.NEGATIVE_INFINITY }
+        val plumeT0 = System.nanoTime()
+        val suggestions = getSuggestionsInternal(proximityInfoHandle, context, composeInfo, autocorrectThreshold, bannedWords,
+            members?.toTypedArray() ?: arrayOf(), scores)
+        // (activable aussi en version release : adb shell setprop log.tag.PlumeLM DEBUG)
+        if(composeInfo.partialWord.isNotEmpty() && android.util.Log.isLoggable("PlumeLM", android.util.Log.DEBUG)) android.util.Log.d("PlumeLM",
+            "plume: timing total=${(System.nanoTime() - plumeT0) / 1_000_000}ms mot=${composeInfo.partialWord} membres=${members?.size ?: 0}")
+        if(members != null) {
+            return@withContext org.futo.inputmethod.latin.plume.PlumeLmSuggestions(suggestions, members.zip(scores.toList()).toMap())
+        }
+        return@withContext suggestions
     }
 
     suspend fun closeInternalLocked() = withContext(LanguageModelScope) {
@@ -371,7 +394,9 @@ class LanguageModel(
         thresholdSetting: Float,
         bannedWords: Array<String>,  // outputs
         outStrings: Array<String?>,
-        outProbs: FloatArray
+        outProbs: FloatArray,
+        scoreCandidates: Array<String>,  // Plume : membres de la paire de confusion à scorer
+        outScores: FloatArray
     )
 
     private external fun rescoreSuggestionsNative(

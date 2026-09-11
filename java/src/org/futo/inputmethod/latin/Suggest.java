@@ -204,7 +204,9 @@ public final class Suggest {
         // or if the word had more than one char and was not suggested.
         final boolean allowsToBeAutoCorrected =
                 (SHOULD_AUTO_CORRECT_USING_NON_WHITE_LISTED_SUGGESTION || whitelistedWord != null)
-                || (consideredWord.length() > 1 && (sourceDictionaryOfRemovedWord == null));
+                || (consideredWord.length() > 1 && (sourceDictionaryOfRemovedWord == null)
+                    // Plume : mot tapé valide selon le dictionnaire (liste fusionnée par le modèle)
+                    && !org.futo.inputmethod.latin.plume.PlumeConfusions.isValidTypedWord(typedWordString));
 
         final boolean hasAutoCorrection;
         // If correction is not enabled, we never auto-correct. This is for example for when
@@ -256,7 +258,9 @@ public final class Suggest {
                 // Don't do it if it looks like a URL (or email address)
                 || StringUtils.lastPartLooksLikeURL(typedWordString)
                 // Plume: mots-outils courts valides (mes, mon, un, à, sur…) jamais autocorrigés
-                || org.futo.inputmethod.latin.plume.PlumeRules.isProtectedWord(typedWordString, locale)) {
+                // (sauf correction de confusion décidée par le modèle : a → à, ou → où…)
+                || (org.futo.inputmethod.latin.plume.PlumeRules.isProtectedWord(typedWordString, locale)
+                    && !org.futo.inputmethod.latin.plume.PlumeConfusions.isProtectedCorrectionAllowed(typedWordString))) {
             hasAutoCorrection = false;
         } else {
             final SuggestedWordInfo firstSuggestion = suggestionResults.first();

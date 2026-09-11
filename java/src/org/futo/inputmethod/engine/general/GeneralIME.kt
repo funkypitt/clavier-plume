@@ -494,7 +494,7 @@ class GeneralIME(val helper: IMEHelper) : IMEInterface, WordLearner, SuggestionS
 
             // Wait for LM to report result
             lmResult = lmResultHolder.get(null, 350L)
-            if(lmResult == null) languageModelFacilitator.reportTimeout()
+            if(lmResult == null) languageModelFacilitator.reportTimeout() else languageModelFacilitator.reportSuccess()
         } else {
             inputLogic.getSuggestedWords(
                 settings.current,

@@ -723,6 +723,11 @@ public final class RichInputConnection implements PrivateCommandPerformer {
         if (DEBUG_PREVIOUS_TEXT) checkConsistencyForDebug();
     }
 
+    private static CharSequence plumeStraightApostrophes(final CharSequence text) {
+        if (text == null || TextUtils.indexOf(text, '\u2019') < 0) return text;
+        return text.toString().replace('\u2019', '\'');
+    }
+
     @SuppressWarnings("unused")
     @Nonnull
     public NgramContext getNgramContextFromNthPreviousWord(
@@ -731,7 +736,10 @@ public final class RichInputConnection implements PrivateCommandPerformer {
         if (!isConnected()) {
             return NgramContext.EMPTY_PREV_WORDS_INFO;
         }
-        final CharSequence prev = getTextBeforeCursor(NUM_CHARS_TO_GET_BEFORE_CURSOR, 0);
+        // Plume : le champ contient des apostrophes typographiques (PlumeRules.typographic), mais le
+        // dictionnaire et le modèle de langue ne connaissent que l'apostrophe droite (le modèle voit
+        // sinon trois octets inconnus au milieu de « qu’elle »). Contexte normalisé ’ → '.
+        final CharSequence prev = plumeStraightApostrophes(getTextBeforeCursor(NUM_CHARS_TO_GET_BEFORE_CURSOR, 0));
         if (DEBUG_PREVIOUS_TEXT && null != prev) {
             final int checkLength = NUM_CHARS_TO_GET_BEFORE_CURSOR - 1;
             final String reference = prev.length() <= checkLength ? prev.toString()
@@ -754,7 +762,7 @@ public final class RichInputConnection implements PrivateCommandPerformer {
         NgramContext ngramContext = NgramContextUtils.getNgramContextFromNthPreviousWord(
                 prev, spacingAndPunctuations, n);
 
-        CharSequence seq = getTextBeforeCursor(4096, 0);
+        CharSequence seq = plumeStraightApostrophes(getTextBeforeCursor(4096, 0));
         if(seq != null) {
             ngramContext.fullContext = seq.toString();
 

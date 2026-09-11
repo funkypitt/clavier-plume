@@ -75,6 +75,19 @@ internal fun SuggestedWordInfo.add(other: SuggestedWordInfo): SuggestedWordInfo 
 }
 
 
+/** Plume : la même suggestion, sans le drapeau qui permet à Suggest d'autocorriger vers elle. */
+internal fun SuggestedWordInfo.plumeWithoutAutocorrect(): SuggestedWordInfo {
+    val kind = mKindAndFlags and 0xFF
+    val appropriate = SuggestedWordInfo.KIND_FLAG_APPROPRIATE_FOR_AUTO_CORRECTION
+    if(kind != SuggestedWordInfo.KIND_WHITELIST && (mKindAndFlags and appropriate) == 0) return this
+    val flags = mKindAndFlags and 0xFF.inv() and appropriate.inv()
+    return SuggestedWordInfo(
+        mWord, mPrevWordsContext, mScore,
+        (if(kind == SuggestedWordInfo.KIND_WHITELIST) SuggestedWordInfo.KIND_CORRECTION else kind) or flags,
+        mSourceDict, mIndexOfTouchPointOfSecondWord, mAutoCommitFirstWordConfidence
+    ).also { it.mOriginatesFromTransformerLM = mOriginatesFromTransformerLM }
+}
+
 internal fun SuggestedWordInfo.scoreAtLeast(other: SuggestedWordInfo): SuggestedWordInfo {
     val result = SuggestedWordInfo(
         mWord,
@@ -164,12 +177,22 @@ public class LanguageModelFacilitator(
     fun reportTimeout() {
         if(shouldPassThroughToLegacy()) return
 
-        if(BuildConfig.DEBUG) Log.d(TAG, "Failed to complete prediction within the time!")
+        if(BuildConfig.DEBUG || Log.isLoggable("PlumeLM", Log.DEBUG)) Log.d("PlumeLM", "Failed to complete prediction within the time!")
+        // Plume : pendant le chargement du modèle (premières frappes après un redémarrage du clavier), les
+        // lenteurs sont attendues ; les compter coupait le modèle pour tout le champ.
+        if(languageModel == null || languageModel?.mNativeState == 0L) return
         numConsecutiveTimeouts += 1
         if(numConsecutiveTimeouts > 5) {
             transformerDisabled = true
-            if(BuildConfig.DEBUG) Log.w(TAG, "Temporarily disabling transformer due to continuous timeouts")
+            if(BuildConfig.DEBUG || Log.isLoggable("PlumeLM", Log.DEBUG)) Log.w("PlumeLM", "Temporarily disabling transformer due to continuous timeouts")
         }
+    }
+
+    /** Plume : le modèle a répondu à temps → le compteur redevient vraiment « consécutif ». Sans cela, six
+     *  lenteurs cumulées dans un même champ (chargement du modèle au premier mot, par exemple) le coupaient
+     *  jusqu'au champ suivant. */
+    fun reportSuccess() {
+        numConsecutiveTimeouts = 0
     }
 
     private var skipLanguage: String? = null
@@ -310,7 +333,27 @@ public class LanguageModelFacilitator(
 
         var autocorrectWord: SuggestedWordInfo? = null
         val filtered = mutableListOf<SuggestedWordInfo>()
-        if(bothAlgorithmsCameToSameConclusion && maxWord != null && maxWordDict != null){
+
+        // Plume (version stable, 2026-09-11) : le dictionnaire, base la plus testée, décide seul de la correction
+        // d'un mot invalide ; un mot valide n'est changé que pour la casse, ou par la règle calibrée des paires de
+        // confusion plus bas. Mesure : avec le modèle enfin actif (version release), « tu invites » devenait
+        // « invités », « ms » → « Ma » au lieu de « me », « awra » → « Ara » au lieu de « sera ».
+        val plumeTypedWord = values.composedData.mTypedWord
+        val plumeTypedValid = plumeTypedWord.isNotEmpty() && suggestedWordsDict.mTypedWordValid
+        val plumeDictAutocorrection = if(suggestedWordsDict.mWillAutoCorrect && suggestedWordsDict.size() > SuggestedWords.INDEX_OF_AUTO_CORRECTION)
+            suggestedWordsDict.getInfo(SuggestedWords.INDEX_OF_AUTO_CORRECTION).takeIf { suggestionBlacklist.isSuggestedWordOk(it) } else null
+        val plumeDictDecides = plumeTypedWord.isNotEmpty() && !plumeTypedValid && plumeDictAutocorrection != null
+        val plumeChangesValidWord = { w: SuggestedWordInfo -> plumeTypedValid && !w.mWord.equals(plumeTypedWord, ignoreCase = true) }
+        if(plumeDictDecides) {
+            val dictAc = plumeDictAutocorrection!!
+            if(Log.isLoggable("PlumeLM", Log.DEBUG)) Log.d("PlumeLM", "plume: dictionary decides $plumeTypedWord -> ${dictAc.mWord}")
+            val clone = if(maxWord != null) dictAc.scoreAtLeast(maxWord) else dictAc
+            autocorrectWord = clone
+            suggestionResults.add(clone)
+            filtered.add(dictAc)
+        }
+
+        if(!plumeDictDecides && bothAlgorithmsCameToSameConclusion && maxWord != null && maxWordDict != null && !plumeChangesValidWord(maxWord)){
             if(BuildConfig.DEBUG) Log.d(TAG, "both algorithms came to same conclusion, autocorrect to ${maxWord.mWord}")
             // We can be pretty confident about autocorrecting this
             val clone = maxWord.add(maxWordDict)
@@ -323,7 +366,7 @@ public class LanguageModelFacilitator(
         // we should prefer the lowercase version to reduce automatically capitalizing which can be
         // annoying
         val bothAlgorithmsCameToSameConclusionButLowerCased = maxWordDict?.mWord == maxWord?.mWord?.lowercase()
-        if(bothAlgorithmsCameToSameConclusionButLowerCased && maxWord != null && maxWordDict != null) {
+        if(!plumeDictDecides && bothAlgorithmsCameToSameConclusionButLowerCased && maxWord != null && maxWordDict != null && !plumeChangesValidWord(maxWordDict)) {
             if(BuildConfig.DEBUG) Log.d(TAG, "both algorithms came to same conclusion but lowercased, autocorrect to ${maxWord.mWord}")
             val clone = maxWordDict.scoreAtLeast(maxWord)
             autocorrectWord = clone
@@ -331,27 +374,66 @@ public class LanguageModelFacilitator(
             filtered.add(maxWordDict)
         }
 
-        // Plume (2026-09-11) : FUTO n'autocorrige que si le modèle et le dictionnaire désignent le même mot.
-        // Avec un modèle moins sûr que le dictionnaire, « nestil », « atil », « awra » n'étaient plus corrigés.
-        // Quand le mot tapé n'existe pas et que le dictionnaire corrigerait, on ne renonce jamais à corriger :
-        // vers le mot du modèle s'il est une correction plausible (candidat du dictionnaire), sinon vers le dictionnaire.
-        if(autocorrectWord == null && suggestedWordsDict.mWillAutoCorrect && maxWordDict != null && maxWord != null) {
-            val lmCandidateInDict = suggestedWordsDictList.firstOrNull {
-                it != suggestedWordsDict.typedWordInfo && it.mWord.equals(maxWord.mWord, ignoreCase = true)
-            }
-            if(lmCandidateInDict != null) {
-                if(BuildConfig.DEBUG) Log.d(TAG, "plume: LM choice is a dictionary candidate, autocorrect to ${maxWord.mWord}")
-                val clone = maxWord.add(lmCandidateInDict)
-                autocorrectWord = clone
-                suggestionResults.add(clone)
-                filtered.add(lmCandidateInDict)
-                filtered.add(maxWord)
+        // Plume : paires de confusion (a/à, ou/où, quelle/qu'elle…). Le mot tapé est valide, le
+        // dictionnaire ne corrige donc pas ; le modèle ne change que l'ordre et le meilleur candidat.
+        var plumeConfusionTyped: String? = null
+        val plumeTyped = values.composedData.mTypedWord
+        val plumeLocale = dictionaryFacilitator.primaryLocale
+        // (une autocorrection déjà choisie vers le mot tapé lui-même ne compte pas : c'est le cas habituel
+        // d'un mot valide sur lequel modèle et dictionnaire s'accordent)
+        val plumeAlreadyCorrected = autocorrectWord != null && !autocorrectWord!!.mWord.equals(plumeTyped, ignoreCase = true)
+        val plumeMembers = if(!plumeAlreadyCorrected && plumeTyped.isNotEmpty() && !values.composedData.mIsBatchMode)
+            org.futo.inputmethod.latin.plume.PlumeConfusions.members(plumeTyped, plumeLocale) else null
+        if(plumeMembers != null) {
+            val lower = { w: String -> w.lowercase(java.util.Locale.FRENCH).replace('\u2019', '\'') }
+            val typedLower = lower(plumeTyped)
+            val scores = (lmSuggestionsRaw as? org.futo.inputmethod.latin.plume.PlumeLmSuggestions)?.confusionLogProbs
+            val bestWord: String?
+            val ratio: Float
+            val source: String
+            if(scores != null && scores[typedLower]?.isFinite() == true) {
+                // Scores exacts des membres (scoreCorrectionsNative), comme la calibration
+                source = "score"
+                val b = plumeMembers.filter { it != typedLower && scores[it]?.isFinite() == true }.maxByOrNull { scores[it]!! }
+                bestWord = b?.let { if(plumeTyped.first().isUpperCase()) it.replaceFirstChar { c -> c.titlecase(java.util.Locale.FRENCH) } else it }
+                ratio = if(b == null) 0f else kotlin.math.exp((scores[b]!! - scores[typedLower]!!).toDouble()).toFloat()
             } else {
-                if(BuildConfig.DEBUG) Log.d(TAG, "plume: keep dictionary autocorrection ${maxWordDict.mWord}")
-                val clone = maxWordDict.scoreAtLeast(maxWord)
-                autocorrectWord = clone
-                suggestionResults.add(clone)
-                filtered.add(maxWordDict)
+                // Repli : les 3 candidats du faisceau ; mot tapé absent → probabilité bornée par le plus faible
+                source = "faisceau"
+                val byWord = lmSuggestions.filter { !it.mPlumeLmProbability.isNaN() }.groupBy { lower(it.mWord) }
+                val pTyped = byWord[typedLower]?.maxOf { it.mPlumeLmProbability }
+                    ?: lmSuggestionsRaw.filter { !it.mPlumeLmProbability.isNaN() }.minOfOrNull { it.mPlumeLmProbability }
+                    ?: 0f
+                val b = plumeMembers.filter { it != typedLower }
+                    .mapNotNull { m -> byWord[m]?.maxByOrNull { it.mPlumeLmProbability } }
+                    .maxByOrNull { it.mPlumeLmProbability }
+                bestWord = b?.mWord
+                ratio = if(b == null) 0f else if(pTyped > 0f) b.mPlumeLmProbability / pTyped else Float.POSITIVE_INFINITY
+            }
+            if(bestWord != null && ratio >= org.futo.inputmethod.latin.plume.PlumeConfusions.reorderRatio(plumeTyped)) {
+                val needed = org.futo.inputmethod.latin.plume.PlumeConfusions.autocorrectRatio(plumeTyped)
+                val topScore = (reweightedSuggestions.map { it.mScore } + suggestedWordsDictList.map { it.mScore }
+                        + suggestionResults.map { it.mScore })
+                    .maxOrNull() ?: 0
+                // Pas d'autocorrection sans texte avant le mot : la calibration n'a mesuré que des mots en
+                // contexte (« Ses parents » devenait « S'est parents »).
+                val hasContext = values.ngramContext.fullContext.trim().removeSuffix(plumeTyped).isNotBlank()
+                val autocorrect = needed != null && hasContext && ratio >= needed
+                val promoted = SuggestedWordInfo(
+                    bestWord,
+                    "",
+                    (topScore.toLong() + 1).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
+                    if(autocorrect) SuggestedWordInfo.KIND_WHITELIST or SuggestedWordInfo.KIND_FLAG_APPROPRIATE_FOR_AUTO_CORRECTION
+                    else SuggestedWordInfo.KIND_CORRECTION,
+                    null, 0, 0
+                ).apply { mOriginatesFromTransformerLM = true }
+                reweightedSuggestions.filter { lower(it.mWord) == lower(bestWord) }.forEach { filtered.add(it) }
+                suggestionResults.add(promoted)
+                if(autocorrect) {
+                    autocorrectWord = promoted
+                    plumeConfusionTyped = plumeTyped
+                }
+                if(Log.isLoggable("PlumeLM", Log.DEBUG)) Log.d("PlumeLM", "plume: confusion $plumeTyped -> $bestWord ratio=$ratio needed=$needed autocorrect=$autocorrect source=$source")
             }
         }
 
@@ -385,7 +467,9 @@ public class LanguageModelFacilitator(
                 continue
             }
 
-            suggestionResults.add(word)
+            // Plume : un mot tapé valide n'est jamais remplacé par une suggestion du modèle marquée « autocorrigeable »
+            // par le natif (« tu invites » devenait « invités ») ; seules les règles ci-dessus décident.
+            suggestionResults.add(if(plumeTypedValid) word.plumeWithoutAutocorrect() else word)
         }
 
         if(maxWordDict?.mSourceDict?.mDictType == Dictionary.TYPE_USER_HISTORY
@@ -413,16 +497,23 @@ public class LanguageModelFacilitator(
         val locale = dictionaryFacilitator.primaryLocale ?: return null
         val wordComposer = inputLogic.mWordComposer ?: return null
 
-        val suggestedWords = Suggest.obtainNonBatchedInputSuggestedWords(
-            wordComposer,
-            values.inputStyle,
-            settingsValues.mAutoCorrectionEnabledPerUserSettings,
-            -1,
-            locale,
-            suggestionResults,
-            settingsValues.mAutoCorrectionThreshold,
-            settingsValues.mIsNumberRowEnabled
-        )
+        org.futo.inputmethod.latin.plume.PlumeConfusions.allowProtectedCorrection(plumeConfusionTyped)
+        org.futo.inputmethod.latin.plume.PlumeConfusions.setValidTypedWord(if(plumeTypedValid) plumeTypedWord else null)
+        val suggestedWords = try {
+            Suggest.obtainNonBatchedInputSuggestedWords(
+                wordComposer,
+                values.inputStyle,
+                settingsValues.mAutoCorrectionEnabledPerUserSettings,
+                -1,
+                locale,
+                suggestionResults,
+                settingsValues.mAutoCorrectionThreshold,
+                settingsValues.mIsNumberRowEnabled
+            )
+        } finally {
+            org.futo.inputmethod.latin.plume.PlumeConfusions.allowProtectedCorrection(null)
+            org.futo.inputmethod.latin.plume.PlumeConfusions.setValidTypedWord(null)
+        }
 
 
         if(BuildConfig.DEBUG) {

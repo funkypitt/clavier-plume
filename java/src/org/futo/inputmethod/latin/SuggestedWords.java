@@ -328,6 +328,8 @@ public class SuggestedWords {
 
         public boolean mOriginatesFromTransformerLM = false;
         public boolean mOriginatesFromSwipeModel = false;
+        /** Plume : probabilité brute du modèle de langue (pénalité « mot exact » du natif retirée), NaN sinon. */
+        public float mPlumeLmProbability = Float.NaN;
 
         /**
          * Create a new suggested word info.

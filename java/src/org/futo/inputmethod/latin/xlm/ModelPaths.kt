@@ -5,6 +5,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import androidx.annotation.Keep
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.futo.inputmethod.annotations.ExternallyReferenced
@@ -20,6 +21,15 @@ import java.io.FileOutputStream
 val BASE_MODEL_RESOURCE = R.raw.ml4_q6_k
 val BASE_MODEL_NAME = "ml4_q6_k"
 val DEPRECATED_MODEL_NAME = "ml4_1_f16_meta_fixed"
+
+// Plume : modèle de langue français/anglais embarqué (fin de la phase 4b du run complet du 2026-09-11 ; les seuils
+// des paires de confusion de PlumeConfusions sont calibrés sur ce modèle).
+val PLUME_FR_MODEL_RESOURCE = R.raw.plume_fr_en_4b
+val PLUME_FR_MODEL_NAME = "plume_fr_en_4b"
+val PLUME_FR_MODEL_INSTALLED = SettingsKey(
+    booleanPreferencesKey("plume_fr_model_installed"),
+    false
+)
 
 val MODEL_OPTION_KEY = SettingsKey(
     stringSetPreferencesKey("lmModelsByLanguage"),
@@ -185,8 +195,40 @@ object ModelPaths {
         signalReloadModels()
     }
 
+    /**
+     * Plume : installe une seule fois le modèle français embarqué comme modèle « fr », et seulement si aucun modèle
+     * français n'est déjà configuré (un modèle importé est gardé, sans copie de 30 Mo en double). Le drapeau
+     * empêche de le réinstaller si l'utilisateur le supprime. Copie via un fichier temporaire : une copie
+     * interrompue ne laisse jamais un modèle tronqué.
+     */
+    suspend fun ensurePlumeFrenchModel(context: Context) {
+        if(context.getSetting(PLUME_FR_MODEL_INSTALLED)) return
+        val directory = getModelDirectory(context)
+        val frConfigured = context.getSetting(MODEL_OPTION_KEY).any {
+            val parts = it.split(":", limit = 2)
+            parts.size == 2 && parts[0] == "fr" && File(directory, "${parts[1]}.gguf").isFile
+        }
+        if(!frConfigured) {
+            val target = File(directory, "$PLUME_FR_MODEL_NAME.gguf")
+            if(!target.isFile) {
+                val tmp = File(directory, "$PLUME_FR_MODEL_NAME.gguf.tmp")
+                context.resources.openRawResource(PLUME_FR_MODEL_RESOURCE).use { input ->
+                    FileOutputStream(tmp).use { output -> input.copyTo(output, 64 * 1024) }
+                }
+                if(!tmp.renameTo(target)) {
+                    tmp.delete()
+                    Log.e("ModelPaths", "plume: could not install the built-in French model")
+                    return
+                }
+            }
+            updateModelOption(context, "fr", target)
+        }
+        context.setSetting(PLUME_FR_MODEL_INSTALLED, true)
+    }
+
     suspend fun getModelOptions(context: Context): Map<String, ModelInfoLoader> {
         ensureDefaultModelExists(context)
+        ensurePlumeFrenchModel(context)
         val modelDirectory = getModelDirectory(context)
         val options = context.getSetting(MODEL_OPTION_KEY)
 
@@ -245,7 +287,7 @@ object ModelPaths {
     }
 
     fun shouldFileBeIncludedInExport(file: File): Boolean {
-        if(file.name == "$BASE_MODEL_NAME.gguf") {
+        if(file.name == "$BASE_MODEL_NAME.gguf" || file.name == "$PLUME_FR_MODEL_NAME.gguf") {
             val loader = ModelInfoLoader(file, file.nameWithoutExtension)
             val info = loader.loadDetails()
             if(info == null) return false

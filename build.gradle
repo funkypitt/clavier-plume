@@ -440,6 +440,15 @@ android {
     }
 }
 
+// Plume : la version privée « release » (natif -O3, R8, sans assertions de débogage) est signée avec la clé de
+// débogage, comme les versions « debug » déjà installées sur le téléphone : même paquet, même signature, donc mise
+// à jour sur place (réglages, mots appris, modèles importés conservés). La version publique garde la clé release.
+androidComponents {
+    onVariants(selector().withBuildType("release").withFlavor(new kotlin.Pair("audience", "prive"))) { variant ->
+        variant.signingConfig.setConfig(android.signingConfigs.debug)
+    }
+}
+
 dependencies {
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'

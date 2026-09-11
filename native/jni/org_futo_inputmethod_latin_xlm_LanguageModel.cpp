@@ -3,6 +3,8 @@
 #include "org_futo_inputmethod_latin_xlm_LanguageModel.h"
 
 #include <cstring> // for memset()
+#include <cmath>
+#include <algorithm>
 #include <vector>
 
 #include "jni.h"
@@ -166,6 +168,15 @@ bool isExactMatch(const std::string &a, const std::string &b){
     };
 
     return preprocess(a) == preprocess(b);
+}
+
+// Plume : log-softmax d'un jeton sur des logits bruts.
+static float plume_log_prob(const float *logits, size_t n_vocab, int token) {
+    float max_logit = -INFINITY;
+    for(size_t i = 0; i < n_vocab; i++) if(logits[i] > max_logit) max_logit = logits[i];
+    double sum = 0.0;
+    for(size_t i = 0; i < n_vocab; i++) sum += std::exp((double)(logits[i] - max_logit));
+    return logits[token] - max_logit - (float)std::log(sum);
 }
 
 bool isTokenMixRoughlyEqual(const TokenMix &a, const TokenMix &b) {
@@ -825,7 +836,8 @@ struct LanguageModelState {
         return str_results;
     }
 
-    std::vector<std::pair<float, std::string>> PredictCorrection(const std::string &context, const std::vector<TokenMix> &mixes, bool swipe_mode, WordCapitalizeMode capitals, const std::vector<std::string> &banned_words) {
+    std::vector<std::pair<float, std::string>> PredictCorrection(const std::string &context, const std::vector<TokenMix> &mixes, bool swipe_mode, WordCapitalizeMode capitals, const std::vector<std::string> &banned_words,
+                                                                 const std::vector<std::string> &score_candidates = {}, std::vector<float> *out_scores = nullptr) {
         if(specialTokens.XBU == -1) return { };
 
         std::vector<banned_sequence> banned_sequences;
@@ -850,7 +862,20 @@ struct LanguageModelState {
         }
 
         auto decoding_result = DecodePromptAndMixes(next_context, mixes);
+
+        // Plume : logits bruts après <XBC>, copiés avant que Sample ne les transforme
+        std::vector<float> xbc_logits;
+        if(out_scores != nullptr && !score_candidates.empty() && decoding_result.size > 0) {
+            size_t n_vocab = llama_n_vocab(llama_get_model(model->context()));
+            const float *l = llama_get_logits_ith(model->context(), decoding_result.logits_head);
+            xbc_logits.assign(l, l + n_vocab);
+        }
+
         auto results = Sample(decoding_result, NUM_RESULTS, capitals, banned_sequences);
+
+        if(!xbc_logits.empty()) {
+            *out_scores = ScoreCandidates(decoding_result.size, xbc_logits, score_candidates);
+        }
 
         std::vector<std::pair<float, std::string>> str_results;
         str_results.reserve(results.size());
@@ -859,6 +884,52 @@ struct LanguageModelState {
         }
 
         return str_results;
+    }
+
+    // Plume : log P(candidat <XEC> | invite) pour chaque candidat d'une paire de confusion (a/à, on/ont…), sur
+    // les logits bruts, comme tools/lm/09_calibrer_confusions.py. Appelé par PredictCorrection après Sample :
+    // l'invite est déjà décodée (séquence 0 jusqu'à prompt_size) et xbc_logits en est une copie brute.
+    // Un candidat d'un seul jeton ne coûte aucun décodage. -inf si un candidat n'a pas pu être scoré.
+    std::vector<float> ScoreCandidates(int prompt_size, const std::vector<float> &xbc_logits, const std::vector<std::string> &candidates) {
+        std::vector<float> out(candidates.size(), -INFINITY);
+        if(prompt_size <= 0 || xbc_logits.empty()) return out;
+
+        llama_context *ctx = model->context();
+        size_t n_vocab = xbc_logits.size();
+
+        for(size_t c = 0; c < candidates.size(); c++) {
+            // Jetons tels qu'à l'entraînement : entre <XBC> et <XEC> (encodé seul, le mot recevrait un « ▁ » final)
+            token_sequence toks = model->tokenize("<XBC>" + candidates[c] + "<XEC>");
+            if(toks.size() < 3 || toks[0] != specialTokens.XBC) continue;
+            auto xec = std::find(toks.begin() + 1, toks.end(), specialTokens.XEC);
+            if(xec == toks.end() || xec == toks.begin() + 1) continue;
+            token_sequence word(toks.begin() + 1, xec + 1); // mot + <XEC>
+
+            float lp = plume_log_prob(xbc_logits.data(), n_vocab, word[0]);
+            if(word.size() > 1) {
+                llama_kv_cache_seq_rm(ctx, 0, prompt_size, -1); // retire aussi ce que Sample a ajouté
+                llama_batch batch = model->adapter->batch;
+                batch.n_tokens = 0;
+                for(size_t i = 0; i + 1 < word.size(); i++) {
+                    batch.token[batch.n_tokens] = word[i];
+                    batch.pos[batch.n_tokens] = (llama_pos)(prompt_size + i);
+                    batch.seq_id[batch.n_tokens][0] = 0;
+                    batch.n_seq_id[batch.n_tokens] = 1;
+                    batch.logits[batch.n_tokens] = true;
+                    batch.n_tokens += 1;
+                }
+                if(llama_decode(ctx, batch) != 0) {
+                    AKLOGE("plume: llama_decode() failed in ScoreCandidates");
+                    continue;
+                }
+                for(size_t i = 1; i < word.size(); i++) {
+                    lp += plume_log_prob(llama_get_logits_ith(ctx, (int)(i - 1)), n_vocab, word[i]);
+                }
+            }
+            out[c] = lp;
+        }
+        llama_kv_cache_seq_rm(ctx, 0, prompt_size, -1);
+        return out;
     }
 };
 
@@ -1000,7 +1071,11 @@ namespace latinime {
 
          // outputs
          jobjectArray outPredictions,
-         jfloatArray outProbabilities
+         jfloatArray outProbabilities,
+
+         // Plume : membres de la paire de confusion à scorer (tableau vide sinon) et leurs log-probabilités
+         jobjectArray scoreCandidatesArray,
+         jfloatArray outScores
     ) {
         GGML_UNUSED(clazz);
 
@@ -1202,7 +1277,19 @@ namespace latinime {
             //}
         } else {
             bool swipeMode = inputMode == 1;
-            results = state->PredictCorrection(contextString, mixes, swipeMode, capitals, bannedWords);
+            std::vector<std::string> scoreCandidates;
+            jsize numScoreCandidates = scoreCandidatesArray != nullptr ? env->GetArrayLength(scoreCandidatesArray) : 0;
+            for(jsize i = 0; i < numScoreCandidates; i++) {
+                auto jstr = (jstring)env->GetObjectArrayElement(scoreCandidatesArray, i);
+                scoreCandidates.push_back(jstring2string(env, jstr));
+                env->DeleteLocalRef(jstr);
+            }
+            std::vector<float> scores;
+            results = state->PredictCorrection(contextString, mixes, swipeMode, capitals, bannedWords, scoreCandidates, &scores);
+            if(outScores != nullptr && !scores.empty()) {
+                jsize n = std::min((jsize)scores.size(), env->GetArrayLength(outScores));
+                env->SetFloatArrayRegion(outScores, 0, n, scores.data());
+            }
 
             //for(const auto &result : results) {
             //    AKLOGI("LanguageModel correction %.2f [%s] -> [%s]", result.first, partialWordString.c_str(), result.second.c_str());
@@ -1278,7 +1365,7 @@ namespace latinime {
             },
             {
                     const_cast<char *>("getSuggestionsNative"),
-                    const_cast<char *>("(JJLjava/lang/String;Ljava/lang/String;I[I[IF[Ljava/lang/String;[Ljava/lang/String;[F)V"),
+                    const_cast<char *>("(JJLjava/lang/String;Ljava/lang/String;I[I[IF[Ljava/lang/String;[Ljava/lang/String;[F[Ljava/lang/String;[F)V"),
                     reinterpret_cast<void *>(xlm_LanguageModel_getSuggestions)
             },
             {
