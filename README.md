@@ -37,6 +37,10 @@ Rien ne quitte l'appareil : aucune permission réseau n'est utilisée pour la sa
 |---|---|
 | ![Plume Militante](screenshots/militante.png) | ![Plume Nature](screenshots/nature.png) |
 
+| Plume Lavande | Plume Terracotta |
+|---|---|
+| ![Plume Lavande](screenshots/lavande.png) | ![Plume Terracotta](screenshots/terracotta.png) |
+
 ## Installation
 
 Téléchargez l'APK de la dernière [release](../../releases) et installez-la, ou suivez ce dépôt
