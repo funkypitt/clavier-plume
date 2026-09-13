@@ -1118,6 +1118,7 @@ public final class InputLogic {
         if(codePoint == Constants.CODE_SPACE
                 && inputTransaction.mSpaceState == SpaceState.ANTIPHANTOM) {
             startDoubleSpacePeriodCountdown(inputTransaction);
+            mPlumeSpaceConfirmed = true;   // « Fin. » + espace tapée exprès : pas une adresse coupée
             return;
         }
 
@@ -1156,6 +1157,7 @@ public final class InputLogic {
     private void handleNonSeparatorEvent(final Event event, final SettingsValues settingsValues,
             final InputTransaction inputTransaction) {
         final int codePoint = event.mCodePoint;
+        if (codePoint == Constants.CODE_COMMERCIAL_AT) plumeRejoinEmailLocalPart(settingsValues);
         // TODO: refactor this method to stop flipping isComposingWord around all the time, and
         // make it shorter (possibly cut into several pieces). Also factor
         // handleNonSpecialCharacterEvent which has the same name as other handle* methods but is
@@ -1254,8 +1256,35 @@ public final class InputLogic {
      * @param event The event to handle.
      * @param inputTransaction The transaction in progress.
      */
+    /**
+     * Plume : « prenom.nom@ » — au premier point rien ne distingue une adresse d'une fin de phrase : le clavier
+     * pose « . » + espace et capitalise « Nom ». Le « @ » (qui n'est pas un séparateur : il reste dans le mot
+     * composé) lève le doute : si le mot en cours a été capitalisé par le clavier, pas par l'utilisateur, et
+     * suit « lettre. » + espace automatique, on le fige tel quel, on recolle et on remet la minuscule.
+     * Mesuré le 2026-09-12 : « prenom.nom@gmail.com » → « Prénom. Nom@gmail.com ».
+     */
+    private boolean mPlumeSpaceConfirmed = false;
+
+    private void plumeRejoinEmailLocalPart(final SettingsValues settingsValues) {
+        if (mPlumeSpaceConfirmed) return;      // l'espace après le point a été tapée par l'utilisateur
+        if (!mWordComposer.isComposingWord() || !mWordComposer.wasAutoCapitalized()
+                || mWordComposer.isMostlyCaps() || mWordComposer.isBatchMode()) return;
+        final int space = mConnection.getNthCodePointBeforeCursor(0);
+        if (space == Constants.NOT_A_CODE
+                || !org.futo.inputmethod.latin.plume.PlumeRules.isAnySpace((char) space)) return;
+        if (mConnection.getNthCodePointBeforeCursor(1) != Constants.CODE_PERIOD) return;
+        if (!Character.isLetter(mConnection.getNthCodePointBeforeCursor(2))) return;
+        final String word = mWordComposer.getTypedWord();
+        if (word.isEmpty()) return;
+        commitTyped(settingsValues, LastComposedWord.NOT_A_SEPARATOR);      // « Nom » tel quel, sans correction
+        mConnection.deleteTextBeforeCursor(word.length() + 1);             // l'espace automatique et le mot
+        mConnection.commitText(word.toLowerCase(settingsValues.mLocale), 1);
+        mLastComposedWord = LastComposedWord.NOT_A_COMPOSED_WORD;          // plus rien à annuler proprement
+    }
+
     private void handleSeparatorEvent(final Event event, final InputTransaction inputTransaction) {
         final int codePoint = event.mCodePoint;
+        mPlumeSpaceConfirmed = false;
         final SettingsValues settingsValues = inputTransaction.mSettingsValues;
         final boolean wasComposingWord = mWordComposer.isComposingWord();
         // We avoid sending spaces in languages without spaces if we were composing.
@@ -1818,6 +1847,17 @@ public final class InputLogic {
         final boolean isWritingSchema = event.mCodePoint == '/'
                 && mConnection.isPotentiallyWritingSchema();
         mConnection.deleteTextBeforeCursor(1);
+
+        // Plume : en français une espace fine a été posée avant le « : » (« https : ») ; dans un schéma
+        // d'URL elle n'a rien à faire là — on la retire avec le « : » puis on le réécrit
+        if (isWritingSchema && ':' == mConnection.getNthCodePointBeforeCursor(0)) {   // 0 = dernier caractère
+            final int beforeColon = mConnection.getNthCodePointBeforeCursor(1);
+            if (beforeColon == org.futo.inputmethod.latin.plume.PlumeRules.NBSP
+                    || beforeColon == org.futo.inputmethod.latin.plume.PlumeRules.NARROW_NBSP) {
+                mConnection.deleteTextBeforeCursor(2);
+                mConnection.commitText(":", 1);
+            }
+        }
 
         boolean stripSpace = inputTransaction.mSettingsValues.mInputAttributes.mIsUriField || isWritingSchema;
 
@@ -2724,7 +2764,10 @@ public final class InputLogic {
 
             mSpaceState = SpaceState.ANTIPHANTOM;
             sendKeyCodePoint(settingsValues, Constants.CODE_SPACE);
-        } else if(settingsValues.mAltSpacesMode != Settings.SPACES_MODE_NONE) {
+        } else if(settingsValues.mAltSpacesMode != Settings.SPACES_MODE_NONE
+                // Plume : après « www. » l'espace fantôme donnait la majuscule de phrase au segment
+                // suivant (« www.Gallaz.ch ») — mesuré le 2026-09-12
+                && !mConnection.textBeforeCursorLooksLikeURL()) {
             mSpaceState = SpaceState.PHANTOM;
         }
     }
@@ -2911,12 +2954,16 @@ public final class InputLogic {
         // Add the word to the user history dictionary
         mDictionaryFacilitator.onWordCommitted(chosenWord);
         TypoLogger.countWord();   // dénominateur de la mesure (mots validés)
-        // Plume : vocabulaire personnel exportable (plume_vocab.tsv)
-        org.futo.inputmethod.latin.plume.PlumeVocab.record(
-                org.futo.inputmethod.latin.plume.PlumeVocab.canonical(chosenWord,
-                        mWordComposer.wasAutoCapitalized() && !mWordComposer.isMostlyCaps(), locale),
-                locale, plumeIsSensitiveField(settingsValues));
-        performAdditionToUserHistoryDictionary(settingsValues, chosenWord, ngramContext, importance);
+        // Plume : un segment d'URL ou d'adresse (« gallaz » dans « www.gallaz.ch ») n'est ni compté dans le
+        // vocabulaire personnel ni appris — mesuré le 2026-09-12 : « gallaz » appris après quatre URL
+        if (!mConnection.textBeforeCursorLooksLikeURL()) {
+            // Plume : vocabulaire personnel exportable (plume_vocab.tsv)
+            org.futo.inputmethod.latin.plume.PlumeVocab.record(
+                    org.futo.inputmethod.latin.plume.PlumeVocab.canonical(chosenWord,
+                            mWordComposer.wasAutoCapitalized() && !mWordComposer.isMostlyCaps(), locale),
+                    locale, plumeIsSensitiveField(settingsValues));
+            performAdditionToUserHistoryDictionary(settingsValues, chosenWord, ngramContext, importance);
+        }
         if (DebugFlags.DEBUG_ENABLED) {
             long runTimeMillis = System.currentTimeMillis() - startTimeMillis;
             Log.d(TAG, "commitChosenWord() : " + runTimeMillis + " ms to run "

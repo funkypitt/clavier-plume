@@ -479,7 +479,8 @@ public final class StringUtils {
             } else {
                 slashCount = 0;
             }
-            if ('w' == codePoint) {
+            // Plume : « Www. » (majuscule automatique en début de phrase) est aussi une URL
+            if ('w' == codePoint || 'W' == codePoint) {
                 ++wCount;
             } else {
                 wCount = 0;
