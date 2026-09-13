@@ -12,17 +12,18 @@ pour bien écrire le français. C'est une **version modifiée de [FUTO Keyboard]
 - **Impératifs et inversions** : « rappelle-moi », « dépêche-toi », « allons-y », « a-t-il »,
   « avez-vous ».
 - **Typographie** : apostrophe courbe, espaces insécables avant `; : ! ?`, guillemets « ».
-- **Pas de majuscule après les abréviations** : « etc. », « cf. », « p. ex. », « M. ».
+- **Pas de majuscule après les abréviations** : « etc. », « cf. », « p. ex. », « M. » ; une URL ou une adresse e-mail n'est ni corrigée, ni coupée, ni capitalisée.
 - **Deux langues, une touche** : la touche EN/FR bascule instantanément, la barre d'espace aussi
   par glissement ; les deux dictionnaires restent actifs.
-- **Apprentissage prudent** : un mot inconnu n'est retenu qu'à sa deuxième validation, un mot
+- **Apprentissage prudent** : un mot inconnu n'est retenu qu'à sa troisième validation, un mot
   effacé au retour arrière est désappris, l'écran « Mots appris » permet d'oublier d'un geste.
 - **Dictionnaire** : Lexique 3.83 (fréquences, catégories), noms propres et bigrammes du corpus
   de Leipzig, vocabulaire d'aujourd'hui de LanguageTool, vocabulaire passif du Littré (reconnu
   s'il est tapé, jamais proposé).
 - **Réglages minimalistes** : 7 écrans, une trentaine d'options.
 - **Dictée** hors ligne (Whisper, modèle multilingue embarqué), glissement, presse-papiers.
-- **Neuf thèmes** dont deux « encre » à fort contraste, typographie Selawik.
+- **Treize thèmes** dont deux « encre » à fort contraste (Coquette, Militante, Torride, Nature
+  depuis la 2.0.5), typographie Selawik.
 
 Rien ne quitte l'appareil : aucune permission réseau n'est utilisée pour la saisie.
 
