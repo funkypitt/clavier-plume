@@ -27,6 +27,16 @@ pour bien écrire le français. C'est une **version modifiée de [FUTO Keyboard]
 
 Rien ne quitte l'appareil : aucune permission réseau n'est utilisée pour la saisie.
 
+## Thèmes
+
+| Plume Coquette | Plume Torride |
+|---|---|
+| ![Plume Coquette](screenshots/coquette.png) | ![Plume Torride](screenshots/torride.png) |
+
+| Plume Militante | Plume Nature |
+|---|---|
+| ![Plume Militante](screenshots/militante.png) | ![Plume Nature](screenshots/nature.png) |
+
 ## Installation
 
 Téléchargez l'APK de la dernière [release](../../releases) et installez-la, ou suivez ce dépôt
