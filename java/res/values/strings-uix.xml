@@ -158,6 +158,10 @@
     <string name="theme_plume_sauge">Plume Sage</string>
     <string name="theme_plume_nordique">Plume Nordic</string>
     <string name="theme_plume_terracotta">Plume Terracotta</string>
+    <string name="theme_plume_coquette">Plume Coquette</string>
+    <string name="theme_plume_militante">Plume Activist</string>
+    <string name="theme_plume_torride">Plume Sultry</string>
+    <string name="theme_plume_nature">Plume Nature</string>
     <string name="theme_default_dark">Dark Mode</string>
     <string name="theme_default_light">Light Mode</string>
     <string name="theme_amoled_dark">AMOLED Dark Purple</string>

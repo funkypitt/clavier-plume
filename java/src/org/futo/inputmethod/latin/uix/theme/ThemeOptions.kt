@@ -21,6 +21,10 @@ import org.futo.inputmethod.latin.uix.theme.presets.PlumeEncreTheme
 import org.futo.inputmethod.latin.uix.theme.presets.PlumeEncreInvTheme
 import org.futo.inputmethod.latin.uix.theme.presets.PlumeLavandeTheme
 import org.futo.inputmethod.latin.uix.theme.presets.PlumeSaugeTheme
+import org.futo.inputmethod.latin.uix.theme.presets.PlumeCoquetteTheme
+import org.futo.inputmethod.latin.uix.theme.presets.PlumeMilitanteTheme
+import org.futo.inputmethod.latin.uix.theme.presets.PlumeTorrideTheme
+import org.futo.inputmethod.latin.uix.theme.presets.PlumeNatureTheme
 import org.futo.inputmethod.latin.uix.theme.presets.PlumeNordiqueTheme
 import org.futo.inputmethod.latin.uix.theme.presets.PlumeTerracottaTheme
 import org.futo.inputmethod.latin.uix.theme.presets.DefaultLightScheme
@@ -57,6 +61,10 @@ val ThemeOptions = mapOf(
     PlumeSaugeTheme.key to PlumeSaugeTheme,
     PlumeNordiqueTheme.key to PlumeNordiqueTheme,
     PlumeTerracottaTheme.key to PlumeTerracottaTheme,
+    PlumeCoquetteTheme.key to PlumeCoquetteTheme,
+    PlumeMilitanteTheme.key to PlumeMilitanteTheme,
+    PlumeTorrideTheme.key to PlumeTorrideTheme,
+    PlumeNatureTheme.key to PlumeNatureTheme,
 )
 
 val ThemeOptionKeys = ThemeOptions.keys

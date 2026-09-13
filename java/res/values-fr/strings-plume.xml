@@ -10,6 +10,10 @@
     <string name="theme_plume_sauge">Plume Sauge</string>
     <string name="theme_plume_nordique">Plume Nordique</string>
     <string name="theme_plume_terracotta">Plume Terracotta</string>
+    <string name="theme_plume_coquette">Plume Coquette</string>
+    <string name="theme_plume_militante">Plume Militante</string>
+    <string name="theme_plume_torride">Plume Torride</string>
+    <string name="theme_plume_nature">Plume Nature</string>
     <string name="keyboard_suggest_forget_learned_word">Oublier (désapprendre)</string>
     <string name="keyboard_suggest_forget_body">« <xliff:g name="word" example="crane">%s</xliff:g> » : oublier ce mot appris (le dictionnaire reprend la main, il pourra être réappris), ou le mettre en liste noire définitivement ?</string>
     <string name="setup_welcome_text">Bienvenue dans Clavier Plume.\n\nPour commencer, activez Clavier Plume comme méthode de saisie.</string>

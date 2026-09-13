@@ -163,12 +163,33 @@ private val nordique = PlumePalette(false, 0xFF2E3440, 0xFF3B4252, 0xFF353B4A, 0
 /** Terracotta : neutres chauds (Mocha Mousse 2025), touches ivoire, accent terre cuite. Lettres 14,8:1. */
 private val terracotta = PlumePalette(true, 0xFFE6D9CC, 0xFFFCF7F1, 0xFFC8B6A5, 0xFF2B211B, 0xFFC25E38, 0xFFFFFFFF, 0xFFC8B6A5, name = "Plume Terracotta")
 
+// Quatre thèmes du 2026-09-13, choisis d'après ce que la presse design attribue à chaque mot-clé en 2026
+// (Creative Bloq, Lummi, ThemePalette, Luxe Interiors, guides coquette/balletcore). Même règle : lettres ≥ 8:1.
+/** « girly » 2026 = coquette / balletcore : rose ballerine, crème, et l'accent cerise-bordeaux (bordeaux + blush
+ *  est LA combinaison citée), texte cacao-bordeaux plutôt que noir. Lettres 13:1. */
+private val coquette = PlumePalette(true, 0xFFF3D9DC, 0xFFFFF7F5, 0xFFE7BFC6, 0xFF4A1F2B, 0xFFD2455E, 0xFFFFFFFF, 0xFFE7BFC6, name = "Plume Coquette")
+/** « activist » 2026 = tract / zine / riso : papier blanc cassé, encre noire, un seul rouge riso — le trio
+ *  noir-blanc-rouge des affiches constructivistes aux fanzines, « une couleur vive utilisée avec parcimonie ».
+ *  Lettres 18,7:1. */
+private val militante = PlumePalette(true, 0xFFF2EEE4, 0xFFFFFFFF, 0xFFD8D3C6, 0xFF121212, 0xFFE8412E, 0xFFFFFFFF, 0xFFD8D3C6, name = "Plume Militante")
+/** « desire » 2026 = « dark feminine energy », velours et cuir : les rouges profonds (oxblood, bordeaux, merlot)
+ *  passent de 7 % à 21 % des préférences de designers cette année ; « Divine Damson », cerise profonde, couleur
+ *  de l'année Graham & Brown. Sombre : vin noir, touches oxblood, lettres ivoire rosé, accent cerise. Lettres 11,3:1. */
+private val torride = PlumePalette(false, 0xFF1E0D13, 0xFF561A2C, 0xFF34121D, 0xFFF8E9E6, 0xFFE02A50, 0xFFFFF4F2, 0xFF7A2A42, name = "Plume Torride")
+/** « nature-lover » 2026 = biophilique, sombre : écorce, touches mousse désaturée (verts à sous-ton gris/brun :
+ *  eucalyptus, mousse, sauge), accent ocre-argile. Complète « Sauge », son pendant clair. Lettres 8,6:1. */
+private val nature = PlumePalette(false, 0xFF2B2A24, 0xFF3A4733, 0xFF2F3A2B, 0xFFF2EFE4, 0xFFD19A4E, 0xFF2B2A24, 0xFF566650, name = "Plume Nature")
+
 val PlumeEncreTheme = ThemeOption(false, "PlumeEncre", R.string.theme_plume_encre, { true }) { encre.withPlume(it) }
 val PlumeEncreInvTheme = ThemeOption(false, "PlumeEncreInv", R.string.theme_plume_encre_inv, { true }) { encreInv.withPlume(it) }
 val PlumeLavandeTheme = ThemeOption(false, "PlumeLavande", R.string.theme_plume_lavande, { true }) { lavande.withPlume(it) }
 val PlumeSaugeTheme = ThemeOption(false, "PlumeSauge", R.string.theme_plume_sauge, { true }) { sauge.withPlume(it) }
 val PlumeNordiqueTheme = ThemeOption(false, "PlumeNordique", R.string.theme_plume_nordique, { true }) { nordique.withPlume(it) }
 val PlumeTerracottaTheme = ThemeOption(false, "PlumeTerracotta", R.string.theme_plume_terracotta, { true }) { terracotta.withPlume(it) }
+val PlumeCoquetteTheme = ThemeOption(false, "PlumeCoquette", R.string.theme_plume_coquette, { true }) { coquette.withPlume(it) }
+val PlumeMilitanteTheme = ThemeOption(false, "PlumeMilitante", R.string.theme_plume_militante, { true }) { militante.withPlume(it) }
+val PlumeTorrideTheme = ThemeOption(false, "PlumeTorride", R.string.theme_plume_torride, { true }) { torride.withPlume(it) }
+val PlumeNatureTheme = ThemeOption(false, "PlumeNature", R.string.theme_plume_nature, { true }) { nature.withPlume(it) }
 
 val PlumeLightTheme = ThemeOption(
     dynamic = false, key = "PlumeLight", name = R.string.theme_plume_light, available = { true }
