@@ -14,9 +14,9 @@ pour bien écrire le français. C'est une **version modifiée de [FUTO Keyboard]
 - **Typographie** : apostrophe courbe, espaces insécables avant `; : ! ?`, guillemets « ».
 - **Pas de majuscule après les abréviations** : « etc. », « cf. », « p. ex. », « M. » ; une URL ou une adresse e-mail n'est ni corrigée, ni coupée, ni capitalisée.
 - **Deux langues, une touche** : la touche EN/FR bascule instantanément, la barre d'espace aussi
-  par glissement. Par défaut les deux dictionnaires sont consultés en même temps (la langue dans
-  laquelle vous écrivez l'emporte) ; après trois mots dans l'autre langue, la barre propose
-  « Passer en anglais ? » d'un tap. Réglage « Une langue à la fois » dans Langues.
+  par glissement. Après trois mots dans l'autre langue, la barre propose « Passer en anglais ? »
+  d'un tap. Au choix (prise en main, puis Langues) : une langue à la fois — le défaut — ou les deux
+  dictionnaires consultés en même temps, la langue dans laquelle vous écrivez l'emportant.
 - **Vos mots** : importez une liste (texte, CSV, export Gboard, Hunspell, LibreOffice) dans le
   dictionnaire personnel ; un mot appris se garde pour de bon d'un tap (★).
 - **Apprentissage prudent** : un mot inconnu n'est retenu qu'à sa troisième validation, un mot

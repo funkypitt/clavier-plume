@@ -27,6 +27,7 @@ object PlumeLanguageHint {
     private var run = 0
     private var cooldown = 0
     @Volatile private var armed = false
+    @Volatile private var lastLabel: String? = null      // libellé injecté : un tap dessus, par quelque chemin, bascule et n'écrit rien
     private var otherLocale: Locale? = null
     @Volatile private var otherDict: Dictionary? = null
     private var loading = false
@@ -70,11 +71,12 @@ object PlumeLanguageHint {
 
     /** Le chip en tête de barre quand l'indice est armé. */
     @JvmStatic
-    fun inject(words: SuggestedWords?, context: Context, active: Locale): SuggestedWords? {
-        if (!armed) return words
+    fun inject(words: SuggestedWords?, context: Context, active: Locale, composing: Boolean): SuggestedWords? {
+        if (!armed || composing) return words                   // entre deux mots seulement, comme le chip d'annulation
         val other = otherLanguage(context, active) ?: return words
         val ui = context.resources.configuration.locales[0]          // nom de la langue dans la langue de l'interface
         val label = context.getString(R.string.plume_hint_switch_language, other.getDisplayLanguage(ui))
+        lastLabel = label
         val chip = SuggestedWordInfo(label, "", Int.MAX_VALUE, SuggestedWordInfo.KIND_PLUME_LANG_HINT,
             null, SuggestedWordInfo.NOT_AN_INDEX, SuggestedWordInfo.NOT_A_CONFIDENCE)
         val list = ArrayList<SuggestedWordInfo>(); list.add(chip)
@@ -90,6 +92,10 @@ object PlumeLanguageHint {
         Subtypes.switchToNextLanguage(context, 1)
         armed = false; run = 0; cooldown = COOLDOWN_AFTER_SWITCH
     }
+
+    /** Vrai si [text] est le libellé du chip : il ne doit jamais finir dans le champ (bug du 2026-09-15 sur le téléphone). */
+    @JvmStatic
+    fun isLabel(text: CharSequence?): Boolean = text != null && lastLabel != null && text.toString() == lastLabel
 
     @JvmStatic
     fun onStartInput() { armed = false }

@@ -75,7 +75,7 @@ import java.util.Locale
  */
 val PlumeSetupDone = SettingsKey(booleanPreferencesKey("plume_setup_done"), false)
 
-private const val STEPS = 7
+private const val STEPS = 8
 
 @Composable
 fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, initialStep: Int = 0, onFinished: () -> Unit) {
@@ -99,14 +99,15 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
     var enLayout by rememberSaveable { mutableStateOf(if (sys.country in setOf("CH", "LI", "DE", "AT")) "qwertz" else "qwerty") }
     var layoutTouched by rememberSaveable { mutableStateOf(false) }
     var enVariant by rememberSaveable { mutableStateOf(if (sys.country in setOf("GB", "IE", "AU", "NZ")) "en_GB" else "en_US") }
+    var bothLanguages by rememberSaveable { mutableStateOf(false) }   // défaut : une langue à la fois (décision du 2026-09-15)
 
     fun applyLanguages() {
         val fr = Subtypes.subtypeToString(Subtypes.makeSubtype(frVariant, frLayout))
         val en = Subtypes.subtypeToString(Subtypes.makeSubtype(enVariant, enLayout))
         context.setSettingBlocking(SubtypesSetting.key, setOf(fr, en))
         context.setSettingBlocking(ActiveSubtype.key, if (primary == "fr") fr else en)
-        // Plume : les deux dictionnaires consultés ensemble par défaut (réglage unique dans Langues)
-        Subtypes.setBothLanguagesMode(context, true)
+        // Plume : le mode bilingue est choisi à l'étape suivante ; ici on pose le défaut, une langue à la fois
+        Subtypes.setBothLanguagesMode(context, bothLanguages)
         context.setSettingBlocking(org.futo.inputmethod.latin.PlumeBilingualDefaultApplied.key, true)
     }
 
@@ -127,9 +128,10 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
                     { v -> frVariant = v; if (!layoutTouched) frLayout = when (v) { "fr_CH" -> "qwertz"; "fr_CA" -> "qwerty"; else -> "azerty" } },
                     { enVariant = it })
                 2 -> StepLayouts(primary, frVariant, enVariant, frLayout, enLayout, { frLayout = it; layoutTouched = true }, { enLayout = it })
-                3 -> StepActivate(inputMethodEnabled, inputMethodSelected)
-                4 -> StepTheme()
-                5 -> StepBasics()
+                3 -> StepBilingual(bothLanguages) { bothLanguages = it }
+                4 -> StepActivate(inputMethodEnabled, inputMethodSelected)
+                5 -> StepTheme()
+                6 -> StepBasics()
                 else -> StepTry(primary)
             }
             Spacer(Modifier.height(24.dp))
@@ -137,13 +139,14 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
         Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             if (step > 0) TextButton(onClick = { step -= 1 }) { Text(stringResource(R.string.plume_setup_back)) } else Spacer(Modifier.width(1.dp))
             Row {
-                if (step in 1..5 && !(step == 3 && !(inputMethodEnabled && inputMethodSelected))) {
+                if (step in 1..6 && !(step == 4 && !(inputMethodEnabled && inputMethodSelected))) {
                     // Passer ne change rien aux réglages existants (Suivant, lui, applique les dispositions)
                     TextButton(onClick = { step += 1 }) { Text(stringResource(R.string.plume_setup_skip)) }
                 }
-                val canNext = step != 3 || (inputMethodEnabled && inputMethodSelected)
+                val canNext = step != 4 || (inputMethodEnabled && inputMethodSelected)
                 Button(enabled = canNext, onClick = {
                     if (step == 2) applyLanguages()
+                    if (step == 3) Subtypes.setBothLanguagesMode(context, bothLanguages)
                     if (step == STEPS - 1) {
                         context.setSettingBlocking(PlumeSetupDone.key, true)
                         onFinished()
@@ -275,6 +278,15 @@ private fun StepLayouts(primary: String, frVariant: String, enVariant: String, f
             for (id in listOf(enLayout) + enIds.filter { it != enLayout }) LayoutChoice(id, enLocale, enLayout == id) { setEn(id) }
         }
     }
+}
+
+@Composable
+private fun StepBilingual(both: Boolean, setBoth: (Boolean) -> Unit) {
+    Title(stringResource(R.string.plume_setup_bilingual_title))
+    Body(stringResource(R.string.plume_setup_bilingual_body))
+    ChoiceCard(stringResource(R.string.plume_languages_mode_one), stringResource(R.string.plume_languages_mode_one_subtitle), !both, { setBoth(false) })
+    ChoiceCard(stringResource(R.string.plume_languages_mode_both), stringResource(R.string.plume_languages_mode_both_subtitle), both, { setBoth(true) })
+    Body(stringResource(R.string.plume_setup_bilingual_later))
 }
 
 @Composable

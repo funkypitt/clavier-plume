@@ -403,7 +403,7 @@ class LatinIME : InputMethodServiceCompose(), LatinIMELegacy.SuggestionStripCont
         registerReceiver(unlockReceiver, filter)
 
         Subtypes.addDefaultSubtypesIfNecessary(this)
-        Subtypes.applyPlumeBilingualDefaultIfNecessary(this)   // Plume : deux langues → les deux en même temps
+        Subtypes.applyPlumeBilingualDefaultIfNecessary(this)   // Plume 2.1.1 : retour unique au défaut « une langue à la fois »
 
         getSettingBlocking(THEME_KEY).let {
             val themeOption = getThemeOption(this, it).orDefault(this@LatinIME)

@@ -184,6 +184,9 @@ public interface DictionaryFacilitator {
     /** Plume : présent dans un dictionnaire livré de CETTE langue (indice de langue, 2.1.0). */
     default boolean isValidWordInLocale(final String word, final Locale locale) { return false; }
 
+    /** Plume : fréquence (0-255, -1 si absent) dans les dictionnaires chargés — règle « nom / élision vs mot courant ». */
+    default int getWordFrequency(final String word) { return -1; }
+
     boolean clearUserHistoryDictionary(final Context context);
 
     void flushUserHistoryDictionaries();

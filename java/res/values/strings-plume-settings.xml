@@ -174,9 +174,9 @@
     <string name="plume_voice_precise_download">Precise dictation: download the 244 model (264 MB)</string>
     <string name="plume_voice_precise_tip">The 244 model is the most accurate but slower. Download it with the browser, then use Import a file below and choose the language.</string>
     <string name="plume_languages_mode_title">Both languages</string>
-    <string name="plume_languages_mode_both">Both languages at the same time (recommended)</string>
+    <string name="plume_languages_mode_both">Effortless — both languages at the same time</string>
     <string name="plume_languages_mode_both_subtitle">Both dictionaries are consulted; the language you are typing in takes precedence. The EN/FR key still sets the layout and the typography.</string>
-    <string name="plume_languages_mode_one">One language at a time</string>
+    <string name="plume_languages_mode_one">Robust — one language at a time</string>
     <string name="plume_languages_mode_one_subtitle">Only the active language corrects; a word from the other language is treated as a typo until you switch.</string>
     <string name="plume_hint_switch_language">Switch to %1$s?</string>
     <string name="plume_pdict_import_list">Import a word list (txt, csv, Gboard, Hunspell, LibreOffice)</string>
@@ -184,4 +184,7 @@
     <string name="plume_pdict_import_report">%1$d added, %2$d already known, %3$d rejected</string>
     <string name="plume_pdict_import_too_large">This file has %1$d words — more than a personal list (limit %2$d). Nothing imported.</string>
     <string name="plume_learned_words_keep">Keep for good (personal dictionary)</string>
+    <string name="plume_setup_bilingual_title">Two languages</string>
+    <string name="plume_setup_bilingual_body">Plume has a French and an English dictionary. How should they work together?</string>
+    <string name="plume_setup_bilingual_later">You can change this later in Settings → Languages.</string>
 </resources>

@@ -85,8 +85,10 @@ val MultilingualBucketSetting = SettingsKey(
     emptySet()
 )
 
-/** Plume : le défaut « les deux langues en même temps » a été appliqué une fois (installations existantes). */
+/** Plume : la 2.1.0 avait basculé les installations existantes en « les deux » ; la 2.1.1 les ramène une fois
+ *  au défaut manuel (« une langue à la fois »), décision de l'utilisateur du 2026-09-15. */
 val PlumeBilingualDefaultApplied = SettingsKey(booleanPreferencesKey("plume_bilingual_default_applied"), false)
+val PlumeBilingualResetDone = SettingsKey(booleanPreferencesKey("plume_bilingual_reset_211"), false)
 
 object Subtypes {
     // Removes extensions from existing existing subtypes which are not meant to be there
@@ -211,7 +213,6 @@ object Subtypes {
         val currentSetting = context.getSettingBlocking(SubtypesSetting)
 
         context.setSettingBlocking(SubtypesSetting.key, currentSetting + setOf(value))
-        applyPlumeBilingualDefaultIfNecessary(context)   // Plume : deuxième langue → les deux en même temps
     }
 
     fun getName(inputMethodSubtype: InputMethodSubtype): String {
@@ -271,19 +272,16 @@ object Subtypes {
     }
 
     /**
-     * Défaut Plume : deux langues installées et seau vide → « les deux en même temps », une seule fois.
-     * Sans lui, un mot anglais tapé en français était corrigé en charabia (journal de frappe du 2026-09-15 :
-     * « boot » → « boit », « connecter » → « connected »).
+     * 2.1.1 : plus aucune bascule automatique. La 2.1.0 avait mis « les deux en même temps » aux installations
+     * existantes ; on les ramène une fois au défaut manuel. Un choix fait ensuite dans Langues est respecté.
      */
     fun applyPlumeBilingualDefaultIfNecessary(context: Context) {
         if (!context.isDirectBootUnlocked) return
-        if (context.getSettingBlocking(PlumeBilingualDefaultApplied)) return
-        val keys = installedLanguageKeys(context)
-        if (keys.size != 2) return          // une seule langue pour l'instant : on réessaie quand la deuxième arrive
-        if (context.getSettingBlocking(MultilingualBucketSetting).isEmpty()) {
-            context.setSettingBlocking(MultilingualBucketSetting.key, keys.toSet())
+        if (context.getSettingBlocking(PlumeBilingualResetDone)) return
+        if (context.getSettingBlocking(PlumeBilingualDefaultApplied) && isBothLanguagesMode(context)) {
+            setBothLanguagesMode(context, false)
         }
-        context.setSettingBlocking(PlumeBilingualDefaultApplied.key, true)
+        context.setSettingBlocking(PlumeBilingualResetDone.key, true)
     }
 
     fun layoutsMappedByLanguage(layouts: Set<String>): Map<String, List<InputMethodSubtype>> {

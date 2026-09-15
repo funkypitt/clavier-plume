@@ -75,6 +75,7 @@ public final class Suggest {
     public Suggest(final DictionaryFacilitator dictionaryFacilitator) {
         mDictionaryFacilitator = dictionaryFacilitator;
         org.futo.inputmethod.latin.plume.PlumeBilingual.setFacilitator(dictionaryFacilitator);   // Plume : mode bilingue
+        org.futo.inputmethod.latin.plume.PlumeNames.setFacilitator(dictionaryFacilitator);
     }
 
     /**
@@ -182,6 +183,8 @@ public final class Suggest {
         // Plume : en mode bilingue, un mot de l'autre langue au même squelette ne bloque pas la correction
         org.futo.inputmethod.latin.plume.PlumeBilingual.filterOtherLanguageExactMatches(
                 suggestionsContainer, typedWordString, locale);
+        // Plume : « moses » → « modes », pas « Moses » (nom propre au plancher qui n'a que les lettres pour lui)
+        org.futo.inputmethod.latin.plume.PlumeNames.preferCommonWord(suggestionsContainer, typedWordString);
 
         boolean foundInDictionary = false;
         Dictionary sourceDictionaryOfRemovedWord = null;

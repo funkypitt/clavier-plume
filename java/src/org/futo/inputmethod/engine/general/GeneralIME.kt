@@ -789,7 +789,7 @@ class GeneralIME(val helper: IMEHelper) : IMEInterface, WordLearner, SuggestionS
     override fun showSuggestionStrip(wordsIn: SuggestedWords?) {
         val words = org.futo.inputmethod.latin.plume.PlumeLanguageHint.inject(
             org.futo.inputmethod.latin.plume.PlumeRevertChip.inject(wordsIn, inputLogic),
-            helper.context, dictionaryFacilitator.primaryLocale)
+            helper.context, dictionaryFacilitator.primaryLocale, inputLogic.mWordComposer.isComposingWord())
         inputLogic.setSuggestedWords(words)
 
         if(settings.current.isSuggestionsEnabledPerUserSettings) {

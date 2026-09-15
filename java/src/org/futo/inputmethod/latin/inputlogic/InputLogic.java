@@ -458,7 +458,8 @@ public final class InputLogic {
         // for the sequence of language switching.
         inputTransaction.setDidAffectContents();
 
-        if(suggestionInfo.mKindAndFlags == SuggestedWordInfo.KIND_PLUME_LANG_HINT) {
+        if(suggestionInfo.mKindAndFlags == SuggestedWordInfo.KIND_PLUME_LANG_HINT
+                || org.futo.inputmethod.latin.plume.PlumeLanguageHint.isLabel(suggestionInfo.mWord)) {
             // Plume : tap sur « Passer en anglais ? » — bascule, rien n'est écrit dans le champ
             inputTransaction.setRequiresUpdateSuggestions();
             org.futo.inputmethod.latin.plume.PlumeLanguageHint.onPicked(mImeHelper.getContext());
@@ -2924,6 +2925,12 @@ public final class InputLogic {
      */
     private void commitChosenWord(final SettingsValues settingsValues, final String chosenWord,
             final int commitType, final String separatorString, final int importance) {
+        // Plume : le libellé du chip « Passer en anglais ? » ne s'écrit jamais, quel que soit le chemin
+        if (org.futo.inputmethod.latin.plume.PlumeLanguageHint.isLabel(chosenWord)) {
+            mWordComposer.reset(true);
+            org.futo.inputmethod.latin.plume.PlumeLanguageHint.onPicked(mImeHelper.getContext());
+            return;
+        }
         long startTimeMillis = 0;
         if (DebugFlags.DEBUG_ENABLED) {
             startTimeMillis = System.currentTimeMillis();
