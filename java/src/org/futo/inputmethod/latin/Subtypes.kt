@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import org.futo.inputmethod.latin.common.Constants
 import org.futo.inputmethod.latin.uix.SettingsKey
 import org.futo.inputmethod.latin.uix.getSetting
@@ -83,6 +84,9 @@ val MultilingualBucketSetting = SettingsKey(
     stringSetPreferencesKey("multilingual_bucket"),
     emptySet()
 )
+
+/** Plume : le défaut « les deux langues en même temps » a été appliqué une fois (installations existantes). */
+val PlumeBilingualDefaultApplied = SettingsKey(booleanPreferencesKey("plume_bilingual_default_applied"), false)
 
 object Subtypes {
     // Removes extensions from existing existing subtypes which are not meant to be there
@@ -207,6 +211,7 @@ object Subtypes {
         val currentSetting = context.getSettingBlocking(SubtypesSetting)
 
         context.setSettingBlocking(SubtypesSetting.key, currentSetting + setOf(value))
+        applyPlumeBilingualDefaultIfNecessary(context)   // Plume : deuxième langue → les deux en même temps
     }
 
     fun getName(inputMethodSubtype: InputMethodSubtype): String {
@@ -240,6 +245,45 @@ object Subtypes {
         } else {
             return locale.getDisplayName(nameLocale)
         }
+    }
+
+    // ---- Plume : clavier bilingue, un seul interrupteur ---------------------------------------------
+    // Le « seau » multilingue de FUTO est une case par langue, prévue pour N langues ; avec exactement deux
+    // langues installées, Plume le pilote par un seul réglage : « une langue à la fois » (seau vide) ou
+    // « les deux langues en même temps » (seau = les deux). Décision de l'utilisateur, 2026-09-15.
+
+    /** Clés de langue installées (format `subtype.locale`, celui du seau), triées. */
+    fun installedLanguageKeys(context: Context): List<String> =
+        layoutsMappedByLanguage(context.getSettingBlocking(SubtypesSetting)).keys.sorted()
+
+    /** Vrai si le clavier a exactement deux langues : l'interrupteur unique s'applique. */
+    fun isBilingual(context: Context): Boolean = installedLanguageKeys(context).size == 2
+
+    /** Vrai si toutes les langues installées sont dans le seau (les deux dictionnaires consultés ensemble). */
+    fun isBothLanguagesMode(context: Context): Boolean {
+        val keys = installedLanguageKeys(context)
+        return keys.isNotEmpty() && context.getSettingBlocking(MultilingualBucketSetting).containsAll(keys)
+    }
+
+    fun setBothLanguagesMode(context: Context, both: Boolean) {
+        context.setSettingBlocking(MultilingualBucketSetting.key,
+            if (both) installedLanguageKeys(context).toSet() else emptySet())
+    }
+
+    /**
+     * Défaut Plume : deux langues installées et seau vide → « les deux en même temps », une seule fois.
+     * Sans lui, un mot anglais tapé en français était corrigé en charabia (journal de frappe du 2026-09-15 :
+     * « boot » → « boit », « connecter » → « connected »).
+     */
+    fun applyPlumeBilingualDefaultIfNecessary(context: Context) {
+        if (!context.isDirectBootUnlocked) return
+        if (context.getSettingBlocking(PlumeBilingualDefaultApplied)) return
+        val keys = installedLanguageKeys(context)
+        if (keys.size != 2) return          // une seule langue pour l'instant : on réessaie quand la deuxième arrive
+        if (context.getSettingBlocking(MultilingualBucketSetting).isEmpty()) {
+            context.setSettingBlocking(MultilingualBucketSetting.key, keys.toSet())
+        }
+        context.setSettingBlocking(PlumeBilingualDefaultApplied.key, true)
     }
 
     fun layoutsMappedByLanguage(layouts: Set<String>): Map<String, List<InputMethodSubtype>> {

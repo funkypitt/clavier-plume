@@ -74,6 +74,7 @@ public final class Suggest {
 
     public Suggest(final DictionaryFacilitator dictionaryFacilitator) {
         mDictionaryFacilitator = dictionaryFacilitator;
+        org.futo.inputmethod.latin.plume.PlumeBilingual.setFacilitator(dictionaryFacilitator);   // Plume : mode bilingue
     }
 
     /**
@@ -177,6 +178,10 @@ public final class Suggest {
         final ArrayList<SuggestedWordInfo> suggestionsContainer =
                 getTransformedSuggestedWordInfoList(wordComposer, suggestionResults,
                         trailingSingleQuotesCount, locale);
+
+        // Plume : en mode bilingue, un mot de l'autre langue au même squelette ne bloque pas la correction
+        org.futo.inputmethod.latin.plume.PlumeBilingual.filterOtherLanguageExactMatches(
+                suggestionsContainer, typedWordString, locale);
 
         boolean foundInDictionary = false;
         Dictionary sourceDictionaryOfRemovedWord = null;

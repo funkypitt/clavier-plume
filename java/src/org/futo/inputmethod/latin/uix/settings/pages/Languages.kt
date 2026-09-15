@@ -137,7 +137,8 @@ fun LanguageSurface(
     onLayoutRemoved: (InputMethodSubtype) -> Unit,
     onLayoutAdditionRequested: () -> Unit,
     onLanguageRemoved: () -> Unit,
-    onToggleMultilingualBucket: (Boolean) -> Unit
+    onToggleMultilingualBucket: (Boolean) -> Unit,
+    showBucketToggle: Boolean = true          // Plume : masquée quand l'interrupteur bilingue unique s'applique
 ) {
     Column(
         modifier
@@ -182,7 +183,7 @@ fun LanguageSurface(
             color = MaterialTheme.colorScheme.outlineVariant
         )
 
-        Row(
+        if (showBucketToggle) Row(
             Modifier
                 .fillMaxWidth()
                 .clickable { onToggleMultilingualBucket(!item.inMultilingualBucket) }
@@ -200,7 +201,7 @@ fun LanguageSurface(
             )
         }
 
-        HorizontalDivider(
+        if (showBucketToggle) HorizontalDivider(
             Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
             color = MaterialTheme.colorScheme.outlineVariant
         )
@@ -211,6 +212,51 @@ fun LanguageSurface(
             tint = MaterialTheme.colorScheme.error,
             onClick = onLanguageRemoved
         )
+    }
+}
+
+/**
+ * Plume : avec exactement deux langues, un seul réglage nommé par son effet remplace les deux cases
+ * « suggestions dans cette langue en même temps » (dont la combinaison devait être devinée, et dont le
+ * défaut vide corrigeait « boot » en « boit »). La touche EN/FR reste : disposition, typographie et
+ * langue par défaut en dépendent dans les deux modes.
+ */
+@Composable
+fun BilingualModeCard(both: Boolean, onChange: (Boolean) -> Unit) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .background(color = MaterialTheme.colorScheme.surfaceContainerLow, shape = RoundedCornerShape(12.dp))
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            stringResource(R.string.plume_languages_mode_title),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
+            style = Typography.Body.MediumMl.copy(fontWeight = FontWeight.Medium)
+        )
+        listOf(
+            true to (R.string.plume_languages_mode_both to R.string.plume_languages_mode_both_subtitle),
+            false to (R.string.plume_languages_mode_one to R.string.plume_languages_mode_one_subtitle),
+        ).forEach { (value, labels) ->
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { onChange(value) }
+                    .padding(start = 8.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                androidx.compose.material3.RadioButton(selected = both == value, onClick = { onChange(value) })
+                Column(Modifier.weight(1.0f)) {
+                    Text(stringResource(labels.first), style = Typography.Body.RegularMl)
+                    Text(
+                        stringResource(labels.second),
+                        style = Typography.Small,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -326,6 +372,15 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
             )
         }
 
+        val bilingual = inputMethodKeys.size == 2
+        if (bilingual) item {
+            BilingualModeCard(
+                both = multilingualBucket.value.containsAll(inputMethodKeys),
+                onChange = { both -> multilingualBucket.setValue(if (both) inputMethodKeys.toSet() else emptySet()) }
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
         items(inputMethodKeys) { localeString ->
             val subtypes = inputMethodList[localeString]!!
             val locale = Subtypes.getLocale(localeString)
@@ -358,7 +413,8 @@ fun LanguagesScreen(navController: NavHostController = rememberNavController()) 
                     }
 
                     multilingualBucket.setValue(newSet)
-                }
+                },
+                showBucketToggle = !bilingual
             )
 
             Spacer(modifier = Modifier.height(12.dp))

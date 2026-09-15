@@ -94,7 +94,7 @@
     <string name="plume_languages_remove">Remove this language</string>
     <string name="plume_learned_words">Learned words</string>
     <string name="plume_learned_words_subtitle">Words the keyboard picked up, forget them in one tap</string>
-    <string name="plume_learned_words_tip">A word missing from the dictionary is kept after its second use. Forgetting removes it from suggestions; it can be learned again. The blacklist bans it for good.</string>
+    <string name="plume_learned_words_tip">A word missing from the dictionary is kept after its third use. ★ keeps it for good in the personal dictionary. Forgetting removes it from suggestions; it can be learned again. The blacklist bans it for good.</string>
     <string name="plume_learned_words_none">No learned words yet.</string>
     <string name="plume_learned_words_forget">Forget</string>
     <plurals name="plume_learned_words_count">
@@ -173,4 +173,15 @@
     <string name="plume_voice_revert_builtin">Back to the built-in model</string>
     <string name="plume_voice_precise_download">Precise dictation: download the 244 model (264 MB)</string>
     <string name="plume_voice_precise_tip">The 244 model is the most accurate but slower. Download it with the browser, then use Import a file below and choose the language.</string>
+    <string name="plume_languages_mode_title">Both languages</string>
+    <string name="plume_languages_mode_both">Both languages at the same time (recommended)</string>
+    <string name="plume_languages_mode_both_subtitle">Both dictionaries are consulted; the language you are typing in takes precedence. The EN/FR key still sets the layout and the typography.</string>
+    <string name="plume_languages_mode_one">One language at a time</string>
+    <string name="plume_languages_mode_one_subtitle">Only the active language corrects; a word from the other language is treated as a typo until you switch.</string>
+    <string name="plume_hint_switch_language">Switch to %1$s?</string>
+    <string name="plume_pdict_import_list">Import a word list (txt, csv, Gboard, Hunspell, LibreOffice)</string>
+    <string name="plume_pdict_import_title">Import</string>
+    <string name="plume_pdict_import_report">%1$d added, %2$d already known, %3$d rejected</string>
+    <string name="plume_pdict_import_too_large">This file has %1$d words — more than a personal list (limit %2$d). Nothing imported.</string>
+    <string name="plume_learned_words_keep">Keep for good (personal dictionary)</string>
 </resources>

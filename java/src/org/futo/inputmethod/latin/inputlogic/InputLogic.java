@@ -239,6 +239,7 @@ public final class InputLogic {
         numCursorUpdatesSinceInputStarted = 0;
         mConnection.finishComposingText(); // On screen rotation in case we were composing, finish composition before resetting
         mConnection.onStartInput();
+        org.futo.inputmethod.latin.plume.PlumeLanguageHint.onStartInput();
         if (!mWordComposer.getTypedWord().isEmpty()) {
             // For messaging apps that offer send button, the IME does not get the opportunity
             // to capture the last word. This block should capture those uncommitted words.
@@ -456,6 +457,13 @@ public final class InputLogic {
         // Manual pick affects the contents of the editor, so we take note of this. It's important
         // for the sequence of language switching.
         inputTransaction.setDidAffectContents();
+
+        if(suggestionInfo.mKindAndFlags == SuggestedWordInfo.KIND_PLUME_LANG_HINT) {
+            // Plume : tap sur « Passer en anglais ? » — bascule, rien n'est écrit dans le champ
+            inputTransaction.setRequiresUpdateSuggestions();
+            org.futo.inputmethod.latin.plume.PlumeLanguageHint.onPicked(mImeHelper.getContext());
+            return inputTransaction;
+        }
 
         if(suggestionInfo.mKindAndFlags == SuggestedWordInfo.KIND_PLUME_REVERT) {
             // Plume : « tap pour annuler » l'autocorrection (iOS 17) — même chemin que le
@@ -2325,6 +2333,11 @@ public final class InputLogic {
      */
     private void revertCommit(final InputTransaction inputTransaction,
             final SettingsValues settingsValues) {
+        // Plume (2.1.0) : annuler une correction dit que le mot tapé était voulu — il compte pour la
+        // confiance de langue (« boot » corrigé en « boit » puis rétabli : l'anglais prend la main)
+        if (mLastComposedWord.mTypedWord != null && mDictionaryFacilitator.isInShippedDictionary(mLastComposedWord.mTypedWord)) {
+            mDictionaryFacilitator.onWordCommitted(mLastComposedWord.mTypedWord);
+        }
         final CharSequence originallyTypedWord = mLastComposedWord.mTypedWord;
         final String originallyTypedWordString =
                 originallyTypedWord != null ? originallyTypedWord.toString() : "";
@@ -2952,6 +2965,13 @@ public final class InputLogic {
             startTimeMillis = System.currentTimeMillis();
         }
         // Add the word to the user history dictionary
+        // Plume (2.1.0) : la confiance de langue compte le mot validé (FUTO) — compter le mot tapé faisait
+        // basculer la confiance sur des fautes françaises qui sont des mots anglais (« dams », « said », banc
+        // du 2026-09-15). Seule une annulation de correction compte le mot tapé (revertCommit). L'indice
+        // « Passer en anglais ? », lui, compte le mot tapé quand il existe : c'est la porte de sortie.
+        final String plumeTyped = mWordComposer.getTypedWord();
+        final String plumeLangWord = (!TextUtils.isEmpty(plumeTyped) && !plumeTyped.equals(chosenWord)
+                && mDictionaryFacilitator.isInShippedDictionary(plumeTyped)) ? plumeTyped : chosenWord;
         mDictionaryFacilitator.onWordCommitted(chosenWord);
         TypoLogger.countWord();   // dénominateur de la mesure (mots validés)
         // Plume : un segment d'URL ou d'adresse (« gallaz » dans « www.gallaz.ch ») n'est ni compté dans le
@@ -2963,6 +2983,11 @@ public final class InputLogic {
                             mWordComposer.wasAutoCapitalized() && !mWordComposer.isMostlyCaps(), locale),
                     locale, plumeIsSensitiveField(settingsValues));
             performAdditionToUserHistoryDictionary(settingsValues, chosenWord, ngramContext, importance);
+            // Plume : indice « Passer en anglais ? » après trois mots de l'autre langue (2.1.0)
+            if (!plumeIsSensitiveField(settingsValues)) {
+                org.futo.inputmethod.latin.plume.PlumeLanguageHint.onWordCommitted(
+                        mImeHelper.getContext(), plumeLangWord, locale, mDictionaryFacilitator);
+            }
         }
         if (DebugFlags.DEBUG_ENABLED) {
             long runTimeMillis = System.currentTimeMillis() - startTimeMillis;

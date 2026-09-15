@@ -181,6 +181,9 @@ public interface DictionaryFacilitator {
 
     boolean isInShippedDictionary(final String word);
 
+    /** Plume : présent dans un dictionnaire livré de CETTE langue (indice de langue, 2.1.0). */
+    default boolean isValidWordInLocale(final String word, final Locale locale) { return false; }
+
     boolean clearUserHistoryDictionary(final Context context);
 
     void flushUserHistoryDictionaries();

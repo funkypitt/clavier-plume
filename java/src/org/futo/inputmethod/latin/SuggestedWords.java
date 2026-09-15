@@ -297,6 +297,7 @@ public class SuggestedWords {
         public static final int KIND_EMOJI_SUGGESTION = 11;
         public static final int KIND_UNDO = 12;
         public static final int KIND_PLUME_REVERT = 13; // Plume : annuler la dernière autocorrection (tap)
+        public static final int KIND_PLUME_LANG_HINT = 14; // Plume : « Passer en anglais ? » (tap = bascule)
 
         public static final int KIND_FLAG_POSSIBLY_OFFENSIVE = 0x80000000;
         public static final int KIND_FLAG_EXACT_MATCH = 0x40000000;

@@ -105,6 +105,9 @@ fun PlumeSetupWizard(inputMethodEnabled: Boolean, inputMethodSelected: Boolean, 
         val en = Subtypes.subtypeToString(Subtypes.makeSubtype(enVariant, enLayout))
         context.setSettingBlocking(SubtypesSetting.key, setOf(fr, en))
         context.setSettingBlocking(ActiveSubtype.key, if (primary == "fr") fr else en)
+        // Plume : les deux dictionnaires consultés ensemble par défaut (réglage unique dans Langues)
+        Subtypes.setBothLanguagesMode(context, true)
+        context.setSettingBlocking(org.futo.inputmethod.latin.PlumeBilingualDefaultApplied.key, true)
     }
 
     Column(Modifier.fillMaxSize()) {

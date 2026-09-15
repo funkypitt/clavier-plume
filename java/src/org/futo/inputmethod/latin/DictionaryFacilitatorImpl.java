@@ -828,8 +828,13 @@ public class DictionaryFacilitatorImpl implements DictionaryFacilitator {
             if(dictionaryGroup.mConfidence > maxConfidence) maxConfidence = dictionaryGroup.mConfidence;
         }
 
+        // Plume (2.1.0) : la langue active (groupe 0) garde toujours le poids 1,0 — sinon ses raccourcis de
+        // liste blanche (« aplus » → « à plus ») ne sortent plus (le natif exige > 0,99) dès que l'autre langue
+        // est aussi confiante. L'autre langue ne monte à 1,0 que si elle est STRICTEMENT plus confiante.
+        final int primaryConfidence = mDictionaryGroups.isEmpty() ? 0 : mDictionaryGroups.get(0).mConfidence;
         for(DictionaryGroup dictionaryGroup : mDictionaryGroups) {
-            if(dictionaryGroup.mConfidence >= maxConfidence) {
+            final boolean primary = dictionaryGroup == mDictionaryGroups.get(0);
+            if(primary || dictionaryGroup.mConfidence > primaryConfidence) {
                 dictionaryGroup.mWeightForTypingInLocale = DictionaryGroup.WEIGHT_FOR_MOST_PROBABLE_LANGUAGE;
                 dictionaryGroup.mWeightForGesturingInLocale = DictionaryGroup.WEIGHT_FOR_MOST_PROBABLE_LANGUAGE;
             } else {
@@ -958,6 +963,19 @@ public class DictionaryFacilitatorImpl implements DictionaryFacilitator {
      *  sans compter l'historique appris. */
     public boolean isInShippedDictionary(final String word) {
         return isValidWord(word, PLUME_SHIPPED_DICTIONARY_TYPES);
+    }
+
+    @Override
+    public boolean isValidWordInLocale(final String word, final Locale locale) {
+        if (TextUtils.isEmpty(word) || locale == null) return false;
+        for (DictionaryGroup group : mDictionaryGroups) {
+            if (group.mLocale == null || !group.mLocale.getLanguage().equals(locale.getLanguage())) continue;
+            for (final String dictType : PLUME_SHIPPED_DICTIONARY_TYPES) {
+                final Dictionary dictionary = group.getDict(dictType);
+                if (dictionary != null && dictionary.isValidWord(word)) return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValidWord(final String word, final String[] dictionariesToCheck) {

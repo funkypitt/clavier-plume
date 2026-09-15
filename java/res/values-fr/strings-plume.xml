@@ -106,7 +106,7 @@
     <string name="plume_languages_remove">Retirer la langue</string>
     <string name="plume_learned_words">Mots appris</string>
     <string name="plume_learned_words_subtitle">Mots retenus par le clavier, à oublier d\'un geste</string>
-    <string name="plume_learned_words_tip">Un mot absent du dictionnaire est retenu à sa deuxième validation. Oublier un mot le retire des suggestions ; il pourra être réappris. La liste noire, elle, l\'interdit pour de bon.</string>
+    <string name="plume_learned_words_tip">Un mot absent du dictionnaire est retenu à sa troisième utilisation. ★ le garde pour de bon dans le dictionnaire personnel. Oublier le retire des suggestions ; il peut être réappris. La liste noire l\'interdit définitivement.</string>
     <string name="plume_learned_words_none">Aucun mot appris pour l\'instant.</string>
     <string name="plume_learned_words_forget">Oublier</string>
     <plurals name="plume_learned_words_count">
@@ -187,4 +187,15 @@
     <string name="plume_voice_revert_builtin">Revenir au modèle intégré</string>
     <string name="plume_voice_precise_download">Dictée précise : télécharger le modèle 244 (264 Mo)</string>
     <string name="plume_voice_precise_tip">Le modèle 244 est le plus précis mais plus lent. Téléchargez-le avec le navigateur, puis « Importer un fichier » ci-dessous et choisissez la langue.</string>
+    <string name="plume_languages_mode_title">Les deux langues</string>
+    <string name="plume_languages_mode_both">Les deux langues en même temps (recommandé)</string>
+    <string name="plume_languages_mode_both_subtitle">Les deux dictionnaires sont consultés ; la langue dans laquelle vous écrivez l\'emporte. La touche EN/FR règle toujours la disposition et la typographie.</string>
+    <string name="plume_languages_mode_one">Une langue à la fois</string>
+    <string name="plume_languages_mode_one_subtitle">Seule la langue active corrige ; un mot de l\'autre langue est traité comme une faute tant que vous ne basculez pas.</string>
+    <string name="plume_hint_switch_language">Passer en %1$s\u202f?</string>
+    <string name="plume_pdict_import_list">Importer une liste de mots (txt, csv, Gboard, Hunspell, LibreOffice)</string>
+    <string name="plume_pdict_import_title">Import</string>
+    <string name="plume_pdict_import_report">%1$d ajoutés, %2$d déjà connus, %3$d rejetés</string>
+    <string name="plume_pdict_import_too_large">Ce fichier contient %1$d mots — plus qu\'une liste personnelle (limite %2$d). Rien n\'a été importé.</string>
+    <string name="plume_learned_words_keep">Garder pour de bon (dictionnaire personnel)</string>
 </resources>

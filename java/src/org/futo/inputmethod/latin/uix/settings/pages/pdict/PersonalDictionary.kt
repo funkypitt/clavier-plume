@@ -55,6 +55,7 @@ import org.futo.inputmethod.latin.uix.settings.ScreenTitle
 import org.futo.inputmethod.latin.uix.settings.ScrollableList
 import org.futo.inputmethod.latin.uix.settings.useDataStoreValue
 import java.util.Locale
+import kotlinx.coroutines.launch
 import kotlin.collections.get
 
 private data class ExceptionalPersonalDictionaryViewConfiguration(
@@ -220,6 +221,28 @@ fun PersonalDictionaryLanguageListForLocale(
         }
     }
 
+    // Plume : import d'une liste de mots
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val importReport = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<org.futo.inputmethod.latin.plume.PlumeWordListImport.Report?>(null) }
+    val importLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) scope.launch {
+            importReport.value = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                org.futo.inputmethod.latin.plume.PlumeWordListImport.import(context, uri, locale)
+            }
+            refreshCounter.intValue += 1
+        }
+    }
+    importReport.value?.let { r ->
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { importReport.value = null },
+            confirmButton = { androidx.compose.material3.TextButton(onClick = { importReport.value = null }) { androidx.compose.material3.Text(stringResource(android.R.string.ok)) } },
+            title = { androidx.compose.material3.Text(stringResource(R.string.plume_pdict_import_title)) },
+            text = { androidx.compose.material3.Text(
+                if (r.refused) stringResource(R.string.plume_pdict_import_too_large, r.total, org.futo.inputmethod.latin.plume.PlumeWordListImport.MAX_WORDS)
+                else stringResource(R.string.plume_pdict_import_report, r.added, r.known, r.rejected)) }
+        )
+    }
     val words = remember(refreshCounter.intValue) {
         dict.get().filter { it.locale?.let { localeFromString(it) } == locale }
     }
@@ -269,6 +292,15 @@ fun PersonalDictionaryLanguageListForLocale(
                     navController.navigate(Route.PersonalDictWord(locale?.toLanguageTag(), null))
                 },
                 icon = painterResource(R.drawable.plus_circle)
+            )
+        }
+        item {
+            // Plume : import d'une liste de mots (txt, csv/tsv, Gboard, Hunspell, LibreOffice) — 2.1.0
+            NavigationItem(
+                title = stringResource(R.string.plume_pdict_import_list),
+                style = NavigationItemStyle.HomePrimary,
+                navigate = { importLauncher.launch(arrayOf("*/*")) },
+                icon = painterResource(R.drawable.file_text)
             )
         }
         items(words) {

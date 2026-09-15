@@ -2,6 +2,7 @@ package org.futo.inputmethod.latin.uix.settings.pages
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -52,6 +53,14 @@ fun LearnedWordsScreen(navController: NavHostController = rememberNavController(
                 subtitle = pluralStringResource(R.plurals.plume_learned_words_count, entry.count, entry.count)
                         + " · " + entry.lang,
             ) {
+                // Plume 2.1.0 : « Garder pour de bon » → dictionnaire personnel (permanent), retiré des mots appris
+                IconButton(onClick = {
+                    org.futo.inputmethod.latin.plume.PlumeWordListImport.keepForGood(context, entry.word, entry.lang)
+                    PlumeVocab.requestForget(entry)
+                    entries = list.filter { it != entry }
+                }) {
+                    Icon(Icons.Default.Star, contentDescription = stringResource(R.string.plume_learned_words_keep))
+                }
                 IconButton(onClick = {
                     PlumeVocab.requestForget(entry)
                     entries = list.filter { it != entry }
