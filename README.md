@@ -1,63 +1,27 @@
 # Clavier Plume
 
-Clavier Android français / anglais, hors ligne, sans publicité ni télémétrie, pensé d'abord
-pour bien écrire le français. C'est une **version modifiée de [FUTO Keyboard](https://github.com/futo-org/android-keyboard)**.
+Clavier Android français / anglais fait d'abord pour bien écrire le français : élisions, accents,
+traits d'union et typographie justes. La correction vient du dictionnaire et de la grammaire, sans
+modèle de langue. Hors ligne, sans publicité ni télémétrie : l'app n'a pas la permission Internet.
+C'est une **version modifiée de [FUTO Keyboard](https://github.com/futo-org/android-keyboard)**.
 
-## Ce qu'il fait de particulier
+## Points-clés
 
-- **Élision juste** : `l'`, `d'`, `qu'`, `j'`, `n'`, `s'`… générées par la grammaire (catégorie,
-  nombre, personne) et validées contre le dictionnaire Dicollecte, pas devinées : « l'hôtel »
-  oui, « l'haricot » non, « j'aime » oui, « j'aimes » non.
-- **Accents retrouvés** : « voila » → « voilà », « coeur » → « cœur », « aplus » → « à plus ».
-- **Impératifs et inversions** : « rappelle-moi », « dépêche-toi », « allons-y », « a-t-il »,
-  « avez-vous ».
-- **Typographie** : apostrophe courbe, espaces insécables avant `; : ! ?`, guillemets « ».
-- **Pas de majuscule après les abréviations** : « etc. », « cf. », « p. ex. », « M. » ; une URL ou une adresse e-mail n'est ni corrigée, ni coupée, ni capitalisée.
-- **Deux langues, une touche** : la touche EN/FR bascule instantanément, la barre d'espace aussi
-  par glissement. Après trois mots dans l'autre langue, la barre propose « Passer en anglais ? »
-  d'un tap. Au choix (prise en main, puis Langues) : une langue à la fois — le défaut — ou les deux
-  dictionnaires consultés en même temps, la langue dans laquelle vous écrivez l'emportant.
-- **Vos mots** : importez une liste (texte, CSV, export Gboard, Hunspell, LibreOffice) dans le
-  dictionnaire personnel ; un mot appris se garde pour de bon d'un tap (★).
-- **Apprentissage prudent** : un mot inconnu n'est retenu qu'à sa troisième validation, un mot
-  effacé au retour arrière est désappris, l'écran « Mots appris » permet d'oublier d'un geste.
-- **Dictionnaire** : Lexique 3.83 (fréquences, catégories), noms propres et bigrammes du corpus
-  de Leipzig, vocabulaire d'aujourd'hui de LanguageTool, vocabulaire passif du Littré (reconnu
-  s'il est tapé, jamais proposé).
-- **Réglages minimalistes** : 7 écrans, une trentaine d'options.
-- **Dictée** hors ligne (Whisper, modèle multilingue embarqué), glissement, presse-papiers.
-- **Treize thèmes** dont deux « encre » à fort contraste (Coquette, Militante, Torride, Nature
-  depuis la 2.0.5), typographie Selawik.
-
-Rien ne quitte l'appareil : aucune permission réseau n'est utilisée pour la saisie.
-
-## Thèmes
-
-| Plume Coquette | Plume Torride |
-|---|---|
-| ![Plume Coquette](screenshots/coquette.png) | ![Plume Torride](screenshots/torride.png) |
-
-| Plume Militante | Plume Nature |
-|---|---|
-| ![Plume Militante](screenshots/militante.png) | ![Plume Nature](screenshots/nature.png) |
-
-| Plume Lavande | Plume Terracotta |
-|---|---|
-| ![Plume Lavande](screenshots/lavande.png) | ![Plume Terracotta](screenshots/terracotta.png) |
+- Élisions générées par la grammaire et validées contre Dicollecte, pas devinées : « l'hôtel » oui, « l'haricot » non ; « j'aime » oui, « j'aimes » non.
+- Accents et traits d'union retrouvés : « voila » → « voilà », « coeur » → « cœur », « rappelle-moi », « a-t-il ».
+- Typographie : apostrophe courbe, espaces insécables avant `; : ! ?`, guillemets « ». Pas de majuscule après « etc. », « cf. », « M. » ; une URL ou une adresse e-mail n'est ni corrigée, ni coupée, ni capitalisée.
+- Deux langues : la touche EN/FR bascule, la barre d'espace aussi par glissement ; après trois mots dans l'autre langue, la barre propose de changer. Au choix (prise en main, puis Langues) : une langue à la fois — le défaut — ou les deux dictionnaires ensemble.
+- Un mot inconnu n'est retenu qu'à sa troisième validation ; effacé au retour arrière, il est désappris ; ★ le garde d'un toucher ; l'écran « Mots appris » permet de l'oublier.
+- Vos mots : import d'une liste (texte, CSV, export Gboard, Hunspell, LibreOffice) dans le dictionnaire personnel.
+- Dictionnaire : Lexique 3.83, noms propres et bigrammes du corpus de Leipzig, vocabulaire récent de LanguageTool, vocabulaire passif du Littré (reconnu s'il est tapé, jamais proposé).
+- Dictée hors ligne (Whisper, modèle multilingue embarqué), glissement, presse-papiers. Le micro et, facultativement, les contacts (prénoms reconnus) sont les seules permissions sensibles.
+- Réglages : 7 écrans, une trentaine d'options. Treize thèmes, dont deux « encre » à fort contraste ; typographie Selawik.
 
 ## Installation
 
 Téléchargez l'APK de la dernière [release](../../releases) et installez-la, ou suivez ce dépôt
 avec [Obtainium](https://github.com/ImranR98/Obtainium). Puis Réglages Android → Langues et
 saisie → activer « Clavier Plume ».
-
-## Licence
-
-Le code est sous [FUTO Source First License 1.1](LICENSE.md) : usage, modification et
-redistribution libres à des fins **non commerciales**. Clavier Plume est une version modifiée
-de FUTO Keyboard ; les modifications sont décrites dans [NOTICE-PLUME.md](NOTICE-PLUME.md),
-avec les sources de données et leurs licences (Lexique CC BY-SA, Leipzig CC BY, Littré
-CC BY-SA, LanguageTool LGPL, LibreOffice MPL, Selawik OFL).
 
 ## Compiler
 
@@ -72,6 +36,14 @@ FUTO Keyboard.
 
 Le dictionnaire français `plume/res-large-overlay/raw/main_fr.dict` est généré par les outils du
 projet (Lexique + règles d'élision + contrôle Dicollecte) ; il est fourni compilé.
+
+## Licence
+
+Le code est sous [FUTO Source First License 1.1](LICENSE.md) : usage, modification et
+redistribution libres à des fins **non commerciales**. Clavier Plume est une version modifiée
+de FUTO Keyboard ; les modifications sont décrites dans [NOTICE-PLUME.md](NOTICE-PLUME.md),
+avec les sources de données et leurs licences (Lexique CC BY-SA, Leipzig CC BY, Littré
+CC BY-SA, LanguageTool LGPL, LibreOffice MPL, Selawik OFL).
 
 ---
 
@@ -89,3 +61,17 @@ Licence FUTO Source First 1.1, voir `LICENSE.md`.
 
 © 2026 Pierre Gallaz. Developed with [Claude Code](https://claude.com/claude-code) (Anthropic).
 FUTO Source First 1.1 licence, see `LICENSE.md`.
+
+## Thèmes
+
+| Plume Coquette | Plume Torride |
+|---|---|
+| ![Plume Coquette](screenshots/coquette.png) | ![Plume Torride](screenshots/torride.png) |
+
+| Plume Militante | Plume Nature |
+|---|---|
+| ![Plume Militante](screenshots/militante.png) | ![Plume Nature](screenshots/nature.png) |
+
+| Plume Lavande | Plume Terracotta |
+|---|---|
+| ![Plume Lavande](screenshots/lavande.png) | ![Plume Terracotta](screenshots/terracotta.png) |
