@@ -312,6 +312,9 @@ android {
         // (hit-testing probabiliste désactivé, thème par défaut Lavande, applicationId propre)
         prive {
             dimension "audience"
+            // applicationId propre : le namespace FUTO n'est pas enregistrable
+            // auprès de la vérification développeur Google (2027).
+            applicationId 'ch.plume.clavier.perso'
             buildConfigField "boolean", "PLUME_PUBLIC", "false"
             getIsDefault().set(true)
         }
@@ -440,12 +443,13 @@ android {
     }
 }
 
-// Plume : la version privée « release » (natif -O3, R8, sans assertions de débogage) est signée avec la clé de
-// débogage, comme les versions « debug » déjà installées sur le téléphone : même paquet, même signature, donc mise
-// à jour sur place (réglages, mots appris, modèles importés conservés). La version publique garde la clé release.
+// Plume : depuis le passage à l'applicationId ch.plume.clavier.perso (vérification développeur Google, 2027),
+// la version privée est signée avec la clé release Plume — en debug COMME en release, pour que les deux
+// continuent de s'installer l'une par-dessus l'autre (réglages, mots appris, modèles importés conservés).
+// L'ancienne clé de débogage FUTO (java/shared.keystore) est publique : elle n'est pas enregistrable.
 androidComponents {
-    onVariants(selector().withBuildType("release").withFlavor(new kotlin.Pair("audience", "prive"))) { variant ->
-        variant.signingConfig.setConfig(android.signingConfigs.debug)
+    onVariants(selector().withFlavor(new kotlin.Pair("audience", "prive"))) { variant ->
+        variant.signingConfig.setConfig(android.signingConfigs.findByName("release") ?: android.signingConfigs.debug)
     }
 }
 

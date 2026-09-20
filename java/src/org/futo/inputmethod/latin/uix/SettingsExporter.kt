@@ -315,6 +315,8 @@ object SettingsExporter {
         inputStream: InputStream,
         destructive: Boolean
     ) = ZipInputStream(inputStream).use { zipIn ->
+        // Plume : l'écriture périodique du vocabulaire est suspendue jusqu'à la relecture du fichier importé
+        org.futo.inputmethod.latin.plume.PlumeVocab.beginImport()
         var entry = zipIn.nextEntry
 
         val clipboardFile = context.clipboardFile
@@ -462,6 +464,7 @@ object SettingsExporter {
             entry = zipIn.nextEntry
         }
 
+        org.futo.inputmethod.latin.plume.PlumeVocab.endImport(context)
         GlobalIMEMessage.tryEmit(IMEMessage.ReloadResources)
     }
 

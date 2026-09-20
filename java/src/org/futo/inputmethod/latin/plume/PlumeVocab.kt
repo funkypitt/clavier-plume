@@ -39,6 +39,9 @@ object PlumeVocab {
     @Volatile private var forgetFile: File? = null
     @Volatile private var dirty = false
     @Volatile private var loaded = false
+    /** Vrai pendant l'import d'une sauvegarde : l'écriture périodique ne doit pas écraser le fichier importé. */
+    @Volatile private var importing = false
+    @Volatile private var importingSince = 0L
     private val executor = Executors.newSingleThreadScheduledExecutor { r ->
         Thread(r, "PlumeVocab").apply { isDaemon = true }
     }
@@ -159,9 +162,40 @@ object PlumeVocab {
         }
     }
 
+    /**
+     * Import d'une sauvegarde (SettingsExporter) : le fichier sur disque va être remplacé. Sans ces deux
+     * appels, le clavier gardait son ancien vocabulaire en mémoire et le réécrivait par-dessus le fichier
+     * importé au `flush` suivant — 1 803 mots réduits à 3 une minute après la première frappe (2026-09-20).
+     */
+    @JvmStatic
+    fun beginImport() { importingSince = System.currentTimeMillis(); importing = true }
+
+    /** Oublie la mémoire et relit le fichier fraîchement importé, sur le même fil que `flush`. */
+    @JvmStatic
+    fun endImport(context: Context) {
+        init(context)
+        val f = file
+        if (f == null) { importing = false; return }
+        executor.execute {
+            try {
+                counts.clear(); learned.clear()
+                dirty = false
+                loaded = false
+                load(f)
+            } finally {
+                importing = false
+            }
+        }
+    }
+
     @JvmStatic
     fun flush() {
         val f = file ?: return
+        if (importing) {
+            // un import qui a échoué en route ne doit pas geler l'écriture pour toujours
+            if (System.currentTimeMillis() - importingSince < 120_000L) return
+            importing = false
+        }
         if (!dirty || !loaded) return        // jamais écraser le fichier avant de l'avoir lu
         dirty = false
         try {
