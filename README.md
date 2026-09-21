@@ -19,9 +19,13 @@ C'est une **version modifiée de [FUTO Keyboard](https://github.com/futo-org/and
 
 ## Installation
 
-Téléchargez l'APK de la dernière [release](../../releases) et installez-la, ou suivez ce dépôt
-avec [Obtainium](https://github.com/ImranR98/Obtainium). Puis Réglages Android → Langues et
-saisie → activer « Clavier Plume ».
+
+[<img src="docs/badge_obtainium.png" alt="Disponible sur Obtainium" height="48">](https://gallaz.ch/eink/fr.html#clavier-plume)
+
+- **Obtainium** (recommandé, les mises à jour arrivent seules) : touchez le badge depuis le téléphone, ou ajoutez `https://github.com/funkypitt/clavier-plume` dans [Obtainium](https://github.com/ImranR98/Obtainium).
+- **APK** : joint à la [dernière version](../../releases/latest). Pas de mises à jour automatiques.
+
+Puis Réglages Android → Langues et saisie → activer « Clavier Plume ».
 
 ## Compiler
 
